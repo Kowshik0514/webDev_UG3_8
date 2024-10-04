@@ -1,0 +1,38 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.pid.lock
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Parcel-bundler cache
+.cache/
+
+# Production build
+/dist/
+/build/
+
+# Typescript output
+*.tsbuildinfo
+
+# dotenv environment variables file
+.env
+
+# MacOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
