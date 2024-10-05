@@ -63,10 +63,14 @@ world.addBody(planeBody1); // Add planeBody to the world
 // Lighting
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
 directionalLight.position.set(10, 10, 10);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
+const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+directionalLight2.position.set(-10, -10, -10);
+directionalLight2.castShadow = true;
+scene.add(directionalLight2);
 
 // Load Character Model
 const gltfLoader = new GLTFLoader();
@@ -79,6 +83,7 @@ let activeAction, previousAction;
 let playerBody;
 
 // Load the character model
+// Load player model
 gltfLoader.load('../models/player.glb', (gltf) => {
   player = gltf.scene;
   player.scale.set(0.5, 0.5, 0.5);
@@ -86,20 +91,18 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   scene.add(player);
 
   // Add physics body for the player
-  // Define the player capsule (capsule shape made of two spheres and a cylinder)
-  const capsuleRadius = 0.25; // Player's radius (thickness)
-  const capsuleHeight = 0.5 ; // Player's height
+  const capsuleRadius = 0.25; // Player's radius
+  const capsuleHeight = 0.5;   // Player's height
 
-  // Create a capsule collider using two spheres and a cylinder
-  const sphereTop = new CANNON.Sphere(0.25); // Top of the capsule
-  const sphereBottom = new CANNON.Sphere(0); // Bottom of the capsule
-  const cylinder = new CANNON.Cylinder(0, 0, capsuleHeight - 2 * capsuleRadius, 8); // The middle cylinder
+  const sphereTop = new CANNON.Sphere(capsuleRadius); // Top of the capsule
+  const sphereBottom = new CANNON.Sphere(capsuleRadius); // Bottom of the capsule
+  const cylinder = new CANNON.Cylinder(capsuleRadius, capsuleRadius, capsuleHeight - 2 * capsuleRadius, 8); // Middle cylinder
 
   // Create playerBody with mass
   playerBody = new CANNON.Body({
-    mass: 1, // Player mass
-    position: new CANNON.Vec3(0, capsuleHeight / 2 + 10, 0), // Initial player position
-    fixedRotation: true, // Prevent rolling
+    mass: 1,
+    position: new CANNON.Vec3(0, capsuleHeight / 2 + 10, 0), // Initial position
+    fixedRotation: true,
   });
 
   // Add the shapes to the playerBody to form a capsule
@@ -109,7 +112,6 @@ gltfLoader.load('../models/player.glb', (gltf) => {
 
   // Add playerBody to the physics world
   world.addBody(playerBody);
-
 
   mixer = new THREE.AnimationMixer(player);
   const animations = gltf.animations;
@@ -121,142 +123,38 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   activeAction.play();
 });
 
-// Load idk model
-gltfLoader.load('../models/idk4.glb', (gltf) => {
-  const model = gltf.scene; // Access the loaded model
-  model.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
-  model.position.set(0, -30, 0); // Center the model in the scene
+// Load room model
+gltfLoader.load('../models/room.glb', (gltf) => {
+  const room = gltf.scene; // Access the loaded model
+  room.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
+  room.position.set(0, -29, 0); // Center the model in the scene
 
   // Add model to scene
-  scene.add(model);
+  scene.add(room);
 
   // Create a box shape for the collider
-  const box = new CANNON.Box(new CANNON.Vec3(1, 1, 1)); // Define the shape based on your model size
+  const boxHalfExtents = new CANNON.Vec3(5, 5, 5); // Adjust dimensions based on the model size
+  const box = new CANNON.Box(boxHalfExtents); // Create a box shape with half extents
 
   // Create a body for physics
-  const body = new CANNON.Body({
-    mass: 1, // Mass of the object (0 = static)
-    position: new CANNON.Vec3(0, 0, 0), // Starting position of the body
-    shape: box, // Use the box shape created above
+  const roomBody = new CANNON.Body({
+    mass: 0, // Mass of the object (0 = static)
+    position: new CANNON.Vec3(0, -30, 0), // Starting position of the body
   });
 
-  // Adjust the position to match the Three.js model
-  body.position.set(model.position.x, model.position.y, model.position.z);
+  // Add the box shape to the body
+  roomBody.addShape(box); // Add the box shape created above
+  // roomBody.quaternion.setFromEuler(0, 0, 0);
 
-  // Add the body to the physics world
-  world.addBody(body);
+  // // Add the body to the physics world
+  world.addBody(roomBody);
 
-  // Sync Cannon.js body with Three.js mesh in the animation loop
-  function animate() {
-    requestAnimationFrame(animate);
 
-    // Step the physics world forward in time
-    world.step(1 / 60);
-
-    // Sync the Three.js model position with the Cannon.js body
-    model.position.copy(body.position);
-    model.quaternion.copy(body.quaternion); // Sync rotation if needed
-
-    // Render the scene
-    renderer.render(scene, camera);
-  }
-  animate();
 }, undefined, (error) => {
   console.error('An error occurred while loading the GLB model:', error);
 });
 
-gltfLoader.load('../models/idk.glb', (gltf) => {
-  const model = gltf.scene; // Access the loaded model
-  model.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
 
-  // Position the model lower in the scene
-  model.position.set(0, -30, 0); // Center the model in the scene
-
-  // Add model to scene
-  scene.add(model); // Add the model to the scene
-
-  // If the model has animations, set up a mixer
-  if (gltf.animations && gltf.animations.length > 0) {
-    const mixer = new THREE.AnimationMixer(model);
-    gltf.animations.forEach((clip) => {
-      mixer.clipAction(clip).play();
-    });
-    
-    // Update the mixer in the animation loop
-    // const clock = new THREE.Clock();
-    // function animate() {
-    //   requestAnimationFrame(animate);
-    //   const delta = clock.getDelta();
-    //   mixer.update(delta);
-    //   renderer.render(scene, camera);
-    // }
-    // animate();
-  }
-}, undefined, (error) => {
-  console.error('An error occurred while loading the GLB model:', error);
-});
-
-gltfLoader.load('../models/idk2.glb', (gltf) => {
-  const model = gltf.scene; // Access the loaded model
-  model.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
-
-  // Position the model lower in the scene
-  model.position.set(0, -30, 0); // Center the model in the scene
-
-  // Add model to scene
-  scene.add(model); // Add the model to the scene
-
-  // If the model has animations, set up a mixer
-  if (gltf.animations && gltf.animations.length > 0) {
-    const mixer = new THREE.AnimationMixer(model);
-    gltf.animations.forEach((clip) => {
-      mixer.clipAction(clip).play();
-    });
-    
-    // Update the mixer in the animation loop
-    // const clock = new THREE.Clock();
-    // function animate() {
-    //   requestAnimationFrame(animate);
-    //   const delta = clock.getDelta();
-    //   mixer.update(delta);
-    //   renderer.render(scene, camera);
-    // }
-    // animate();
-  }
-}, undefined, (error) => {
-  console.error('An error occurred while loading the GLB model:', error);
-});
-
-gltfLoader.load('../models/idk3.glb', (gltf) => {
-  const model = gltf.scene; // Access the loaded model
-  model.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
-
-  // Position the model lower in the scene
-  model.position.set(0, -30, 0); // Center the model in the scene
-
-  // Add model to scene
-  scene.add(model); // Add the model to the scene
-
-  // If the model has animations, set up a mixer
-  if (gltf.animations && gltf.animations.length > 0) {
-    const mixer = new THREE.AnimationMixer(model);
-    gltf.animations.forEach((clip) => {
-      mixer.clipAction(clip).play();
-    });
-    
-    // Update the mixer in the animation loop
-    // const clock = new THREE.Clock();
-    // function animate() {
-    //   requestAnimationFrame(animate);
-    //   const delta = clock.getDelta();
-    //   mixer.update(delta);
-    //   renderer.render(scene, camera);
-    // }
-    // animate();
-  }
-}, undefined, (error) => {
-  console.error('An error occurred while loading the GLB model:', error);
-});
 
 
 const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xFAD2A8 });
