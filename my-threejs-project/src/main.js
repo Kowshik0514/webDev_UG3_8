@@ -33,32 +33,32 @@ planeBody1.position.set(1, 0, 0);
 planeBody1.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBody1); // Add planeBody to the world
 
-const planeGeometry1 = new THREE.PlaneGeometry(10, 10); // Visual ground plane
-const planeMaterial1 = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
-plane1.rotation.x = -Math.PI / 2; // Rotate the mesh to lie horizontally
-plane1.position.set(1, 0, 0); // Set ground position at Y = 0
-plane1.receiveShadow = true;
-scene.add(plane1);
+// const planeGeometry1 = new THREE.PlaneGeometry(10, 10); // Visual ground plane
+// const planeMaterial1 = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+// const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
+// plane1.rotation.x = -Math.PI / 2; // Rotate the mesh to lie horizontally
+// plane1.position.set(1, 0, 0); // Set ground position at Y = 0
+// plane1.receiveShadow = true;
+// scene.add(plane1);
 
 // Ground Plane
-const planeShape = new CANNON.Plane();
-const planeBody = new CANNON.Body({
-  mass: 0 // Mass of 0 for static objects
-});
-planeBody.addShape(planeShape);
-planeBody.position.set(0, 0, 0);
-planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-world.addBody(planeBody); // Add planeBody to the world
+// const planeShape = new CANNON.Plane();
+// const planeBody = new CANNON.Body({
+//   mass: 0 // Mass of 0 for static objects
+// });
+// planeBody.addShape(planeShape);
+// planeBody.position.set(0, 0, 0);
+// planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+// world.addBody(planeBody); // Add planeBody to the world
 
 // Create Ground Mesh
-const planeGeometry = new THREE.PlaneGeometry(10, 10);
-const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-plane.rotation.x = -Math.PI / 2;
-plane.position.set(0, 0, 0);
-plane.receiveShadow = true;
-scene.add(plane);
+// const planeGeometry = new THREE.PlaneGeometry(10, 10);
+// const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+// const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+// plane.rotation.x = -Math.PI / 2;
+// plane.position.set(0, 0, 0);
+// plane.receiveShadow = true;
+// scene.add(plane);
 
 // Lighting
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -121,6 +121,144 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   activeAction.play();
 });
 
+// Load idk model
+gltfLoader.load('../models/idk4.glb', (gltf) => {
+  const model = gltf.scene; // Access the loaded model
+  model.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
+  model.position.set(0, -30, 0); // Center the model in the scene
+
+  // Add model to scene
+  scene.add(model);
+
+  // Create a box shape for the collider
+  const box = new CANNON.Box(new CANNON.Vec3(1, 1, 1)); // Define the shape based on your model size
+
+  // Create a body for physics
+  const body = new CANNON.Body({
+    mass: 1, // Mass of the object (0 = static)
+    position: new CANNON.Vec3(0, 0, 0), // Starting position of the body
+    shape: box, // Use the box shape created above
+  });
+
+  // Adjust the position to match the Three.js model
+  body.position.set(model.position.x, model.position.y, model.position.z);
+
+  // Add the body to the physics world
+  world.addBody(body);
+
+  // Sync Cannon.js body with Three.js mesh in the animation loop
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Step the physics world forward in time
+    world.step(1 / 60);
+
+    // Sync the Three.js model position with the Cannon.js body
+    model.position.copy(body.position);
+    model.quaternion.copy(body.quaternion); // Sync rotation if needed
+
+    // Render the scene
+    renderer.render(scene, camera);
+  }
+  animate();
+}, undefined, (error) => {
+  console.error('An error occurred while loading the GLB model:', error);
+});
+
+gltfLoader.load('../models/idk.glb', (gltf) => {
+  const model = gltf.scene; // Access the loaded model
+  model.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
+
+  // Position the model lower in the scene
+  model.position.set(0, -30, 0); // Center the model in the scene
+
+  // Add model to scene
+  scene.add(model); // Add the model to the scene
+
+  // If the model has animations, set up a mixer
+  if (gltf.animations && gltf.animations.length > 0) {
+    const mixer = new THREE.AnimationMixer(model);
+    gltf.animations.forEach((clip) => {
+      mixer.clipAction(clip).play();
+    });
+    
+    // Update the mixer in the animation loop
+    // const clock = new THREE.Clock();
+    // function animate() {
+    //   requestAnimationFrame(animate);
+    //   const delta = clock.getDelta();
+    //   mixer.update(delta);
+    //   renderer.render(scene, camera);
+    // }
+    // animate();
+  }
+}, undefined, (error) => {
+  console.error('An error occurred while loading the GLB model:', error);
+});
+
+gltfLoader.load('../models/idk2.glb', (gltf) => {
+  const model = gltf.scene; // Access the loaded model
+  model.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
+
+  // Position the model lower in the scene
+  model.position.set(0, -30, 0); // Center the model in the scene
+
+  // Add model to scene
+  scene.add(model); // Add the model to the scene
+
+  // If the model has animations, set up a mixer
+  if (gltf.animations && gltf.animations.length > 0) {
+    const mixer = new THREE.AnimationMixer(model);
+    gltf.animations.forEach((clip) => {
+      mixer.clipAction(clip).play();
+    });
+    
+    // Update the mixer in the animation loop
+    // const clock = new THREE.Clock();
+    // function animate() {
+    //   requestAnimationFrame(animate);
+    //   const delta = clock.getDelta();
+    //   mixer.update(delta);
+    //   renderer.render(scene, camera);
+    // }
+    // animate();
+  }
+}, undefined, (error) => {
+  console.error('An error occurred while loading the GLB model:', error);
+});
+
+gltfLoader.load('../models/idk3.glb', (gltf) => {
+  const model = gltf.scene; // Access the loaded model
+  model.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
+
+  // Position the model lower in the scene
+  model.position.set(0, -30, 0); // Center the model in the scene
+
+  // Add model to scene
+  scene.add(model); // Add the model to the scene
+
+  // If the model has animations, set up a mixer
+  if (gltf.animations && gltf.animations.length > 0) {
+    const mixer = new THREE.AnimationMixer(model);
+    gltf.animations.forEach((clip) => {
+      mixer.clipAction(clip).play();
+    });
+    
+    // Update the mixer in the animation loop
+    // const clock = new THREE.Clock();
+    // function animate() {
+    //   requestAnimationFrame(animate);
+    //   const delta = clock.getDelta();
+    //   mixer.update(delta);
+    //   renderer.render(scene, camera);
+    // }
+    // animate();
+  }
+}, undefined, (error) => {
+  console.error('An error occurred while loading the GLB model:', error);
+});
+
+
 const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xFAD2A8 });
 const wallHeight = 5;
 const wallThickness = 0.2;
@@ -148,20 +286,20 @@ function createWall(geometry, position, rotation = 0) {
 }
 
 // Back Wall
-const backWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
-createWall(backWallGeometry, { x: 0, y: wallHeight / 2, z: -5 });
+// const backWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
+// createWall(backWallGeometry, { x: 0, y: wallHeight / 2, z: -5 });
 
-// Left Wall
-const leftWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
-createWall(leftWallGeometry, { x: -5, y: wallHeight / 2, z: 0 });
+// // Left Wall
+// const leftWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
+// createWall(leftWallGeometry, { x: -5, y: wallHeight / 2, z: 0 });
 
-// Right Wall
-const rightWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
-createWall(rightWallGeometry, { x: 5, y: wallHeight / 2, z: 0 });
+// // Right Wall
+// const rightWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
+// createWall(rightWallGeometry, { x: 5, y: wallHeight / 2, z: 0 });
 
-// Front Wall
-const frontWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
-createWall(frontWallGeometry, { x: 0, y: wallHeight / 2, z: 5 });
+// // Front Wall
+// const frontWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
+// createWall(frontWallGeometry, { x: 0, y: wallHeight / 2, z: 5 });
 
 // Create a simple tree
 // Function to create a tree with physics body
@@ -190,12 +328,12 @@ function createTree(x, y, z) {
 }
 
 // Create trees at specific coordinates
-createTree(2, 0, 2);
-createTree(-2, 0, -2);
-createTree(3, 0, -3);
-createTree(-3, 0, 3);
-createTree(1, 0, -1);
-createTree(-1, 0, 1);
+// createTree(2, 0, 2);
+// createTree(-2, 0, -2);
+// createTree(3, 0, -3);
+// createTree(-3, 0, 3);
+// createTree(1, 0, -1);
+// createTree(-1, 0, 1);
 
 
 // Controls
