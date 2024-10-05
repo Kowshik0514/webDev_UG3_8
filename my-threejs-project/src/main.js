@@ -24,6 +24,24 @@ const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0); // Set gravity
 
 // Ground Plane
+const planeShape1 = new CANNON.Plane();
+const planeBody1 = new CANNON.Body({
+  mass: 0 // Mass of 0 for static objects
+});
+planeBody1.addShape(planeShape1);
+planeBody1.position.set(1, 0, 0);
+planeBody1.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+world.addBody(planeBody1); // Add planeBody to the world
+
+const planeGeometry1 = new THREE.PlaneGeometry(10, 10); // Visual ground plane
+const planeMaterial1 = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
+plane1.rotation.x = -Math.PI / 2; // Rotate the mesh to lie horizontally
+plane1.position.set(1, 0, 0); // Set ground position at Y = 0
+plane1.receiveShadow = true;
+scene.add(plane1);
+
+// Ground Plane
 const planeShape = new CANNON.Plane();
 const planeBody = new CANNON.Body({
   mass: 0 // Mass of 0 for static objects
@@ -68,24 +86,30 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   scene.add(player);
 
   // Add physics body for the player
-  const boxWidth = 0.5; // Adjust width
-  const boxHeight = 1.6; // Adjust height
-  const boxDepth = 0.5; // Adjust depth
-  const playerShape = new CANNON.Box(new CANNON.Vec3(boxWidth / 2, boxHeight / 2, boxDepth / 2));
+  // Define the player capsule (capsule shape made of two spheres and a cylinder)
+  const capsuleRadius = 0.25; // Player's radius (thickness)
+  const capsuleHeight = 1.6; // Player's height
+
+  // Create a capsule collider using two spheres and a cylinder
+  const sphereTop = new CANNON.Sphere(capsuleRadius); // Top of the capsule
+  const sphereBottom = new CANNON.Sphere(capsuleRadius); // Bottom of the capsule
+  const cylinder = new CANNON.Cylinder(capsuleRadius, capsuleRadius, capsuleHeight - 2 * capsuleRadius, 8); // The middle cylinder
+
+  // Create playerBody with mass
   playerBody = new CANNON.Body({
-    mass: 1,
-    position: new CANNON.Vec3(0, 1.6, 0)
+    mass: 1, // Player mass
+    position: new CANNON.Vec3(0, capsuleHeight / 2 + 10, 0), // Initial player position
+    fixedRotation: true, // Prevent rolling
   });
-  playerBody.addShape(playerShape);
-  playerBody.fixedRotation = true; // Set fixedRotation to true
 
-// Set some material properties if needed
-const playerMaterial = new CANNON.Material();
-// playerMaterial.friction = 0.5; 
-playerBody.material = playerMaterial;
+  // Add the shapes to the playerBody to form a capsule
+  playerBody.addShape(sphereTop, new CANNON.Vec3(0, (capsuleHeight - capsuleRadius) / 2, 0));  // Position top sphere
+  playerBody.addShape(sphereBottom, new CANNON.Vec3(0, -(capsuleHeight - capsuleRadius) / 2, 0));  // Position bottom sphere
+  playerBody.addShape(cylinder); // Add the cylinder in the middle
 
-// Set friction (optional)
+  // Add playerBody to the physics world
   world.addBody(playerBody);
+
 
   mixer = new THREE.AnimationMixer(player);
   const animations = gltf.animations;
@@ -97,7 +121,50 @@ playerBody.material = playerMaterial;
   activeAction.play();
 });
 
+const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xFAD2A8 });
+const wallHeight = 5;
+const wallThickness = 0.2;
+const wallWidth = 10;
+
+// Create walls with matching physics bodies
+function createWall(geometry, position, rotation = 0) {
+  // Three.js Wall Mesh
+  const wall = new THREE.Mesh(geometry, wallMaterial);
+  wall.position.set(position.x, position.y, position.z);
+  wall.rotation.y = rotation;
+  wall.castShadow = true;
+  scene.add(wall);
+
+  // Cannon.js Wall Body
+  const halfExtents = new CANNON.Vec3(geometry.parameters.width / 2, geometry.parameters.height / 2, geometry.parameters.depth / 2);
+  const wallShape = new CANNON.Box(halfExtents);
+  const wallBody = new CANNON.Body({
+    mass: 0, // Static wall
+    position: new CANNON.Vec3(position.x, position.y, position.z)
+  });
+  wallBody.addShape(wallShape);
+  wallBody.quaternion.setFromEuler(0, rotation, 0); // Apply rotation
+  world.addBody(wallBody);
+}
+
+// Back Wall
+const backWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
+createWall(backWallGeometry, { x: 0, y: wallHeight / 2, z: -5 });
+
+// Left Wall
+const leftWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
+createWall(leftWallGeometry, { x: -5, y: wallHeight / 2, z: 0 });
+
+// Right Wall
+const rightWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
+createWall(rightWallGeometry, { x: 5, y: wallHeight / 2, z: 0 });
+
+// Front Wall
+const frontWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
+createWall(frontWallGeometry, { x: 0, y: wallHeight / 2, z: 5 });
+
 // Create a simple tree
+// Function to create a tree with physics body
 function createTree(x, y, z) {
   const trunkGeometry = new THREE.CylinderGeometry(0.1, 0.15, 1, 8);
   const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
@@ -111,6 +178,15 @@ function createTree(x, y, z) {
 
   scene.add(trunk);
   scene.add(foliage);
+
+  // Create a physics body for the tree
+  const treeShape = new CANNON.Cylinder(0.1, 0.15, 1, 8); // Collision shape
+  const treeBody = new CANNON.Body({
+    mass: 0, // Static
+    position: new CANNON.Vec3(x, y + 0.5, z) // Position adjusted for height
+  });
+  treeBody.addShape(treeShape);
+  world.addBody(treeBody); // Add the tree body to the world
 }
 
 // Create trees at specific coordinates
@@ -120,6 +196,7 @@ createTree(3, 1.5, -3);
 createTree(-3, 1.5, 3);
 createTree(1, 1.5, -1);
 createTree(-1, 1.5, 1);
+
 
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
@@ -183,22 +260,55 @@ function animate() {
     // Sync player position with physics body
     player.position.copy(playerBody.position);
     player.quaternion.copy(playerBody.quaternion);
-    
+
+    // Calculate the camera position based on player and pitch/yaw
     const cameraX = player.position.x + radius * Math.sin(yaw) * Math.cos(pitch);
     const cameraY = player.position.y + radius * Math.sin(pitch);
     const cameraZ = player.position.z + radius * Math.cos(yaw) * Math.cos(pitch);
 
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(player.position);
+
+    // Rotate the player based on camera's yaw
+    player.rotation.y = yaw; // Set player rotation to match the camera's yaw
   }
-  
+
   renderer.render(scene, camera);
 }
 
+
+// Function to update animation based on player's movement
+function updatePlayerAnimation() {
+  if (!player || !mixer) return;
+
+  let newAction;
+
+  // Check if the player is moving and if they're running
+  if (isMoving) {
+    if (isRunning) {
+      newAction = actions['run']; // Play run animation
+    } else {
+      newAction = actions['walk']; // Play walk animation
+    }
+  } else {
+    newAction = actions['idle']; // Player is idle
+  }
+
+  // If the new action is different from the active action, blend the animations
+  if (newAction && newAction !== activeAction) {
+    previousAction = activeAction;
+    activeAction = newAction;
+
+    // Smoothly blend between animations
+    previousAction.fadeOut(0.2);
+    activeAction.reset().fadeIn(0.2).play();
+  }
+}
 // Move player function
+// Call updatePlayerAnimation within movePlayer
 function movePlayer() {
   if (!player) return;
-  
+
   let moveDirection = new THREE.Vector3();
   const forward = getPlayerForwardDirection();
   const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
@@ -207,7 +317,7 @@ function movePlayer() {
   if (keys.s) moveDirection.add(forward.clone().negate());
   if (keys.a) moveDirection.add(right.clone().negate());
   if (keys.d) moveDirection.add(right);
-  
+
   moveDirection.normalize();
 
   // Update player physics body
@@ -221,13 +331,17 @@ function movePlayer() {
   }
 
   // Jumping
-  if (keys.space && playerBody.position.y <= 1.6) { 
-    playerBody.velocity.y = jumpForce; 
+  if (keys.space && playerBody.position.y <= 1.6) {
+    playerBody.velocity.y = jumpForce;
   }
 
   // Reset Y velocity for better control
-  playerBody.velocity.y = Math.max(playerBody.velocity.y, -20); 
+  playerBody.velocity.y = Math.max(playerBody.velocity.y, -20);
+
+  // Update animation based on movement
+  updatePlayerAnimation();
 }
+
 
 // Get player forward direction
 function getPlayerForwardDirection() {
