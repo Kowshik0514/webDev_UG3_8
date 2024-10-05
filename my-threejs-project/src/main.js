@@ -8,7 +8,7 @@ const scene = new THREE.Scene();
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 1.6, 3); // Initial camera position behind the player
+camera.position.set(0, 1.6, 3);
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -19,10 +19,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 
 // Ground Plane
-const planeGeometry = new THREE.PlaneGeometry(200, 200);
+const planeGeometry = new THREE.PlaneGeometry(10, 10);
 const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-plane.rotation.x = -Math.PI / 2; // Rotate to make it horizontal
+plane.rotation.x = -Math.PI / 2;
 plane.receiveShadow = true;
 scene.add(plane);
 
@@ -44,9 +44,9 @@ let activeAction, previousAction;
 // Load the character model
 gltfLoader.load('../models/player.glb', (gltf) => {
   player = gltf.scene;
-  player.scale.set(0.5, 0.5, 0.5); // Adjust size if needed
-  player.position.set(0, 1.6, 0); // Position the model on the ground
-  player.rotation.y = Math.PI; // Rotate 180 degrees
+  player.scale.set(0.5, 0.5, 0.5);
+  player.position.set(0, 0, 0);
+  player.rotation.y = Math.PI;
   scene.add(player);
 
   mixer = new THREE.AnimationMixer(player);
@@ -55,10 +55,8 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   const animations = gltf.animations;
   animations.forEach((clip) => {
     const action = mixer.clipAction(clip);
-    actions[clip.name.toLowerCase()] = action; // Store actions by animation name
+    actions[clip.name.toLowerCase()] = action;
   });
-
-  // Set the idle animation as the default
   activeAction = actions['idle'];
   activeAction.play();
 });
@@ -85,8 +83,8 @@ function createTree(x, y, z) {
 }
 
 // Create a tree at specific coordinates
-createTree(2, 0, 2); // Adjust position as needed
-createTree(-2, 0, -2); // Adjust position as needed
+createTree(2, 0, 2); 
+createTree(-2, 0, -2); 
 
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
@@ -107,7 +105,8 @@ let isRunning = false;
 // Mouse movement variables
 let yaw = 0; // Horizontal angle for character rotation
 const pitchLimit = Math.PI / 2 - 0.1; // Limit for vertical camera angle
-
+let pitch = 0; // Vertical angle for camera rotation
+const radius = 3;
 window.addEventListener('keydown', (event) => {
   if (event.key.toLowerCase() in keys) {
     keys[event.key.toLowerCase()] = true;
@@ -129,59 +128,48 @@ window.addEventListener('keyup', (event) => {
   }
 });
 
-// Mouse movement event to control character rotation
+// Mouse
 document.addEventListener('mousemove', (event) => {
   if (controls.isLocked) {
-    yaw -= event.movementX * 0.002; // Adjust sensitivity for horizontal rotation
-    player.rotation.y = yaw; // Rotate the player model based on yaw
-    camera.rotation.y = yaw; // Rotate the camera based on yaw
-    // console.log(camera.rotation.y+"{{{{{{{{{{{{{[[");
+    yaw -= event.movementX * 0.002; 
+    pitch -= event.movementY * (-0.002); 
+    pitch = Math.max(-pitchLimit, Math.min(pitchLimit, pitch));
+    // console.log("Player rotation (yaw):", player.rotation.y, "Pitch:", pitch);
   }
 });
+
+
 const clock = new THREE.Clock();
 
 // Animation Loop
 function animate() {
   requestAnimationFrame(animate);
-
-  const delta = clock.getDelta(); // Time between frames
-
-  if (mixer) mixer.update(delta); // Update the animation mixer
+  const delta = clock.getDelta();
+  if (mixer) mixer.update(delta);
 
   if (player) {
     movePlayer();
-    
-    
-    // You can also use this forward direction for movement or camera logic
+    const cameraX = player.position.x + radius * Math.sin(yaw) * Math.cos(pitch);
+    const cameraY = player.position.y + radius * Math.sin(pitch);
+    const cameraZ = player.position.z + radius * Math.cos(yaw) * Math.cos(pitch);
+
+    camera.position.set(cameraX, cameraY, cameraZ);
+    camera.lookAt(player.position);
   }
 
-  // const forwardDirection = getPlayerForwardDirection(); // Safe to call once the player is defined
-  // console.log('Player Forward Direction:', forwardDirection);
-  // Update camera position to follow player
-  if (player) {
-    const cameraOffset = new THREE.Vector3(0, 1.6, 3); // Fixed position behind the player
-    camera.position.copy(player.position).add(cameraOffset); // Set camera behind player
-    console.log(camera.position+"=================");
-    camera.lookAt(player.position); // Make the camera look at the player
-  }
 
   renderer.render(scene, camera);
 }
 
 function getPlayerForwardDirection() {
   const forward = new THREE.Vector3(
-    -Math.sin(player.rotation.y), // X component based on horizontal angle (yaw)
-    0,                            // Y component is zero for horizontal movement
-    -Math.cos(player.rotation.y)  // Z component based on horizontal angle (yaw)
+    -Math.sin(player.rotation.y),0,-Math.cos(player.rotation.y)
   );
-
   return forward.normalize();
 }
-
 // Move player function
 function movePlayer() {
   if (!player) return;
-
   const forward = new THREE.Vector3();
   const right = new THREE.Vector3();
   controls.getDirection(forward);
@@ -190,35 +178,27 @@ function movePlayer() {
   right.crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
 
   let moveDirection = new THREE.Vector3();
-  // console.log(moveDirection);
-  // Move forward and backward
   if (keys.w) 
-    moveDirection.add(forward);
-
+  moveDirection.add(forward);
   if (keys.s) moveDirection.add(forward.clone().negate());
-
-  // Move left and right
   if (keys.a) moveDirection.add(right.clone().negate());
   if (keys.d) moveDirection.add(right);
   if (keys.shift) isRunning = true;
   if (moveDirection.length() > 0) {
     velocity.add(moveDirection.normalize().multiplyScalar(isRunning ? speed.run : speed.walk));
     // console.log(velocity);
-    // Rotate character towards movement direction
     const targetRotation = Math.atan2(moveDirection.x, moveDirection.z);
     // console.log(targetRotation);
     player.rotation.y = THREE.MathUtils.lerp(player.rotation.y+Math.PI, targetRotation, 0.1); // Smooth transition
+    
   }
-
-  // Handle jumping
+  //  jumping
   if (keys.space && canJump) {
     velocity.y += jumpForce;
     canJump = false;
   }
-
   // Apply gravity
   velocity.y += gravity;
-
   // Update player position
   player.position.add(velocity);
 
