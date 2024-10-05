@@ -2,6 +2,7 @@ import './style.css';
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import * as CANNON from 'cannon'; // Import Cannon.js
 
 // Scene
 const scene = new THREE.Scene();
@@ -18,11 +19,26 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 
+// Physics world
+const world = new CANNON.World();
+world.gravity.set(0, -9.82, 0); // Set gravity
+
 // Ground Plane
+const planeShape = new CANNON.Plane();
+const planeBody = new CANNON.Body({
+  mass: 0 // Mass of 0 for static objects
+});
+planeBody.addShape(planeShape);
+planeBody.position.set(0, 0, 0);
+planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+world.addBody(planeBody); // Add planeBody to the world
+
+// Create Ground Mesh
 const planeGeometry = new THREE.PlaneGeometry(10, 10);
 const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 plane.rotation.x = -Math.PI / 2;
+plane.position.set(0, 0, 0);
 plane.receiveShadow = true;
 scene.add(plane);
 
@@ -41,17 +57,37 @@ let mixer;
 let actions = {};
 let activeAction, previousAction;
 
+// Player physics body
+let playerBody;
+
 // Load the character model
 gltfLoader.load('../models/player.glb', (gltf) => {
   player = gltf.scene;
   player.scale.set(0.5, 0.5, 0.5);
-  player.position.set(0, 0, 0);
   player.rotation.y = Math.PI;
   scene.add(player);
 
-  mixer = new THREE.AnimationMixer(player);
+  // Add physics body for the player
+  const boxWidth = 0.5; // Adjust width
+  const boxHeight = 1.6; // Adjust height
+  const boxDepth = 0.5; // Adjust depth
+  const playerShape = new CANNON.Box(new CANNON.Vec3(boxWidth / 2, boxHeight / 2, boxDepth / 2));
+  playerBody = new CANNON.Body({
+    mass: 1,
+    position: new CANNON.Vec3(0, 1.6, 0)
+  });
+  playerBody.addShape(playerShape);
+  playerBody.fixedRotation = true; // Set fixedRotation to true
 
-  // Extract and store each animation by name
+// Set some material properties if needed
+const playerMaterial = new CANNON.Material();
+// playerMaterial.friction = 0.5; 
+playerBody.material = playerMaterial;
+
+// Set friction (optional)
+  world.addBody(playerBody);
+
+  mixer = new THREE.AnimationMixer(player);
   const animations = gltf.animations;
   animations.forEach((clip) => {
     const action = mixer.clipAction(clip);
@@ -61,30 +97,29 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   activeAction.play();
 });
 
-
-
 // Create a simple tree
 function createTree(x, y, z) {
-  // Create the trunk of the tree
   const trunkGeometry = new THREE.CylinderGeometry(0.1, 0.15, 1, 8);
-  const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // Brown color
+  const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
   const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
-  trunk.position.set(x, y + 0.5, z); // Position the trunk on the ground
+  trunk.position.set(x, y + 0.5, z);
 
-  // Create the foliage of the tree
   const foliageGeometry = new THREE.ConeGeometry(0.5, 1, 8);
-  const foliageMaterial = new THREE.MeshStandardMaterial({ color: 0x228B22 }); // Green color
+  const foliageMaterial = new THREE.MeshStandardMaterial({ color: 0x228B22 });
   const foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
-  foliage.position.set(x, y + 1.5, z); // Position the foliage above the trunk
+  foliage.position.set(x, y + 1.5, z);
 
-  // Add trunk and foliage to the scene
   scene.add(trunk);
   scene.add(foliage);
 }
 
-// Create a tree at specific coordinates
-createTree(2, 0, 2); 
-createTree(-2, 0, -2); 
+// Create trees at specific coordinates
+createTree(2, 1.5, 2);
+createTree(-2, 1.5, -2);
+createTree(3, 1.5, -3);
+createTree(-3, 1.5, 3);
+createTree(1, 1.5, -1);
+createTree(-1, 1.5, 1);
 
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
@@ -94,27 +129,21 @@ document.addEventListener('click', () => {
 
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
-const velocity = new THREE.Vector3();
-let canJump = false;
-const gravity = -0.1;
-const jumpForce = 0.2;
-const speed = { walk: 0.1, run: 0.2 };
+const jumpForce = 5;
+const speed = { walk: 5, run: 10 };
 let isMoving = false;
 let isRunning = false;
 
-// Mouse movement variables
-let yaw = 0; // Horizontal angle for character rotation
-const pitchLimit = Math.PI / 2 - 0.1; // Limit for vertical camera angle
-let pitch = 0; // Vertical angle for camera rotation
+let yaw = 0;
+const pitchLimit = Math.PI / 2 - 0.1;
+let pitch = 0;
 const radius = 3;
+
 window.addEventListener('keydown', (event) => {
   if (event.key.toLowerCase() in keys) {
     keys[event.key.toLowerCase()] = true;
     isMoving = keys.w || keys.a || keys.s || keys.d;
     isRunning = keys.shift;
-    // console.log(isRunning);
-    // console.log("****************");
-    updatePlayerMovement(); 
   }
 });
 
@@ -123,21 +152,17 @@ window.addEventListener('keyup', (event) => {
     keys[event.key.toLowerCase()] = false;
     isMoving = keys.w || keys.a || keys.s || keys.d;
     isRunning = keys.shift;
-    
-    updatePlayerMovement();
   }
 });
 
-// Mouse
+// Mouse movement
 document.addEventListener('mousemove', (event) => {
   if (controls.isLocked) {
-    yaw -= event.movementX * 0.002; 
-    pitch -= event.movementY * (-0.002); 
+    yaw -= event.movementX * 0.002;
+    pitch -= event.movementY * (-0.002);
     pitch = Math.max(-pitchLimit, Math.min(pitchLimit, pitch));
-    // console.log("Player rotation (yaw):", player.rotation.y, "Pitch:", pitch);
   }
 });
-
 
 const clock = new THREE.Clock();
 
@@ -145,10 +170,20 @@ const clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
+
+  // Step the physics world
+  world.step(1 / 60);
+
   if (mixer) mixer.update(delta);
 
+  // Call movePlayer every frame
+  movePlayer();
+
   if (player) {
-    movePlayer();
+    // Sync player position with physics body
+    player.position.copy(playerBody.position);
+    player.quaternion.copy(playerBody.quaternion);
+    
     const cameraX = player.position.x + radius * Math.sin(yaw) * Math.cos(pitch);
     const cameraY = player.position.y + radius * Math.sin(pitch);
     const cameraZ = player.position.z + radius * Math.cos(yaw) * Math.cos(pitch);
@@ -156,89 +191,52 @@ function animate() {
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(player.position);
   }
-
-
+  
   renderer.render(scene, camera);
 }
 
-function getPlayerForwardDirection() {
-  const forward = new THREE.Vector3(
-    -Math.sin(player.rotation.y),0,-Math.cos(player.rotation.y)
-  );
-  return forward.normalize();
-}
 // Move player function
 function movePlayer() {
   if (!player) return;
-  const forward = new THREE.Vector3();
-  const right = new THREE.Vector3();
-  controls.getDirection(forward);
-  forward.y = 0;
-  forward.normalize();
-  right.crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
-
+  
   let moveDirection = new THREE.Vector3();
-  if (keys.w) 
-  moveDirection.add(forward);
+  const forward = getPlayerForwardDirection();
+  const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
+
+  if (keys.w) moveDirection.add(forward);
   if (keys.s) moveDirection.add(forward.clone().negate());
   if (keys.a) moveDirection.add(right.clone().negate());
   if (keys.d) moveDirection.add(right);
-  if (keys.shift) isRunning = true;
+  
+  moveDirection.normalize();
+
+  // Update player physics body
   if (moveDirection.length() > 0) {
-    velocity.add(moveDirection.normalize().multiplyScalar(isRunning ? speed.run : speed.walk));
-    // console.log(velocity);
+    const speedValue = isRunning ? speed.run : speed.walk;
+    playerBody.velocity.x = moveDirection.x * speedValue;
+    playerBody.velocity.z = moveDirection.z * speedValue;
+
     const targetRotation = Math.atan2(moveDirection.x, moveDirection.z);
-    // console.log(targetRotation);
-    player.rotation.y = THREE.MathUtils.lerp(player.rotation.y+Math.PI, targetRotation, 0.1); // Smooth transition
-    
-  }
-  //  jumping
-  if (keys.space && canJump) {
-    velocity.y += jumpForce;
-    canJump = false;
-  }
-  // Apply gravity
-  velocity.y += gravity;
-  // Update player position
-  player.position.add(velocity);
-
-  // Ground collision detection
-  if (player.position.y < 1.6) {
-    player.position.y = 1.6;
-    velocity.y = 0;
-    canJump = true;
+    player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1);
   }
 
-  // Reset velocity for horizontal movement
-  velocity.set(0, velocity.y, 0);
+  // Jumping
+  if (keys.space && playerBody.position.y <= 1.6) { 
+    playerBody.velocity.y = jumpForce; 
+  }
+
+  // Reset Y velocity for better control
+  playerBody.velocity.y = Math.max(playerBody.velocity.y, -20); 
 }
 
-function updatePlayerMovement() {
-  if (!player || !mixer) return;
-  // console.log(isMoving);
-  // console.log("++++++++++++++++");
-  if (isMoving) {
-    // console.log(isRunning);
-    // console.log("-------");
-    if (isRunning) {
-      switchAnimation('run');
-    } else {
-      switchAnimation('walk');
-    }
-  } else {
-    switchAnimation('idle');
-  }
+// Get player forward direction
+function getPlayerForwardDirection() {
+  const forward = new THREE.Vector3(
+    -Math.sin(player.rotation.y), 0, -Math.cos(player.rotation.y)
+  );
+  return forward.normalize();
 }
-// Function to switch animations
-function switchAnimation(newActionName) {
-  const newAction = actions[newActionName.toLowerCase()];
-  if (newAction !== activeAction) {
-    previousAction = activeAction;
-    activeAction = newAction;
-    previousAction.fadeOut(0.5);
-    activeAction.reset().fadeIn(0.5).play();
-  }
-}
+
 // Handle window resize
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
