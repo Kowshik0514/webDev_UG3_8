@@ -33,7 +33,16 @@ planeBody1.position.set(1, 0, 0);
 planeBody1.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBody1); // Add planeBody to the world
 
-const planeGeometry1 = new THREE.PlaneGeometry(10, 10); // Visual ground plane
+// Sky Sphere (for a 360-degree sky effect)
+const skyGeometry = new THREE.SphereGeometry(500, 100, 100);
+const skyMaterial = new THREE.MeshBasicMaterial({
+  color: 0x87CEEB, // Sky blue color
+  side: THREE.BackSide // Render the inside of the sphere
+});
+const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+scene.add(sky);
+
+const planeGeometry1 = new THREE.PlaneGeometry(100000, 100000); // Visual ground plane
 const planeMaterial1 = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
 plane1.rotation.x = -Math.PI / 2; // Rotate the mesh to lie horizontally
@@ -98,7 +107,7 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   // Create playerBody with mass
   playerBody = new CANNON.Body({
     mass: 1, // Player mass
-    position: new CANNON.Vec3(0, capsuleHeight / 2 + 10, 0), // Initial player position
+    position: new CANNON.Vec3(0.5, 2.5, 0), // Initial player position
     fixedRotation: true, // Prevent rolling
   });
 
@@ -109,7 +118,6 @@ gltfLoader.load('../models/player.glb', (gltf) => {
 
   // Add playerBody to the physics world
   world.addBody(playerBody);
-
 
   mixer = new THREE.AnimationMixer(player);
   const animations = gltf.animations;
@@ -127,11 +135,12 @@ const wallThickness = 0.2;
 const wallWidth = 10;
 
 // Create walls with matching physics bodies
-function createWall(geometry, position, rotation = 0) {
+function createWall(geometry, position, rotationY, rotationX) {
   // Three.js Wall Mesh
   const wall = new THREE.Mesh(geometry, wallMaterial);
   wall.position.set(position.x, position.y, position.z);
-  wall.rotation.y = rotation;
+  wall.rotation.y = rotationY;
+  wall.rotation.x = rotationX;
   wall.castShadow = true;
   scene.add(wall);
 
@@ -143,25 +152,30 @@ function createWall(geometry, position, rotation = 0) {
     position: new CANNON.Vec3(position.x, position.y, position.z)
   });
   wallBody.addShape(wallShape);
-  wallBody.quaternion.setFromEuler(0, rotation, 0); // Apply rotation
+  wallBody.quaternion.setFromEuler(0, rotationY, 0); // Apply rotationY
+  wallBody.quaternion.setFromEuler(0, rotationX, 0); // Apply rotationX
   world.addBody(wallBody);
 }
 
 // Back Wall
 const backWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
-createWall(backWallGeometry, { x: 0, y: wallHeight / 2, z: -5 });
+createWall(backWallGeometry, { x: 0, y: wallHeight / 2, z: -5 }, 0, 0);
 
 // Left Wall
 const leftWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
-createWall(leftWallGeometry, { x: -5, y: wallHeight / 2, z: 0 });
+createWall(leftWallGeometry, { x: -5, y: wallHeight / 2, z: 0 }, 0, 0);
 
 // Right Wall
 const rightWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
-createWall(rightWallGeometry, { x: 5, y: wallHeight / 2, z: 0 });
+createWall(rightWallGeometry, { x: 5, y: wallHeight / 2, z: 0 }, 0, 0);
 
 // Front Wall
 const frontWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
-createWall(frontWallGeometry, { x: 0, y: wallHeight / 2, z: 5 });
+createWall(frontWallGeometry, { x: 0, y: wallHeight / 2, z: 5 }, 0, 0);
+
+// Above wall
+const aboveWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight*2, 0);
+createWall(aboveWallGeometry, { x: 0, y: wallHeight, z: 0 }, 0, Math.PI/2);
 
 // Create a simple tree
 // Function to create a tree with physics body
@@ -207,7 +221,7 @@ document.addEventListener('click', () => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 5, run: 10 };
+const speed = { walk: 15, run: 30 };
 let isMoving = false;
 let isRunning = false;
 
