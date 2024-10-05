@@ -88,12 +88,12 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   // Add physics body for the player
   // Define the player capsule (capsule shape made of two spheres and a cylinder)
   const capsuleRadius = 0.25; // Player's radius (thickness)
-  const capsuleHeight = 1.6; // Player's height
+  const capsuleHeight = 0.5 ; // Player's height
 
   // Create a capsule collider using two spheres and a cylinder
-  const sphereTop = new CANNON.Sphere(capsuleRadius); // Top of the capsule
-  const sphereBottom = new CANNON.Sphere(capsuleRadius); // Bottom of the capsule
-  const cylinder = new CANNON.Cylinder(capsuleRadius, capsuleRadius, capsuleHeight - 2 * capsuleRadius, 8); // The middle cylinder
+  const sphereTop = new CANNON.Sphere(0.25); // Top of the capsule
+  const sphereBottom = new CANNON.Sphere(0); // Bottom of the capsule
+  const cylinder = new CANNON.Cylinder(0, 0, capsuleHeight - 2 * capsuleRadius, 8); // The middle cylinder
 
   // Create playerBody with mass
   playerBody = new CANNON.Body({
@@ -190,12 +190,12 @@ function createTree(x, y, z) {
 }
 
 // Create trees at specific coordinates
-createTree(2, 1.5, 2);
-createTree(-2, 1.5, -2);
-createTree(3, 1.5, -3);
-createTree(-3, 1.5, 3);
-createTree(1, 1.5, -1);
-createTree(-1, 1.5, 1);
+createTree(2, 0, 2);
+createTree(-2, 0, -2);
+createTree(3, 0, -3);
+createTree(-3, 0, 3);
+createTree(1, 0, -1);
+createTree(-1, 0, 1);
 
 
 // Controls
