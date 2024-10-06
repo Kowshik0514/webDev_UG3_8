@@ -28,7 +28,7 @@ const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0); // Set gravity
 
 // Call the function to create the forest (multiple trees)
-createForest(scene, world); 
+createForest(scene, world);
 
 // Create all walls
 createAllWalls(scene, world);
@@ -39,18 +39,19 @@ loadChandelier(scene, world);
 // Button to drop chandelier
 document.getElementById('dropChandelierBtn').addEventListener('click', () => {
   // dropChandelier(playerBody); // Pass the player's body to check the position
-  
+
   const chandelierPosition = window.chandelier.position;
   const playerPosition = playerBody.position;
 
   // Check if player's x and z positions match chandelier's x and z positions
   const isDirectlyBelow = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
-                          Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
+    Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
 
 
   setTimeout(() => {
     dropChandelier(); // Reset the flag
-  }, 10000);
+  }, 10000);
+  // simulateEarthquake(100000);
   // if (isDirectlyBelow) {
   //   console.log("Dropping chandelier");
   //       // Set chandelier body mass to 1 to allow it to fall
@@ -122,7 +123,7 @@ let actions = {};
 let activeAction, previousAction;
 
 // Player physics body
-export let playerBody=null;
+export let playerBody = null;
 
 // Load the character model
 gltfLoader.load('../models/player.glb', (gltf) => {
@@ -134,7 +135,7 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   // Add physics body for the player
   // Define the player capsule (capsule shape made of two spheres and a cylinder)
   const capsuleRadius = 0.25; // Player's radius (thickness)
-  const capsuleHeight = 0.5 ; // Player's height
+  const capsuleHeight = 0.5; // Player's height
 
   // Create a capsule collider using two spheres and a cylinder
   const sphereTop = new CANNON.Sphere(0.25); // Top of the capsule
@@ -247,8 +248,8 @@ function animate() {
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(player.position);
 
-    // Rotate the player based on camera's yaw
-    // player.rotation.y = yaw; // Set player rotation to match the camera's yaw
+    // Rotate the player to match the camera's yaw
+    player.rotation.y = yaw; // Sync player's Y rotation with the camera's yaw
   }
   renderer.render(scene, camera);
 }
@@ -343,5 +344,4 @@ window.addEventListener('resize', () => {
 
 // Start the animation
 animate();
-
 
