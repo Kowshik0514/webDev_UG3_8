@@ -3,6 +3,10 @@ import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as CANNON from 'cannon'; // Import Cannon.js
+import { createForest } from './tree'; // Import tree functions
+import { createWall, createAllWalls } from './wall'; // Import wall creation functions
+import { loadChandelier, dropChandelier } from './chandelier';
+import { chandelier, chandelierBody } from './globals.js';
 
 // Scene
 const scene = new THREE.Scene();
@@ -23,6 +27,35 @@ renderer.shadowMap.enabled = true;
 const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0); // Set gravity
 
+// Call the function to create the forest (multiple trees)
+createForest(scene, world); 
+
+// Create all walls
+createAllWalls(scene, world);
+
+// Load the chandelier
+loadChandelier(scene, world);
+
+// Button to drop chandelier
+document.getElementById('dropChandelierBtn').addEventListener('click', () => {
+  // dropChandelier(playerBody); // Pass the player's body to check the position
+  
+  const chandelierPosition = window.chandelier.position;
+  const playerPosition = playerBody.position;
+
+  // Check if player's x and z positions match chandelier's x and z positions
+  const isDirectlyBelow = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
+                          Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
+
+  if (isDirectlyBelow) {
+    console.log("Dropping chandelier");
+        // Set chandelier body mass to 1 to allow it to fall
+    dropChandelier(); // Pass the player's body to check the position
+  } else {
+    console.log("Player is not directly below the chandelier.");
+  }
+});
+
 // Ground Plane
 const planeShape1 = new CANNON.Plane();
 const planeBody1 = new CANNON.Body({
@@ -42,7 +75,7 @@ const skyMaterial = new THREE.MeshBasicMaterial({
 const sky = new THREE.Mesh(skyGeometry, skyMaterial);
 scene.add(sky);
 
-const planeGeometry1 = new THREE.PlaneGeometry(100000, 100000); // Visual ground plane
+const planeGeometry1 = new THREE.PlaneGeometry(1000, 1000); // Visual ground plane
 const planeMaterial1 = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
 plane1.rotation.x = -Math.PI / 2; // Rotate the mesh to lie horizontally
@@ -129,89 +162,6 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   activeAction.play();
 });
 
-const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xFAD2A8 });
-const wallHeight = 5;
-const wallThickness = 0.2;
-const wallWidth = 10;
-
-// Create walls with matching physics bodies
-function createWall(geometry, position, rotationY, rotationX) {
-  // Three.js Wall Mesh
-  const wall = new THREE.Mesh(geometry, wallMaterial);
-  wall.position.set(position.x, position.y, position.z);
-  wall.rotation.y = rotationY;
-  wall.rotation.x = rotationX;
-  wall.castShadow = true;
-  scene.add(wall);
-
-  // Cannon.js Wall Body
-  const halfExtents = new CANNON.Vec3(geometry.parameters.width / 2, geometry.parameters.height / 2, geometry.parameters.depth / 2);
-  const wallShape = new CANNON.Box(halfExtents);
-  const wallBody = new CANNON.Body({
-    mass: 0, // Static wall
-    position: new CANNON.Vec3(position.x, position.y, position.z)
-  });
-  wallBody.addShape(wallShape);
-  wallBody.quaternion.setFromEuler(0, rotationY, 0); // Apply rotationY
-  wallBody.quaternion.setFromEuler(0, rotationX, 0); // Apply rotationX
-  world.addBody(wallBody);
-}
-
-// Back Wall
-const backWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
-createWall(backWallGeometry, { x: 0, y: wallHeight / 2, z: -5 }, 0, 0);
-
-// Left Wall
-const leftWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
-createWall(leftWallGeometry, { x: -5, y: wallHeight / 2, z: 0 }, 0, 0);
-
-// Right Wall
-const rightWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
-createWall(rightWallGeometry, { x: 5, y: wallHeight / 2, z: 0 }, 0, 0);
-
-// Front Wall
-const frontWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
-createWall(frontWallGeometry, { x: 0, y: wallHeight / 2, z: 5 }, 0, 0);
-
-// Above wall
-const aboveWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight*2, 0);
-createWall(aboveWallGeometry, { x: 0, y: wallHeight, z: 0 }, 0, Math.PI/2);
-
-// Create a simple tree
-// Function to create a tree with physics body
-function createTree(x, y, z) {
-  const trunkGeometry = new THREE.CylinderGeometry(0.1, 0.15, 1, 8);
-  const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
-  const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
-  trunk.position.set(x, y + 0.5, z);
-
-  const foliageGeometry = new THREE.ConeGeometry(0.5, 1, 8);
-  const foliageMaterial = new THREE.MeshStandardMaterial({ color: 0x228B22 });
-  const foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
-  foliage.position.set(x, y + 1.5, z);
-
-  scene.add(trunk);
-  scene.add(foliage);
-
-  // Create a physics body for the tree
-  const treeShape = new CANNON.Cylinder(0.1, 0.15, 1, 8); // Collision shape
-  const treeBody = new CANNON.Body({
-    mass: 0, // Static
-    position: new CANNON.Vec3(x, y + 0.5, z) // Position adjusted for height
-  });
-  treeBody.addShape(treeShape);
-  world.addBody(treeBody); // Add the tree body to the world
-}
-
-// Create trees at specific coordinates
-createTree(2, 0, 2);
-createTree(-2, 0, -2);
-createTree(3, 0, -3);
-createTree(-3, 0, 3);
-createTree(1, 0, -1);
-createTree(-1, 0, 1);
-
-
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
 document.addEventListener('click', () => {
@@ -231,16 +181,26 @@ let pitch = 0;
 const radius = 3;
 
 window.addEventListener('keydown', (event) => {
-  if (event.key.toLowerCase() in keys) {
-    keys[event.key.toLowerCase()] = true;
+  console.log(event.key);  // Debug key presses
+
+  if (event.key === ' ' || event.key.toLowerCase() in keys) {
+    if (event.key === ' ') {
+      keys.space = true;
+    } else {
+      keys[event.key.toLowerCase()] = true;
+    }
     isMoving = keys.w || keys.a || keys.s || keys.d;
     isRunning = keys.shift;
   }
 });
 
 window.addEventListener('keyup', (event) => {
-  if (event.key.toLowerCase() in keys) {
-    keys[event.key.toLowerCase()] = false;
+  if (event.key === ' ' || event.key.toLowerCase() in keys) {
+    if (event.key === ' ') {
+      keys.space = false;
+    } else {
+      keys[event.key.toLowerCase()] = false;
+    }
     isMoving = keys.w || keys.a || keys.s || keys.d;
     isRunning = keys.shift;
   }
@@ -284,12 +244,10 @@ function animate() {
     camera.lookAt(player.position);
 
     // Rotate the player based on camera's yaw
-    player.rotation.y = yaw; // Set player rotation to match the camera's yaw
+    // player.rotation.y = yaw; // Set player rotation to match the camera's yaw
   }
-
   renderer.render(scene, camera);
 }
-
 
 // Function to update animation based on player's movement
 function updatePlayerAnimation() {
@@ -345,8 +303,14 @@ function movePlayer() {
   }
 
   // Jumping
-  if (keys.space && playerBody.position.y <= 1.6) {
-    playerBody.velocity.y = jumpForce;
+  if (keys.space) {
+    if (keys.shift) {
+      // Shift + Space: Fly upward
+      playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
+    } else if (playerBody.position.y <= 1.6) {
+      // Normal jump (only if player is grounded)
+      playerBody.velocity.y = jumpForce; // Regular jump
+    }
   }
 
   // Reset Y velocity for better control
