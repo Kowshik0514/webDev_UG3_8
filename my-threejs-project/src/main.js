@@ -47,13 +47,17 @@ document.getElementById('dropChandelierBtn').addEventListener('click', () => {
   const isDirectlyBelow = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
                           Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
 
-  if (isDirectlyBelow) {
-    console.log("Dropping chandelier");
-        // Set chandelier body mass to 1 to allow it to fall
-    dropChandelier(); // Pass the player's body to check the position
-  } else {
-    console.log("Player is not directly below the chandelier.");
-  }
+
+  setTimeout(() => {
+    dropChandelier(); // Reset the flag
+  }, 10000);
+  // if (isDirectlyBelow) {
+  //   console.log("Dropping chandelier");
+  //       // Set chandelier body mass to 1 to allow it to fall
+  //   dropChandelier(); // Pass the player's body to check the position
+  // } else {
+  //   console.log("Player is not directly below the chandelier.");
+  // }
 });
 
 // Ground Plane
@@ -118,7 +122,7 @@ let actions = {};
 let activeAction, previousAction;
 
 // Player physics body
-let playerBody;
+export let playerBody=null;
 
 // Load the character model
 gltfLoader.load('../models/player.glb', (gltf) => {
@@ -336,5 +340,8 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+
 // Start the animation
 animate();
+
+

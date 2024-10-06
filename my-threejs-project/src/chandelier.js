@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { chandelier, chandelierBody } from './globals.js';
-
+import {playerBody}  from './main.js'
 // Button to drop chandelier
 const dropChandelierBtn = document.getElementById('dropChandelierBtn');
 dropChandelierBtn.addEventListener('click', () => {
@@ -10,15 +10,20 @@ dropChandelierBtn.addEventListener('click', () => {
   
   const chandelierPosition = window.chandelier.position;
   const playerPosition = playerBody.position;
-
+  console.log("Hoo");
+  console.log(playerBody.position.x);
   // Check if player's x and z positions match chandelier's x and z positions
   const isDirectlyBelow = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
                           Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
 
+
+  setTimeout(() => {
+    dropChandelier(); // Reset the flag
+  }, 10000);
   if (isDirectlyBelow) {
     console.log("Dropping chandelier");
         // Set chandelier body mass to 1 to allow it to fall
-    dropChandelier(); // Pass the player's body to check the position
+        // Pass the player's body to check the position
   } else {
     console.log("Player is not directly below the chandelier.");
   }
@@ -67,6 +72,11 @@ export function dropChandelier(){
           requestAnimationFrame(animate2); // Continue the animation
       } else {
         // Update the chandelier's physical body once it has dropped
+        const playerPosition = playerBody.position;
+    const chandelierPosition = window.chandelier.position;
+
+        const isNear = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
+                          Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
         window.chandelierBody.position.set(
           window.chandelier.position.x,
           window.chandelier.position.y,
@@ -74,7 +84,19 @@ export function dropChandelier(){
         );
         window.chandelierBody.mass = 1; // Allow the chandelier to respond to physics after falling
         window.chandelierBody.updateMassProperties(); // Update mass properties to reflect the new mass 
+        console.log("mg");
+        console.log(isNear);
+        if(isNear == true)
+        {
+          document.getElementById('go').innerHTML = "You Lost";
+        }
+        else
+        {
+          document.getElementById('go').innerHTML = "You Won";
+        }
+        document.getElementById('restartButton').innerHTML = "Restart";
         document.getElementById('gameOverPopup').style.display = 'flex';
+
       }
   }
 
