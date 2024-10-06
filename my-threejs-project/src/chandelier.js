@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { chandelier, chandelierBody } from './globals.js';
 import {playerBody}  from './main.js'
 // Button to drop chandelier
-const dropChandelierBtn = document.getElementById('dropChandelierBtn');
+const dropChandelierBtn = document.getElementsByClassName('dropChandelierBtn')[0];
 dropChandelierBtn.addEventListener('click', () => {
   // dropChandelier(playerBody); // Pass the player's body to check the position
   
@@ -19,7 +19,7 @@ dropChandelierBtn.addEventListener('click', () => {
 
   setTimeout(() => {
     dropChandelier(); // Reset the flag
-  }, 10000);
+  }, 9000);
   if (isDirectlyBelow) {
     console.log("Dropping chandelier");
         // Set chandelier body mass to 1 to allow it to fall

@@ -37,7 +37,7 @@ createAllWalls(scene, world);
 loadChandelier(scene, world);
 
 // Button to drop chandelier
-document.getElementById('dropChandelierBtn').addEventListener('click', () => {
+document.getElementsByClassName('dropChandelierBtn')[0].addEventListener('click', () => {
   // dropChandelier(playerBody); // Pass the player's body to check the position
   
   const chandelierPosition = window.chandelier.position;
