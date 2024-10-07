@@ -171,7 +171,7 @@ export function startEarthquake(world, scene) {
     if (earthquakeActive) {
       loadStones(scene, world)
     }
-  }, 500);
+  }, 50);
 }
 
 // Stop the earthquake

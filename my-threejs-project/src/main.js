@@ -7,7 +7,7 @@ import { createForest } from './tree'; // Import tree functions
 import { createWall, createAllWalls } from './wall'; // Import wall creation functions
 import { loadChandelier, dropChandelier, startEarthquake } from './chandelier';
 import { chandelier, chandelierBody } from './globals.js';
-import { loadStones, updateStones, removeStones } from './Stones.js';  // Adjust the path as needed
+import { loadStones, updateStones, removeStones } from './Stones.js';
 
 // Scene
 const scene = new THREE.Scene();
@@ -61,6 +61,17 @@ document.getElementById('dropChandelierBtn').addEventListener('click', () => {
   //   console.log("Player is not directly below the chandelier.");
   // }
 });
+
+const greyPlaneGeometry = new THREE.PlaneGeometry(2, 4); // Adjust size as needed
+const greyPlaneMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 }); // Grey color
+const greyPlane = new THREE.Mesh(greyPlaneGeometry, greyPlaneMaterial);
+
+// Position the plane near the door
+greyPlane.position.set(-1.5, 2, 3.8); // Adjust position relative to the door's position
+greyPlane.rotation.z = -Math.PI / 2; // Rotate the plane vertically
+
+// Add the plane to the scene
+scene.add(greyPlane);
 
 // Ground Plane
 const planeShape1 = new CANNON.Plane();
@@ -398,7 +409,7 @@ function animate() {
   world.step(1 / 60);
   // Update stones position
   checkProximityToDoor();
-  updateStones();  // Add this to sync stone positions with physics bodies
+  updateStones(playerBody);  // Add this to sync stone positions with physics bodies
 
   if (mixer) mixer.update(delta);
 
