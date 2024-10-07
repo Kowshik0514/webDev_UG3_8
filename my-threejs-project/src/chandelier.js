@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { chandelier, chandelierBody,stones } from './globals.js';
-import { playerBody, directionalLight, directionalLight2 } from './main.js'; // Assuming `directionalLight` is global
+import { playerBody, directionalLight, directionalLight2,plane001,texture1,texture2 } from './main.js'; // Assuming `directionalLight` is global
 import {  rstgame } from './main.js';
 import { loadStones, updateStones, removeStones } from './Stones.js';
 
@@ -145,6 +145,12 @@ export function startEarthquake(world, scene) {
     earthquakeSound.play();
   }
 
+  plane001.material.map = texture1; 
+  // Change to earthquake texture
+        plane001.material.needsUpdate = true; 
+        // Notify Three.js to update the material
+
+
   earthquakeInterval = setInterval(() => {
     if (earthquakeActive) {
       const shakeX = (Math.random() - 0.5) * shakeStrength;
@@ -186,6 +192,12 @@ function stopEarthquake() {
     earthquakeSound.currentTime = 0; // Reset the sound to the beginning
   }
 
+  plane001.material.map = texture2; 
+  // Change to earthquake texture
+        plane001.material.needsUpdate = true; 
+        // Notify Three.js to update the material
+
+  
   // Reset light intensity
   directionalLight.intensity = 1; // Reset to normal intensity
   directionalLight2.intensity = 1; // Reset to normal intensity

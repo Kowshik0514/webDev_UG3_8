@@ -128,6 +128,10 @@ let activeAction, previousAction;
 
 // Player physics body
 export let playerBody = null;
+export let plane001;
+export let texture1;
+export let texture2;
+
 
 // Load the character model
 gltfLoader.load('../models/player.glb', (gltf) => {
@@ -293,6 +297,24 @@ gltfLoader.load('../models/room.glb', (gltf) => {
   room.scale.set(0.5, 0.5, 0.5); // Scale adjustment
   room.position.set(0, -29, 0); // Position adjustment
   scene.add(room);
+  // Load the textures
+// const textureLoader = new THREE.TextureLoader();
+texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
+
+// Find the existing plane named 'Plane001'
+plane001 = room.getObjectByName('Plane001');
+texture2= plane001.material.map;
+
+// Apply the texture to the plane's material;
+
+// Animation loop (if needed)
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+
+// Start the animation
+animate();
 
   // Traverse through each object in the room and create colliders
   room.traverse((object) => {
@@ -323,6 +345,12 @@ gltfLoader.load('../models/room.glb', (gltf) => {
 }, undefined, (error) => {
   console.error('An error occurred while loading the GLB model:', error);
 });
+
+export let crack; // Declare the crack object
+
+const textureLoader = new THREE.TextureLoader();
+const crackTexture = textureLoader.load('../moodels/crack.jpg');
+
 
 
 // Controls
