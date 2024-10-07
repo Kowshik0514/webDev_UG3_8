@@ -1,10 +1,9 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { chandelier, chandelierBody } from './globals.js';
+import { chandelier, chandelierBody,stones } from './globals.js';
 import { playerBody, directionalLight, directionalLight2 } from './main.js'; // Assuming `directionalLight` is global
-import { chandelier, chandelierBody, stones } from './globals.js';
-import { playerBody, rstgame } from './main.js';
+import {  rstgame } from './main.js';
 import { loadStones, updateStones, removeStones } from './Stones.js';
 
 let earthquakeActive = false; // Flag to control earthquake
