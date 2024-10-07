@@ -170,11 +170,21 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   activeAction = actions['idle'];
   activeAction.play();
 });
-
+let floor;
 gltfLoader.load('../models/room.glb', (gltf) => {
   const room = gltf.scene; // Access the loaded model
   room.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
   room.position.set(0, -29, 0); // Center the model in the scene
+
+  floor = room.getObjectByName('Plane001');
+    
+    if (floor) {
+        floor.material.transparent = true;
+        floor.material.opacity = 0;
+        console.log("Floor object (Plane001) found!");
+    } else {
+        console.error("Floor object (Plane001) not found!");
+    }
 
   // Add model to scene
   scene.add(room);
@@ -267,7 +277,16 @@ const clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
-
+  if(camera.position.y > 0){
+    if(floor){
+      floor.material.opacity = 1;
+    }
+  }
+  else {
+    if(floor){
+      floor.material.opacity = 0;
+    }
+  }
   // Step the physics world
   world.step(1 / 60);
 
