@@ -307,6 +307,7 @@ gltfLoader.load('../models/room.glb', (gltf) => {
   console.error('An error occurred while loading the GLB model:', error);
 });
 
+
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
 document.addEventListener('click', () => {
@@ -457,27 +458,6 @@ function movePlayer() {
     player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1);
   }
 
-  if(player.position.x <=1 && player.position.x >= -1   && player.position.z <4.6 && player.position.z > 4  )
-  {
-    document.getElementById("door").style.display = "flex";
-  }
-  else
-  {
-    document.getElementById("door").style.display = "none";
-  }
-
-  if(player.position.x <=1 && player.position.x >= -1   && player.position.z <7 && player.position.z > 5  )
-  {
-    document.getElementById("door2").style.display = "flex";
-  }
-  else
-  {
-    document.getElementById("door2").style.display = "none";
-  }
-
-
-
-
   // Jumping
   if (keys.space) {
     if (keys.shift) {
@@ -504,20 +484,6 @@ function getPlayerForwardDirection() {
   );
   return forward.normalize();
 }
-
-
-const exit = document.getElementById('door');
-exit.addEventListener("click" , function(event) {
-  player.position.z = 7;
-  playerBody.position.z = 7;
-});
-
-
-const entry = document.getElementById('door2');
-entry.addEventListener("click" , function(event) {
-  player.position.z = 4.5;
-  playerBody.position.z = 4.5;
-});
 
 // Handle window resize
 window.addEventListener('resize', () => {
