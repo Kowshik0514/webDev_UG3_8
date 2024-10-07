@@ -8,6 +8,26 @@ import { loadStones, updateStones, removeStones } from './Stones.js';
 let earthquakeActive = false; // Flag to control earthquake
 let earthquakeInterval;
 let earthqk;
+let earthquakeSound; // Reference to earthquake sound
+let thudSound;
+let soundOn = true; // Flag to track if sound is on
+// Button to toggle sound on/off
+const soundToggleBtn = document.getElementById('soundToggleBtn');
+soundToggleBtn.addEventListener('click', () => {
+  soundOn = !soundOn;
+  soundToggleBtn.innerHTML = soundOn ? 'Turn Sound Off' : 'Turn Sound On';
+  if (!soundOn && earthquakeSound) {
+    earthquakeSound.pause();
+  } else if (soundOn && earthquakeActive) {
+    earthquakeSound.play();
+  }
+});
+// Load the earthquake sound
+function loadEarthquakeSound() {
+  earthquakeSound = new Audio('../sounds/earthquake.mp3');
+  earthquakeSound.loop = true; // Loop the sound during the earthquake
+  thudSound = new Audio('../sounds/thud.mp3'); // Load the thud sound
+}
 
 // Button to drop chandelier
 const dropChandelierBtn = document.getElementById('dropChandelierBtn');
@@ -54,34 +74,7 @@ export function loadChandelier(scene, world) {
     console.error('An error occurred while loading the chandelier model:', error);
   });
 }
-let a = 0
-
-// export function loadStones(scene, world) {
-//   const chandelierLoader = new GLTFLoader();
-
-//   chandelierLoader.load('../models/stones.glb', (gltf) => {
-//     window.chandelier = gltf.scene;
-//     window.chandelier.scale.set(0.0004, 0.0004, 0.0004);
-//     if (a % 2 == 0)
-//       window.chandelier.position.set(-2, 4.5, -0.85);
-//     else
-//       window.chandelier.position.set(-1, 4.5, -0.85);
-//     a++;
-//     window.chandelier.castShadow = true;
-//     scene.add(window.chandelier);
-
-//     const chandelierShape = new CANNON.Box(new CANNON.Vec3(0.8, 1, 0.8));
-//     window.chandelierBody = new CANNON.Body({
-//       mass: 0,
-//       position: new CANNON.Vec3(0, 4.5, -0.85)
-//     });
-//     window.chandelierBody.addShape(chandelierShape);
-//     world.addBody(window.chandelierBody);
-//   }, undefined, (error) => {
-//     console.error('An error occurred while loading the chandelier model:', error);
-//   });
-// }
-
+let a = 0;
 
 export function dropChandelier(world, scene) {
   const fallDuration = 1;
@@ -115,6 +108,11 @@ export function dropChandelier(world, scene) {
       window.chandelierBody.mass = 1;
       window.chandelierBody.updateMassProperties();
 
+      // Play thud sound if sound is on
+      if (soundOn && thudSound) {
+        thudSound.play();
+      }
+
       if (isNear) {
         document.getElementById('go').innerHTML = "You Lost";
       } else {
@@ -132,6 +130,11 @@ export function dropChandelier(world, scene) {
 export function startEarthquake(world, scene) {
   earthquakeActive = true;
   let shakeStrength = 0.1;
+
+  // Play earthquake sound if sound is on
+  if (soundOn && earthquakeSound) {
+    earthquakeSound.play();
+  }
 
   earthquakeInterval = setInterval(() => {
     if (earthquakeActive) {
@@ -159,6 +162,12 @@ function stopEarthquake() {
   earthquakeActive = false;
   clearInterval(earthquakeInterval);
   clearInterval(earthqk);
+
+  // Stop earthquake sound
+  if (earthquakeSound) {
+    earthquakeSound.pause();
+    earthquakeSound.currentTime = 0; // Reset the sound to the beginning
+  }
 }
 
 // Event listener for the restart button
@@ -179,3 +188,6 @@ export function restartGame() {
   stopEarthquake(); // Stop the earthquake effect
   rstgame();
 }
+
+// Load the earthquake sound when the page loads
+window.addEventListener('load', loadEarthquakeSound);

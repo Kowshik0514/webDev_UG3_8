@@ -10,7 +10,8 @@
 
 <body>
   <canvas id="bg"></canvas>
-  <button id="dropChandelierBtn" style="position: absolute; top: 10px; left: 10px;">Drop Chandelier</button>
+  <button id="dropChandelierBtn" style="position: absolute; top: 10px; left: 10px;">Start Earthquake</button>
+  <button id="soundToggleBtn" style="position: absolute; top: 40px; left: 10px;">Turn Sound Off</button>
 
   <!-- Game Over Pop-up -->
   <div id="gameOverPopup"
@@ -58,10 +59,10 @@
     });
 
     // Add event listener to the "Restart" button
-    // document.getElementById('restartButton').addEventListener('click', () => {
-    //   restartGame(); // Call the restart game function
-    //   startTimer(); // Start the timer again if you want it on restart
-    // });
+    document.getElementById('restartButton').addEventListener('click', () => {
+      restartGame(); // Call the restart game function
+      startTimer(); // Start the timer again if you want it on restart
+    });
   </script>
 </body>
 
