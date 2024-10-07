@@ -172,51 +172,41 @@ gltfLoader.load('../models/player.glb', (gltf) => {
 });
 let floor;
 gltfLoader.load('../models/room.glb', (gltf) => {
-  const room = gltf.scene; // Access the loaded model
-  room.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
-  room.position.set(0, -29, 0); // Center the model in the scene
-
-  floor = room.getObjectByName('Plane001');
-    
-    if (floor) {
-        floor.material.transparent = true;
-        floor.material.opacity = 0;
-        console.log("Floor object (Plane001) found!");
-    } else {
-        console.error("Floor object (Plane001) not found!");
-    }
-
-  // Add model to scene
+  const room = gltf.scene;
+  room.scale.set(0.5, 0.5, 0.5); // Scale adjustment
+  room.position.set(0, -29, 0); // Position adjustment
   scene.add(room);
 
+  // Traverse through each object in the room and create colliders
   room.traverse((object) => {
-    if (object.isMesh && object.name === 'Cube010') {
-      // For simplicity, assume each mesh has a box collider
-      const box = new THREE.Box3().setFromObject(object); // Calculate bounding box
+    // if (object.isMesh && object.name === 'Cube010') {
+      const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
 
-      // Create a Cannon.js box shape based on the bounding box
-      const halfExtents = new CANNON.Vec3(
-        (box.max.x - box.min.x) / 2,
-        (box.max.y - box.min.y) / 2,
-        (box.max.z - box.min.z) / 2
-      );
+      // Calculate the center and size of the bounding box
+      const center = new THREE.Vector3();
+      box.getCenter(center);
+      const size = new THREE.Vector3();
+      box.getSize(size);
+
+      // Create a Cannon.js box shape based on the size of the bounding box
+      const halfExtents = new CANNON.Vec3(size.x / 2, size.y / 2, size.z / 2);
       const shape = new CANNON.Box(halfExtents);
 
       // Create a physical body in Cannon.js
       const body = new CANNON.Body({
-        mass: 1, // Mass of the object
-        position: new CANNON.Vec3(object.position.x, object.position.y, object.position.z),
-        shape: shape
+        mass: 0, // Mass of the object
+        position: new CANNON.Vec3(center.x, center.y, center.z), // Use the center of the bounding box for positioning
+        shape: shape,
       });
-      world.addBody(body); // Add the body to the physics world
-    }
+
+      // Add the body to the physics world
+      world.addBody(body);
+    // }
   });
-
-
-
 }, undefined, (error) => {
   console.error('An error occurred while loading the GLB model:', error);
 });
+
 
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);

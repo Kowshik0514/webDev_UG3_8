@@ -34,22 +34,22 @@ export function createWall(scene, world, geometry, position, rotationY, rotation
 // Function to create all walls
 export function createAllWalls(scene, world) {
   // Back Wall
-  const backWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
-  createWall(scene, world, backWallGeometry, { x: 0, y: wallHeight / 2, z: -5 }, 0, 0);
+  // const backWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
+  // createWall(scene, world, backWallGeometry, { x: 0, y: wallHeight / 2, z: -5 }, 0, 0);
 
-  // Left Wall
-  const leftWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
-  createWall(scene, world, leftWallGeometry, { x: -5, y: wallHeight / 2, z: 0 }, 0, 0);
+  // // Left Wall
+  // const leftWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
+  // createWall(scene, world, leftWallGeometry, { x: -5, y: wallHeight / 2, z: 0 }, 0, 0);
 
-  // Right Wall
-  const rightWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
-  createWall(scene, world, rightWallGeometry, { x: 5, y: wallHeight / 2, z: 0 }, 0, 0);
+  // // Right Wall
+  // const rightWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, wallWidth);
+  // createWall(scene, world, rightWallGeometry, { x: 5, y: wallHeight / 2, z: 0 }, 0, 0);
 
-  // Front Wall
-  const frontWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
-  createWall(scene, world, frontWallGeometry, { x: 0, y: wallHeight / 2, z: 5 }, 0, 0);
+  // // Front Wall
+  // const frontWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallThickness);
+  // createWall(scene, world, frontWallGeometry, { x: 0, y: wallHeight / 2, z: 5 }, 0, 0);
 
-  // Above Wall
-  const aboveWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight * 2, 0);
-  createWall(scene, world, aboveWallGeometry, { x: 0, y: wallHeight, z: 0 }, 0, Math.PI / 2);
+  // // Above Wall
+  // const aboveWallGeometry = new THREE.BoxGeometry(wallWidth, wallHeight * 2, 0);
+  // createWall(scene, world, aboveWallGeometry, { x: 0, y: wallHeight, z: 0 }, 0, Math.PI / 2);
 }
