@@ -247,7 +247,7 @@ function checkProximityToDoor() {
 // Display a message for entering/leaving the room based on the player's position
 function displayDoorInteractionMessage() {
   const messageBox = document.createElement('div');
-  messageBox.id = 'doorInteractionMessage';
+  messageBox.id = 'leaveRoomMessage';
   messageBox.style.position = 'absolute';
   messageBox.style.top = '20%';
   messageBox.style.left = '50%';
