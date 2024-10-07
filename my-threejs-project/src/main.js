@@ -39,26 +39,9 @@ loadChandelier(scene, world);
 // Button to drop chandelier
 document.getElementById('dropChandelierBtn').addEventListener('click', () => {
   // dropChandelier(playerBody); // Pass the player's body to check the position
-
-  const chandelierPosition = window.chandelier.position;
-  const playerPosition = playerBody.position;
-
-  // Check if player's x and z positions match chandelier's x and z positions
-  const isDirectlyBelow = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
-    Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
-
-
   setTimeout(() => {
     dropChandelier(); // Reset the flag
   }, 10000);
-  // simulateEarthquake(100000);
-  // if (isDirectlyBelow) {
-  //   console.log("Dropping chandelier");
-  //       // Set chandelier body mass to 1 to allow it to fall
-  //   dropChandelier(); // Pass the player's body to check the position
-  // } else {
-  //   console.log("Player is not directly below the chandelier.");
-  // }
 });
 
 // Ground Plane
