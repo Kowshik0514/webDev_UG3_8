@@ -8,6 +8,7 @@ import { createWall, createAllWalls } from './wall'; // Import wall creation fun
 import { loadChandelier, dropChandelier, startEarthquake } from './chandelier';
 import { chandelier, chandelierBody } from './globals.js';
 import { loadStones, updateStones, removeStones } from './Stones.js';
+import { loadRoads, updateRoads } from './road.js';
 
 // Scene
 const scene = new THREE.Scene();
@@ -36,6 +37,17 @@ createAllWalls(scene, world);
 
 // Load the chandelier
 loadChandelier(scene, world);
+
+const roadPositions = [
+  new THREE.Vector3(-1.5, 0, 7.8),
+  new THREE.Vector3(-1.5, 0, 17.8),
+  new THREE.Vector3(-1.5, 0, 27.8),
+  // new THREE.Vector3(10, 0, 0),
+  // new THREE.Vector3(-10, 0, 0)
+];
+
+// Load roads into the scene and physics world
+loadRoads(scene, world, roadPositions);
 
 // Button to drop chandelier
 document.getElementById('dropChandelierBtn').addEventListener('click', () => {
@@ -360,7 +372,6 @@ animate();
 export let crack; // Declare the crack object
 
 const textureLoader = new THREE.TextureLoader();
-const crackTexture = textureLoader.load('../moodels/crack.jpg');
 
 
 
@@ -443,6 +454,9 @@ function animate() {
 
   // Call movePlayer every frame
   movePlayer();
+
+  // Update road positions
+  updateRoads();
 
   if (player) {
     // Sync player position with physics body
