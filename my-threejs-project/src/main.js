@@ -48,10 +48,18 @@ document.getElementById('dropChandelierBtn').addEventListener('click', () => {
   const isDirectlyBelow = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
     Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
 
-
+  startEarthquake(world, scene);
   setTimeout(() => {
     dropChandelier(world, scene); // Reset the flag
   }, 10000);
+  // simulateEarthquake(100000);
+  // if (isDirectlyBelow) {
+  //   console.log("Dropping chandelier");
+  //       // Set chandelier body mass to 1 to allow it to fall
+  //   dropChandelier(); // Pass the player's body to check the position
+  // } else {
+  //   console.log("Player is not directly below the chandelier.");
+  // }
 });
 
 // Ground Plane
@@ -165,34 +173,34 @@ gltfLoader.load('../models/player.glb', (gltf) => {
 let floor;
 //Door
 let door;
-gltfLoader.load('../models/door.glb', (gltf )=> {
-door=gltf.scene;
-door.scale.set(0.5, 0.5, 0.5); // Scale adjustment
-door.position.set(-1, 0.1, 4); // Position adjustment
-scene.add(door);
-door.traverse((object)=>{
-  const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
+gltfLoader.load('../models/door.glb', (gltf) => {
+  door = gltf.scene;
+  door.scale.set(0.5, 0.5, 0.5); // Scale adjustment
+  door.position.set(-1, 0.1, 4); // Position adjustment
+  scene.add(door);
+  door.traverse((object) => {
+    const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
 
-      // Calculate the center and size of the bounding box
-      const center = new THREE.Vector3();
-      box.getCenter(center);
-      const size = new THREE.Vector3();
-      box.getSize(size);
+    // Calculate the center and size of the bounding box
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    const size = new THREE.Vector3();
+    box.getSize(size);
 
-      // Create a Cannon.js box shape based on the size of the bounding box
-      const halfExtents = new CANNON.Vec3(size.x/2 , size.y/2 , size.z/2);
-      const shape = new CANNON.Box(halfExtents);
+    // Create a Cannon.js box shape based on the size of the bounding box
+    const halfExtents = new CANNON.Vec3(size.x / 2, size.y / 2, size.z / 2);
+    const shape = new CANNON.Box(halfExtents);
 
-      // Create a physical body in Cannon.js
-      const body = new CANNON.Body({
-        mass: 0, // Mass of the object
-        position: new CANNON.Vec3(center.x, center.y, center.z), // Use the center of the bounding box for positioning
-        shape: shape,
-      });
+    // Create a physical body in Cannon.js
+    const body = new CANNON.Body({
+      mass: 0, // Mass of the object
+      position: new CANNON.Vec3(center.x, center.y, center.z), // Use the center of the bounding box for positioning
+      shape: shape,
+    });
 
-      // Add the body to the physics world
-      world.addBody(body);
-})
+    // Add the body to the physics world
+    world.addBody(body);
+  })
 
 });
 // Define a flag to show if the player is near the door
@@ -232,7 +240,7 @@ function checkProximityToDoor() {
     nearDoor = false;
     isMessageDisplayed = false;
     hideLeaveRoomMessage();
-     // Reset flag when player moves away from the door
+    // Reset flag when player moves away from the door
   }
 }
 
@@ -254,7 +262,7 @@ function displayDoorInteractionMessage() {
   } else {
     messageBox.innerText = 'Do you want to leave the room? Press Y to leave or N to stay inside.';
   }
-  
+
   document.body.appendChild(messageBox);
 }
 
@@ -279,7 +287,6 @@ window.addEventListener('keydown', (event) => {
     }
   }
 });
-//room
 gltfLoader.load('../models/room.glb', (gltf) => {
   const room = gltf.scene;
   room.scale.set(0.5, 0.5, 0.5); // Scale adjustment
@@ -297,9 +304,9 @@ gltfLoader.load('../models/room.glb', (gltf) => {
     const size = new THREE.Vector3();
     box.getSize(size);
 
-      // Create a Cannon.js box shape based on the size of the bounding box
-      const halfExtents = new CANNON.Vec3(size.x / 2, size.y / 2, size.z / 2);
-      const shape = new CANNON.Box(halfExtents);
+    // Create a Cannon.js box shape based on the size of the bounding box
+    const halfExtents = new CANNON.Vec3(size.x / 2, size.y / 2, size.z / 2);
+    const shape = new CANNON.Box(halfExtents);
 
     // Create a physical body in Cannon.js
     const body = new CANNON.Body({
@@ -389,6 +396,7 @@ function animate() {
   // Step the physics world
   world.step(1 / 60);
   // Update stones position
+  checkProximityToDoor();
   updateStones();  // Add this to sync stone positions with physics bodies
 
   if (mixer) mixer.update(delta);
@@ -412,7 +420,6 @@ function animate() {
     // Rotate the player to match the camera's yaw
     player.rotation.y = yaw; // Sync player's Y rotation with the camera's yaw
   }
-  checkProximityToDoor();
   renderer.render(scene, camera);
 }
 
@@ -474,7 +481,7 @@ function movePlayer() {
     if (keys.shift) {
       // Shift + Space: Fly upward
       playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
-    } else if (playerBody.position.y <= 100) {
+    } else if (playerBody.position.y <= 1.6) {
       // Normal jump (only if player is grounded)
       playerBody.velocity.y = jumpForce; // Regular jump
     }

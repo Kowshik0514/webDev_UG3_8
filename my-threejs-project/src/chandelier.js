@@ -7,28 +7,7 @@ import { loadStones, updateStones, removeStones } from './Stones.js';
 
 let earthquakeActive = false; // Flag to control earthquake
 let earthquakeInterval;
-let earthquakeSound; // Reference to earthquake sound
-let thudSound;
-let soundOn = true; // Flag to track if sound is on
-
-// Button to toggle sound on/off
-const soundToggleBtn = document.getElementById('soundToggleBtn');
-soundToggleBtn.addEventListener('click', () => {
-  soundOn = !soundOn;
-  soundToggleBtn.innerHTML = soundOn ? 'Turn Sound Off' : 'Turn Sound On';
-  if (!soundOn && earthquakeSound) {
-    earthquakeSound.pause();
-  } else if (soundOn && earthquakeActive) {
-    earthquakeSound.play();
-  }
-});
-
-// Load the earthquake sound
-function loadEarthquakeSound() {
-  earthquakeSound = new Audio('../sounds/earthquake.mp3');
-  earthquakeSound.loop = true; // Loop the sound during the earthquake
-  thudSound = new Audio('../sounds/thud.mp3'); // Load the thud sound
-}
+let earthqk;
 
 // Button to drop chandelier
 const dropChandelierBtn = document.getElementById('dropChandelierBtn');
@@ -120,7 +99,6 @@ export function dropChandelier(world, scene) {
 
     if (t < 1) {
       requestAnimationFrame(animate2);
-      console.log("hi");
     } else {
       // Start the earthquake effect
       const playerPosition = playerBody.position;
@@ -137,11 +115,6 @@ export function dropChandelier(world, scene) {
       window.chandelierBody.mass = 1;
       window.chandelierBody.updateMassProperties();
 
-      // Play thud sound if sound is on
-      if (soundOn && thudSound) {
-        thudSound.play();
-      }
-      console.log("hi2");
       if (isNear) {
         document.getElementById('go').innerHTML = "You Lost";
       } else {
@@ -159,11 +132,6 @@ export function dropChandelier(world, scene) {
 export function startEarthquake(world, scene) {
   earthquakeActive = true;
   let shakeStrength = 0.1;
-
-    // Play earthquake sound if sound is on
-    if (soundOn && earthquakeSound) {
-      earthquakeSound.play();
-    }
 
   earthquakeInterval = setInterval(() => {
     if (earthquakeActive) {
@@ -190,12 +158,7 @@ export function startEarthquake(world, scene) {
 function stopEarthquake() {
   earthquakeActive = false;
   clearInterval(earthquakeInterval);
-
-  // Stop earthquake sound
-  if (earthquakeSound) {
-    earthquakeSound.pause();
-    earthquakeSound.currentTime = 0; // Reset the sound to the beginning
-  }
+  clearInterval(earthqk);
 }
 
 // Event listener for the restart button
@@ -216,6 +179,3 @@ export function restartGame() {
   stopEarthquake(); // Stop the earthquake effect
   rstgame();
 }
-
-// Load the earthquake sound when the page loads
-window.addEventListener('load', loadEarthquakeSound);

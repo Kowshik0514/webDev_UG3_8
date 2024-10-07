@@ -22,37 +22,6 @@ body {
   border-radius: 5px;
 }
 
-
-
-#door {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Center the element */
-  font-size: 1.5rem; /* 1.5rem = 24px */
-  font-family: Arial, sans-serif;
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 0.625rem 0.9375rem; /* Padding in rem (10px 15px in rem units) */
-  border-radius: 0.3125rem; /* Border radius in rem (5px = 0.3125rem) */
-  display: none;
-}
-
-
-#door2{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Center the element */
-  font-size: 1.5rem; /* 1.5rem = 24px */
-  font-family: Arial, sans-serif;
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 0.625rem 0.9375rem; /* Padding in rem (10px 15px in rem units) */
-  border-radius: 0.3125rem; /* Border radius in rem (5px = 0.3125rem) */
-  display: none;
-}
-
 #timer {
   font-weight: bold;
 }
