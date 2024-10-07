@@ -1,11 +1,13 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { chandelier, chandelierBody } from './globals.js';
-import { playerBody } from './main.js';
+import { chandelier, chandelierBody, stones } from './globals.js';
+import { playerBody, rstgame } from './main.js';
+import { loadStones, updateStones, removeStones } from './Stones.js';
 
 let earthquakeActive = false; // Flag to control earthquake
 let earthquakeInterval;
+let earthqk;
 
 // Button to drop chandelier
 const dropChandelierBtn = document.getElementById('dropChandelierBtn');
@@ -17,7 +19,7 @@ dropChandelierBtn.addEventListener('click', () => {
   const isDirectlyBelow = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
     Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
 
-  startEarthquake();
+
 
   setTimeout(() => {
     dropChandelier();
@@ -52,8 +54,36 @@ export function loadChandelier(scene, world) {
     console.error('An error occurred while loading the chandelier model:', error);
   });
 }
+let a = 0
 
-export function dropChandelier() {
+// export function loadStones(scene, world) {
+//   const chandelierLoader = new GLTFLoader();
+
+//   chandelierLoader.load('../models/stones.glb', (gltf) => {
+//     window.chandelier = gltf.scene;
+//     window.chandelier.scale.set(0.0004, 0.0004, 0.0004);
+//     if (a % 2 == 0)
+//       window.chandelier.position.set(-2, 4.5, -0.85);
+//     else
+//       window.chandelier.position.set(-1, 4.5, -0.85);
+//     a++;
+//     window.chandelier.castShadow = true;
+//     scene.add(window.chandelier);
+
+//     const chandelierShape = new CANNON.Box(new CANNON.Vec3(0.8, 1, 0.8));
+//     window.chandelierBody = new CANNON.Body({
+//       mass: 0,
+//       position: new CANNON.Vec3(0, 4.5, -0.85)
+//     });
+//     window.chandelierBody.addShape(chandelierShape);
+//     world.addBody(window.chandelierBody);
+//   }, undefined, (error) => {
+//     console.error('An error occurred while loading the chandelier model:', error);
+//   });
+// }
+
+
+export function dropChandelier(world, scene) {
   const fallDuration = 1;
   const initialY = window.chandelier.position.y;
   const targetY = 1;
@@ -70,7 +100,7 @@ export function dropChandelier() {
     if (t < 1) {
       requestAnimationFrame(animate2);
     } else {
-      startEarthquake(); // Start the earthquake effect
+      // Start the earthquake effect
       const playerPosition = playerBody.position;
       const chandelierPosition = window.chandelier.position;
 
@@ -99,7 +129,7 @@ export function dropChandelier() {
 }
 
 // Function to simulate earthquake effect
-function startEarthquake() {
+export function startEarthquake(world, scene) {
   earthquakeActive = true;
   let shakeStrength = 0.1;
 
@@ -111,16 +141,24 @@ function startEarthquake() {
       // Apply shaking to player's position or camera
       playerBody.position.x += shakeX;
       playerBody.position.z += shakeY;
-
       // You can also apply shaking to other objects in the scene if needed
     }
+    else {
+      removeStones(world)
+    }
   }, 50);
+  earthqk = setInterval(() => {
+    if (earthquakeActive) {
+      loadStones(scene, world)
+    }
+  }, 500);
 }
 
 // Stop the earthquake
 function stopEarthquake() {
   earthquakeActive = false;
   clearInterval(earthquakeInterval);
+  clearInterval(earthqk);
 }
 
 // Event listener for the restart button
@@ -139,4 +177,5 @@ export function restartGame() {
   // Reset player position and stop earthquake
   playerBody.position.set(0, 1, 0);
   stopEarthquake(); // Stop the earthquake effect
+  rstgame();
 }
