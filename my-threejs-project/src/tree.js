@@ -30,14 +30,14 @@ export function createTree(scene, world, x, y, z) {
 
 // Function to create multiple trees
 export function createForest(scene, world) {
-  const trees = [
-    { x: 2, y: 0, z: 2 },
-    { x: -2, y: 0, z: -2 },
-    { x: 3, y: 0, z: -3 },
-    { x: -1, y: 0, z: 1 },
-  ];
+  // const trees = [
+  //   { x: 2, y: 0, z: 2 },
+  //   { x: -2, y: 0, z: -2 },
+  //   { x: 3, y: 0, z: -3 },
+  //   { x: -1, y: 0, z: 1 },
+  // ];
 
-  trees.forEach(tree => {
-    createTree(scene, world, tree.x, tree.y, tree.z);
-  });
+  // trees.forEach(tree => {
+  //   createTree(scene, world, tree.x, tree.y, tree.z);
+  // });
 }

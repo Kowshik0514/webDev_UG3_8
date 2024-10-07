@@ -39,26 +39,9 @@ loadChandelier(scene, world);
 // Button to drop chandelier
 document.getElementById('dropChandelierBtn').addEventListener('click', () => {
   // dropChandelier(playerBody); // Pass the player's body to check the position
-
-  const chandelierPosition = window.chandelier.position;
-  const playerPosition = playerBody.position;
-
-  // Check if player's x and z positions match chandelier's x and z positions
-  const isDirectlyBelow = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
-    Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
-
-
   setTimeout(() => {
     dropChandelier(); // Reset the flag
   }, 10000);
-  // simulateEarthquake(100000);
-  // if (isDirectlyBelow) {
-  //   console.log("Dropping chandelier");
-  //       // Set chandelier body mass to 1 to allow it to fall
-  //   dropChandelier(); // Pass the player's body to check the position
-  // } else {
-  //   console.log("Player is not directly below the chandelier.");
-  // }
 });
 
 // Ground Plane
@@ -171,102 +154,158 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   activeAction.play();
 });
 let floor;
-gltfLoader.load('../models/room.glb', (gltf) => {
-  const room = gltf.scene; // Access the loaded model
-  room.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
-  room.position.set(0, -29, 0); // Center the model in the scene
+//Door
+let door;
+gltfLoader.load('../models/door.glb', (gltf )=> {
+door=gltf.scene;
+door.scale.set(0.5, 0.5, 0.5); // Scale adjustment
+door.position.set(-1, 0.1, 4); // Position adjustment
+scene.add(door);
+door.traverse((object)=>{
+  const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
 
-  floor = room.getObjectByName('Plane001');
-    
-    if (floor) {
-        floor.material.transparent = true;
-        floor.material.opacity = 0;
-        console.log("Floor object (Plane001) found!");
-    } else {
-        console.error("Floor object (Plane001) not found!");
-    }
+      // Calculate the center and size of the bounding box
+      const center = new THREE.Vector3();
+      box.getCenter(center);
+      const size = new THREE.Vector3();
+      box.getSize(size);
 
-  // Add model to scene
-  scene.add(room);
-
-  room.traverse((object) => {
-    if (object.isMesh && object.name === 'Cube010') {
-      // For simplicity, assume each mesh has a box collider
-      const box = new THREE.Box3().setFromObject(object); // Calculate bounding box
-
-      // Create a Cannon.js box shape based on the bounding box
-      const halfExtents = new CANNON.Vec3(
-        (box.max.x - box.min.x) / 2,
-        (box.max.y - box.min.y) / 2,
-        (box.max.z - box.min.z) / 2
-      );
+      // Create a Cannon.js box shape based on the size of the bounding box
+      const halfExtents = new CANNON.Vec3(size.x/2 , size.y/2 , size.z/2);
       const shape = new CANNON.Box(halfExtents);
 
       // Create a physical body in Cannon.js
       const body = new CANNON.Body({
-        mass: 1, // Mass of the object
-        position: new CANNON.Vec3(object.position.x, object.position.y, object.position.z),
-        shape: shape
+        mass: 0, // Mass of the object
+        position: new CANNON.Vec3(center.x, center.y, center.z), // Use the center of the bounding box for positioning
+        shape: shape,
       });
-      world.addBody(body); // Add the body to the physics world
+
+      // Add the body to the physics world
+      world.addBody(body);
+})
+
+});
+// Define a flag to show if the player is near the door
+let nearDoor = false;
+const doorLeaveDistance = 2; // The distance within which the player can interact with the door
+let isMessageDisplayed = false;
+
+// Position outside the room (where you want the player to be moved after leaving)
+const outsidePosition = new CANNON.Vec3(5, 1.6, 5); // Set this to where you want the player to appear after leaving
+
+// Function to check if the player is near the door
+let isOutsideRoom = false; // Track whether the player is inside or outside the room
+const insidePosition = new CANNON.Vec3(0, 1.6, 0); // Position inside the room near the door
+
+// Check if the player is near the door (either inside or outside the room)
+function hideLeaveRoomMessage() {
+  const messageBox = document.getElementById('leaveRoomMessage');
+  if (messageBox) {
+    messageBox.remove();
+  }
+}
+function checkProximityToDoor() {
+  if (!playerBody || !door) return;
+
+  const playerPosition = playerBody.position;
+  const doorPosition = door.position;
+
+  const distanceToDoor = playerPosition.distanceTo(doorPosition);
+
+  if (distanceToDoor < doorLeaveDistance) {
+    if (!isMessageDisplayed) {
+      displayDoorInteractionMessage();
+      isMessageDisplayed = true; // Set flag to true to avoid multiple messages
     }
+    nearDoor = true;
+  } else {
+    nearDoor = false;
+    isMessageDisplayed = false;
+    hideLeaveRoomMessage();
+     // Reset flag when player moves away from the door
+  }
+}
+
+// Display a message for entering/leaving the room based on the player's position
+function displayDoorInteractionMessage() {
+  const messageBox = document.createElement('div');
+  messageBox.id = 'doorInteractionMessage';
+  messageBox.style.position = 'absolute';
+  messageBox.style.top = '20%';
+  messageBox.style.left = '50%';
+  messageBox.style.transform = 'translate(-50%, -50%)';
+  messageBox.style.padding = '10px';
+  messageBox.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+  messageBox.style.color = '#fff';
+  messageBox.style.fontSize = '20px';
+
+  if (isOutsideRoom) {
+    messageBox.innerText = 'Do you want to enter the room? Press Y to enter or N to stay outside.';
+  } else {
+    messageBox.innerText = 'Do you want to leave the room? Press Y to leave or N to stay inside.';
+  }
+  
+  document.body.appendChild(messageBox);
+}
+
+// Handle player input for entering or leaving
+window.addEventListener('keydown', (event) => {
+  if (nearDoor && isMessageDisplayed) {
+    if (event.key.toLowerCase() === 'y') {
+      if (isOutsideRoom) {
+        // Move player inside the room
+        playerBody.position.copy(insidePosition);
+        isOutsideRoom = false;
+      } else {
+        // Move player outside the room
+        playerBody.position.copy(outsidePosition);
+        isOutsideRoom = true;
+      }
+      hideLeaveRoomMessage();
+      isMessageDisplayed = false;
+    } else if (event.key.toLowerCase() === 'n') {
+      hideLeaveRoomMessage();
+      isMessageDisplayed = false;
+    }
+  }
+});
+//room
+gltfLoader.load('../models/room.glb', (gltf) => {
+  const room = gltf.scene;
+  room.scale.set(0.5, 0.5, 0.5); // Scale adjustment
+  room.position.set(0, -29, 0); // Position adjustment
+  scene.add(room);
+
+  // Traverse through each object in the room and create colliders
+  room.traverse((object) => {
+    // if (object.isMesh && object.name === 'Cube010') {
+      const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
+
+      // Calculate the center and size of the bounding box
+      const center = new THREE.Vector3();
+      box.getCenter(center);
+      const size = new THREE.Vector3();
+      box.getSize(size);
+
+      // Create a Cannon.js box shape based on the size of the bounding box
+      const halfExtents = new CANNON.Vec3(size.x/2 , size.y/2 , size.z/2);
+      const shape = new CANNON.Box(halfExtents);
+
+      // Create a physical body in Cannon.js
+      const body = new CANNON.Body({
+        mass: 0, // Mass of the object
+        position: new CANNON.Vec3(center.x, center.y, center.z), // Use the center of the bounding box for positioning
+        shape: shape,
+      });
+
+      // Add the body to the physics world
+      world.addBody(body);
+    // }
   });
-
-
-
 }, undefined, (error) => {
   console.error('An error occurred while loading the GLB model:', error);
 });
-
-
-
-
-// Load the Chandelier model using GLTFLoader
-gltfLoader.load('../models/door.glb', (gltf) => {
-  const door = gltf.scene;
-  door.scale.set(1, 0.7, 1); // Scale it as necessary
-  door.position.set(0, 0, 4.7); // Set the position above the ground (e.g., 0 units above)
-
-  scene.add(door); // Add to the scene
-
-  // Create a physics body for the door using a box shape (adjust as needed for your model)
-  const doorShape = new CANNON.Box(new CANNON.Vec3(0.3, 0.3, 0.3)); // Adjust the size to fit your model
-  const doorBody = new CANNON.Body({
-      mass: 0, // Static object
-      position: new CANNON.Vec3(0, 0, 4.7) // Same as the door's position
-  });
-  doorBody.addShape(doorShape); // Add the shape to the body
-
-  // Add the door's body to the world
-  world.addBody(doorBody);
-});
-
-
-gltfLoader.load('../models/door.glb', (gltf) => {
-  const door = gltf.scene;
-  door.scale.set(1, 0.7, 1); // Scale it as necessary
-  door.position.set(0, 0, 5.2); // Set the position above the ground (e.g., 0 units above)
-
-  scene.add(door); // Add to the scene
-
-  // Create a physics body for the door using a box shape (adjust as needed for your model)
-  const doorShape = new CANNON.Box(new CANNON.Vec3(0.3, 0.3, 0.3)); // Adjust the size to fit your model
-  const doorBody = new CANNON.Body({
-      mass: 0, // Static object
-      position: new CANNON.Vec3(0, 0, 5.2) // Same as the door's position
-  });
-  doorBody.addShape(doorShape); // Add the shape to the body
-
-  // Add the door's body to the world
-  world.addBody(doorBody);
-});
-
-
-
-
-
-
-
 
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
@@ -361,6 +400,7 @@ function animate() {
     // Rotate the player to match the camera's yaw
     player.rotation.y = yaw; // Sync player's Y rotation with the camera's yaw
   }
+  checkProximityToDoor();
   renderer.render(scene, camera);
 }
 
@@ -443,7 +483,7 @@ function movePlayer() {
     if (keys.shift) {
       // Shift + Space: Fly upward
       playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
-    } else if (playerBody.position.y <= 1.6) {
+    } else if (playerBody.position.y <= 100) {
       // Normal jump (only if player is grounded)
       playerBody.velocity.y = jumpForce; // Regular jump
     }
