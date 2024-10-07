@@ -3,9 +3,13 @@ import * as CANNON from 'cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { chandelier, chandelierBody } from './globals.js';
 import { playerBody, directionalLight, directionalLight2 } from './main.js'; // Assuming `directionalLight` is global
+import { chandelier, chandelierBody, stones } from './globals.js';
+import { playerBody, rstgame } from './main.js';
+import { loadStones, updateStones, removeStones } from './Stones.js';
 
 let earthquakeActive = false; // Flag to control earthquake
 let earthquakeInterval;
+let earthqk;
 let earthquakeSound; // Reference to earthquake sound
 let thudSound;
 let soundOn = true; // Flag to track if sound is on
@@ -27,7 +31,6 @@ soundToggleBtn.addEventListener('click', () => {
     earthquakeSound.play();
   }
 });
-
 // Load the earthquake sound
 function loadEarthquakeSound() {
   earthquakeSound = new Audio('../sounds/earthquake.mp3');
@@ -45,7 +48,7 @@ dropChandelierBtn.addEventListener('click', () => {
   const isDirectlyBelow = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
     Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
 
-  startEarthquake();
+
 
   setTimeout(() => {
     dropChandelier();
@@ -80,8 +83,9 @@ export function loadChandelier(scene, world) {
     console.error('An error occurred while loading the chandelier model:', error);
   });
 }
+let a = 0;
 
-export function dropChandelier() {
+export function dropChandelier(world, scene) {
   const fallDuration = 1;
   const initialY = window.chandelier.position.y;
   const targetY = 1;
@@ -98,7 +102,7 @@ export function dropChandelier() {
     if (t < 1) {
       requestAnimationFrame(animate2);
     } else {
-      startEarthquake(); // Start the earthquake effect
+      // Start the earthquake effect
       const playerPosition = playerBody.position;
       const chandelierPosition = window.chandelier.position;
 
@@ -132,7 +136,7 @@ export function dropChandelier() {
 }
 
 // Function to simulate earthquake effect
-function startEarthquake() {
+export function startEarthquake(world, scene) {
   earthquakeActive = true;
   earthquakeStartTime = performance.now();
   let shakeStrength = 0.1;
@@ -158,14 +162,24 @@ function startEarthquake() {
 
       directionalLight.intensity = intensity;
       directionalLight2.intensity = intensity;
+      // You can also apply shaking to other objects in the scene if needed
+    }
+    else {
+      removeStones(world)
     }
   }, 50);
+  earthqk = setInterval(() => {
+    if (earthquakeActive) {
+      loadStones(scene, world)
+    }
+  }, 500);
 }
 
 // Stop the earthquake
 function stopEarthquake() {
   earthquakeActive = false;
   clearInterval(earthquakeInterval);
+  clearInterval(earthqk);
 
   // Stop earthquake sound
   if (earthquakeSound) {
@@ -194,6 +208,7 @@ export function restartGame() {
   // Reset player position and stop earthquake
   playerBody.position.set(0, 1, 0);
   stopEarthquake(); // Stop the earthquake effect
+  rstgame();
 }
 
 // Load the earthquake sound when the page loads
