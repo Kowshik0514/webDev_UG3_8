@@ -91,13 +91,13 @@ plane.receiveShadow = true;
 scene.add(plane);
 
 // Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+let ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+export let directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(10, 10, 10);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
-const directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
+export let directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight2.position.set(10, 10, 10);
 directionalLight2.castShadow = true;
 scene.add(directionalLight2);
@@ -118,6 +118,7 @@ gltfLoader.load('../models/player.glb', (gltf) => {
   player.scale.set(0.5, 0.5, 0.5);
   player.rotation.y = Math.PI;
   scene.add(player);
+  console.log(player);
 
   // Add physics body for the player
   // Define the player capsule (capsule shape made of two spheres and a cylinder)

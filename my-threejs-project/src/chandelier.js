@@ -2,13 +2,19 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { chandelier, chandelierBody } from './globals.js';
-import { playerBody } from './main.js';
+import { playerBody, directionalLight, directionalLight2 } from './main.js'; // Assuming `directionalLight` is global
 
 let earthquakeActive = false; // Flag to control earthquake
 let earthquakeInterval;
 let earthquakeSound; // Reference to earthquake sound
 let thudSound;
 let soundOn = true; // Flag to track if sound is on
+
+let earthquakeStartTime = 0; // Used for oscillating light
+const earthquakeDuration = 10000; // Earthquake duration in milliseconds
+const maxDimIntensity = 0.1;
+const maxBrightIntensity = 1.5;
+const oscillationSpeed = 0.05; // Speed of light oscillation
 
 // Button to toggle sound on/off
 const soundToggleBtn = document.getElementById('soundToggleBtn');
@@ -91,7 +97,6 @@ export function dropChandelier() {
 
     if (t < 1) {
       requestAnimationFrame(animate2);
-      console.log("hi");
     } else {
       startEarthquake(); // Start the earthquake effect
       const playerPosition = playerBody.position;
@@ -112,7 +117,7 @@ export function dropChandelier() {
       if (soundOn && thudSound) {
         thudSound.play();
       }
-      console.log("hi2");
+
       if (isNear) {
         document.getElementById('go').innerHTML = "You Lost";
       } else {
@@ -129,12 +134,13 @@ export function dropChandelier() {
 // Function to simulate earthquake effect
 function startEarthquake() {
   earthquakeActive = true;
+  earthquakeStartTime = performance.now();
   let shakeStrength = 0.1;
 
-    // Play earthquake sound if sound is on
-    if (soundOn && earthquakeSound) {
-      earthquakeSound.play();
-    }
+  // Play earthquake sound if sound is on
+  if (soundOn && earthquakeSound) {
+    earthquakeSound.play();
+  }
 
   earthquakeInterval = setInterval(() => {
     if (earthquakeActive) {
@@ -145,7 +151,13 @@ function startEarthquake() {
       playerBody.position.x += shakeX;
       playerBody.position.z += shakeY;
 
-      // You can also apply shaking to other objects in the scene if needed
+      // Oscillate light intensity using a sine wave
+      const elapsedTime = performance.now() - earthquakeStartTime;
+      const oscillation = Math.sin(elapsedTime * oscillationSpeed) * 0.5 + 0.5;
+      const intensity = THREE.MathUtils.lerp(maxDimIntensity, maxBrightIntensity, oscillation);
+
+      directionalLight.intensity = intensity;
+      directionalLight2.intensity = intensity;
     }
   }, 50);
 }
@@ -160,6 +172,10 @@ function stopEarthquake() {
     earthquakeSound.pause();
     earthquakeSound.currentTime = 0; // Reset the sound to the beginning
   }
+
+  // Reset light intensity
+  directionalLight.intensity = 1; // Reset to normal intensity
+  directionalLight2.intensity = 1; // Reset to normal intensity
 }
 
 // Event listener for the restart button
