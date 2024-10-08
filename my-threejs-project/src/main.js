@@ -12,7 +12,7 @@ import { loadRoads, roads } from './road.js';
 import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
 
 // Scene
-const scene = new THREE.Scene();
+export const scene = new THREE.Scene();
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -249,7 +249,7 @@ gltfLoader.load('../models/door.glb', (gltf) => {
 
 
 
-let first_aid_box;
+export let first_aid_box;
 let first_aid_body;
 gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
   first_aid_box = gltf.scene;

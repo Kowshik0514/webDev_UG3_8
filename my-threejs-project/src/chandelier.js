@@ -3,7 +3,7 @@ import * as CANNON from 'cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { chandelier, chandelierBody, stones } from './globals.js';
 import { playerBody, directionalLight, directionalLight2, plane001, texture1, texture2 } from './main.js'; // Assuming `directionalLight` is global
-import { rstgame } from './main.js';
+import { rstgame , first_aid_box, scene} from './main.js';
 import { loadStones, updateStones, removeStones, refill_health } from './Stones.js';
 
 let earthquakeActive = false; // Flag to control earthquake
@@ -209,6 +209,7 @@ document.getElementById('restartButton').addEventListener('click', () => {
 });
 
 export function restartGame() {
+  scene.add(first_aid_box);
   document.getElementById('gameOverPopup').style.display = 'none';
 
   // Reset the chandelier position

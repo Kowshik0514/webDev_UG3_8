@@ -3,7 +3,7 @@ import * as CANNON from 'cannon';
 import { stones } from './globals.js';
 import { restartGame } from './chandelier.js';
 // Add reference to the player object and playerHealth
-export let playerHealth = 80; // Initialize player's health
+export let playerHealth = 100; // Initialize player's health
 const healthBarContainer = document.createElement('div');
 const healthBar = document.createElement('div');
 
@@ -130,7 +130,7 @@ function checkStoneCollision(stoneBody, playerBody) {
     if (distance < 1.5 && stoneBody.position.y > 1) {
         console.log(stoneBody.position); // Adjust this distance based on your game's scale
         if (playerHealth > 0) {
-            playerHealth -= 1; // Decrease health by 10%
+            playerHealth -= 6; // Decrease health by 10%
             updateHealth(playerBody); // Update the health UI
         }
     }
