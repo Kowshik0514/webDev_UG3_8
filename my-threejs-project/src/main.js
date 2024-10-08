@@ -625,6 +625,90 @@ window.addEventListener('resize', () => {
 });
 
 
+
+
+
+export let floor2;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor2 = gltf.scene;
+  floor2.scale.set(1, 1, 1); // Scale adjustment
+  floor2.position.set(-1, 0.2, 0); // Position adjustment
+  scene.add(floor2);
+  // floor.traverse((object) => {
+  //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
+
+  //   // Calculate the center and size of the bounding box
+  //   const center = new THREE.Vector3();
+  //   box.getCenter(center);
+  //   const size = new THREE.Vector3();
+  //   box.getSize(size);
+
+  //   // Create a Cannon.js box shape based on the size of the bounding box
+  //   const halfExtents = new CANNON.Vec3(0.022, 0.022, 0.022);
+  //   const shape = new CANNON.Box(halfExtents);
+
+  //   // Create a physical body in Cannon.js
+  //   const first_aid_body = new CANNON.Body({
+  //     mass: 0, // Mass of the object
+  //     position: new CANNON.Vec3(-1, 0.1, 2), // Use the center of the bounding box for positioning
+  //     shape: shape,
+  //   });
+
+  //   // Add the body to the physics world
+  //   world.addBody(first_aid_body);
+  // })
+
+});
+
+export let floor3;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor3 = gltf.scene;
+  floor3.scale.set(1, 1, 1); // Scale adjustment
+  floor3.position.set(4.63, 0.2, 0); // Position adjustment
+  scene.add(floor3);
+});
+
+export let floor4;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor4 = gltf.scene;
+  floor4.scale.set(1, 1, 1); // Scale adjustment
+  floor4.position.set(-6.6, 0.2, 0); // Position adjustment
+  scene.add(floor4);
+});
+
+export let floor5;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor5 = gltf.scene;
+  floor5.scale.set(1, 1, 1); // Scale adjustment
+  floor5.position.set(-1, 0.2, -8.54); // Position adjustment
+  scene.add(floor5);
+});
+
+
+export let floor6;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor6 = gltf.scene;
+  floor6.scale.set(1, 1, 1); // Scale adjustment
+  floor6.position.set(4.63, 0.2, -8.54); // Position adjustment
+  scene.add(floor6);
+});
+
+export let floor7;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor7 = gltf.scene;
+  floor7.scale.set(1, 1, 1); // Scale adjustment
+  floor7.position.set(-6.6, 0.2, -8.53); // Position adjustment
+  scene.add(floor7);
+});
+
+
+
 // Start the animation
 animate();
 
