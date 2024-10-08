@@ -128,7 +128,7 @@ function checkStoneCollision(stoneBody, playerBody) {
     // Check if the stone is close enough to the player to be considered a hit
     if (distance < 1 && stoneBody.position.y > 1) {
         console.log(stoneBody.position); // Adjust this distance based on your game's scale
-        if (playerBody.position.x > -1.1 && playerBody.position.x < 1.1 && playerBody.position.z > -5.4 && playerBody.position.z < -4.6) {
+        if (playerBody.position.x > -1.5 && playerBody.position.x < 1.5 && playerBody.position.z > -6 && playerBody.position.z < -4) {
             //donothing
             console.log("Do Nothing");
         }

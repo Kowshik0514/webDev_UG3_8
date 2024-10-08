@@ -7,10 +7,10 @@ import { createForest } from './tree'; // Import tree functions
 import { createWall, createAllWalls } from './wall'; // Import wall creation functions
 import { loadChandelier, dropChandelier, startEarthquake } from './chandelier';
 import { chandelier, chandelierBody } from './globals.js';
-import { loadStones, updateStones, removeStones , playerHealth , updateHealth , update} from './Stones.js';
+import { loadStones, updateStones, removeStones, playerHealth, updateHealth, update } from './Stones.js';
 import { loadRoads, roads } from './road.js';
 import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
-import { createTable  } from './table.js';
+import { createTable } from './table.js';
 import { loadSofa } from './sofa.js';
 
 // Scene
@@ -152,7 +152,7 @@ const planeBodyFront = new CANNON.Body({
 });
 planeBodyFront.addShape(planeShapeFront);
 planeBodyFront.position.set(0.48, 0.48, -6.5);
-planeBodyFront.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+planeBodyFront.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBodyFront); // Add to physics world
 
 const planeShapeRight = new CANNON.Box(new CANNON.Vec3(4, 0.01, 2)); // Length 5, Breadth 5
@@ -161,7 +161,7 @@ const planeBodyRight = new CANNON.Body({
 });
 planeBodyRight.addShape(planeShapeRight);
 planeBodyRight.position.set(7.6, 0.42, -3.8);
-planeBodyRight.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
+planeBodyRight.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
 world.addBody(planeBodyRight); // Add to physics world
 
 const planeShapeLeft = new CANNON.Box(new CANNON.Vec3(4, 0.01, 2)); // Length 5, Breadth 5
@@ -170,7 +170,7 @@ const planeBodyLeft = new CANNON.Body({
 });
 planeBodyLeft.addShape(planeShapeLeft);
 planeBodyLeft.position.set(-7.5, 0.42, -3.8);
-planeBodyLeft.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
+planeBodyLeft.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
 world.addBody(planeBodyLeft); // Add to physics world
 const planeShapeBack1 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
 const planeBodyBack1 = new CANNON.Body({
@@ -178,7 +178,7 @@ const planeBodyBack1 = new CANNON.Body({
 });
 planeBodyBack1.addShape(planeShapeBack1);
 planeBodyBack1.position.set(6.23, 0.4, -1.5);
-planeBodyBack1.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+planeBodyBack1.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBodyBack1); // Add to physics world
 
 const planeShapeBack2 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
@@ -187,39 +187,39 @@ const planeBodyBack2 = new CANNON.Body({
 });
 planeBodyBack2.addShape(planeShapeBack2);
 planeBodyBack2.position.set(-6.5, 0.4, -1.5);
-planeBodyBack2.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+planeBodyBack2.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBodyBack2); // Add to physics world
 const planeShapeBack3 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
 const planeBodyBack3 = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyBack3.addShape(planeShapeBack3);
-planeBodyBack3.position.set(3.1,0.42,0.27);
-planeBodyBack3.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+planeBodyBack3.position.set(3.1, 0.42, 0.27);
+planeBodyBack3.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBodyBack3); // Add to physics world
 const planeShapeBack4 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
 const planeBodyBack4 = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyBack4.addShape(planeShapeBack4);
-planeBodyBack4.position.set(-3.4,0.42,0.19);
-planeBodyBack4.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+planeBodyBack4.position.set(-3.4, 0.42, 0.19);
+planeBodyBack4.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBodyBack4); // Add to physics world
 const planeShapeBack5 = new CANNON.Box(new CANNON.Vec3(1.2, 0.01, 2)); // Length 5, Breadth 5
 const planeBodyBack5 = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyBack5.addShape(planeShapeBack5);
-planeBodyBack5.position.set(4.4,0.42,-0.24);
-planeBodyBack5.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
+planeBodyBack5.position.set(4.4, 0.42, -0.24);
+planeBodyBack5.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
 world.addBody(planeBodyBack5); // Add to physics world
 const planeShapeBack6 = new CANNON.Box(new CANNON.Vec3(1.2, 0.01, 2)); // Length 5, Breadth 5
 const planeBodyBack6 = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyBack6.addShape(planeShapeBack6);
-planeBodyBack6.position.set(-4.4,0.42,-0.24);
-planeBodyBack6.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
+planeBodyBack6.position.set(-4.4, 0.42, -0.24);
+planeBodyBack6.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
 world.addBody(planeBodyBack6); // Add to physics world
 
 // Lighting
@@ -302,7 +302,7 @@ let door;
 gltfLoader.load('../models/door.glb', (gltf) => {
   door = gltf.scene;
   door.scale.set(0.5, 0.5, 0.5);
-  door.position.set(-0.13,0.42,1.8);
+  door.position.set(-0.13, 0.42, 1.8);
   scene.add(door);
   door.traverse((object) => {
     const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
@@ -340,7 +340,7 @@ gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
 
 });
 gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
-  first_aid_box2= gltf.scene;
+  first_aid_box2 = gltf.scene;
   first_aid_box2.scale.set(0.11, 0.11, 0.11);
   first_aid_box2.position.set(-4.4, 1, -0.8);
   scene.add(first_aid_box2);
@@ -438,23 +438,23 @@ gltfLoader.load('../models/room.glb', (gltf) => {
   room.position.set(0, -4.3, 0);
   scene.add(room);
   // Load the textures
-const textureLoader = new THREE.TextureLoader();
-texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
+  const textureLoader = new THREE.TextureLoader();
+  texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
 
-// // Find the existing plane named 'Plane001'
+  // // Find the existing plane named 'Plane001'
 
-texture2= plane1.material.map;
+  texture2 = plane1.material.map;
 
-// // Apply the texture to the plane's material;
+  // // Apply the texture to the plane's material;
 
-// // Animation loop (if needed)
-function animate() {
+  // // Animation loop (if needed)
+  function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-}
+  }
 
-// // Start the animation
-animate();
+  // // Start the animation
+  animate();
 
   // Traverse through each object in the room and create colliders
   // room.traverse((object) => {
@@ -570,7 +570,7 @@ function animate() {
       floor.material.transparent = true;
       floor.material.needsUpdate = true;  // Ensure material updates
     }
-    
+
     // console.log(3);
     // Set road opacity to 0
     roads.forEach((road) => {
@@ -587,7 +587,7 @@ function animate() {
   world.step(1 / 60);
   // Update stones position
   checkProximityToDoor();
-  updateStones(playerBody,world, scene);  // Add this to sync stone positions with physics bodies
+  updateStones(playerBody, world, scene);  // Add this to sync stone positions with physics bodies
 
   if (mixer) mixer.update(delta);
 
@@ -626,7 +626,7 @@ function updatePlayerAnimation() {
   let newAction;
 
   // Check if the player is moving and if they're running
-  
+
   if (isMoving) {
     if (isRunning) {
       newAction = actions['crawl']; // Play run animation
@@ -636,7 +636,7 @@ function updatePlayerAnimation() {
   } else {
     newAction = actions['idle']; // PlayerBplayerBody is idle
   }
-  if((player.position.x>-1.1 && playerBody.position.x<1.1) && (playerBody.position.z>-5.4 && playerBody.position.z<-4.6)){
+  if ((player.position.x > -1.5 && playerBody.position.x < 1.5) && (playerBody.position.z > -6 && playerBody.position.z <-4)) {
     newAction = actions['sleep'];
     playerBody.position.y = -0.05;
 
@@ -674,7 +674,7 @@ function movePlayer() {
     playerBody.velocity.z = moveDirection.z * speedValue;
 
     const targetRotation = Math.atan2(moveDirection.x, moveDirection.z);
-    player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1)+Math.PI;
+    player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1) + Math.PI;
   }
 
   // Jumping
@@ -695,26 +695,24 @@ function movePlayer() {
   // Reset Y velocity for better control
   playerBody.velocity.y = Math.max(playerBody.velocity.y, -20);
 
-  if((playerBody.position.x - first_aid_box1.position.x >= -0.5 &&  playerBody.position.x - first_aid_box1.position.x <= 0.5 ) && (playerBody.position.z - first_aid_box1.position.z >= -0.5 &&  playerBody.position.z - first_aid_box1.position.z <= 0.5 ))
-  {
+  if ((playerBody.position.x - first_aid_box1.position.x >= -0.5 && playerBody.position.x - first_aid_box1.position.x <= 0.5) && (playerBody.position.z - first_aid_box1.position.z >= -0.5 && playerBody.position.z - first_aid_box1.position.z <= 0.5)) {
     update(30);
-     updateHealth(playerBody);
-     if (first_aid_box1) {
+    updateHealth(playerBody);
+    if (first_aid_box1) {
       scene.remove(first_aid_box1); // Remove the object from the scene
       // world.remove(first_aid_body);
     }
 
   }
-  if((playerBody.position.x - first_aid_box2.position.x >= -0.5 &&  playerBody.position.x - first_aid_box2.position.x <= 0.5 ) && (playerBody.position.z - first_aid_box2.position.z >= -0.5 &&  playerBody.position.z - first_aid_box2.position.z <= 0.5 ))
-    {
-      update(30);
-       updateHealth(playerBody);
-       if (first_aid_box2) {
-        scene.remove(first_aid_box2); // Remove the object from the scene
-        // world.remove(first_aid_body);
-      }
-  
+  if ((playerBody.position.x - first_aid_box2.position.x >= -0.5 && playerBody.position.x - first_aid_box2.position.x <= 0.5) && (playerBody.position.z - first_aid_box2.position.z >= -0.5 && playerBody.position.z - first_aid_box2.position.z <= 0.5)) {
+    update(30);
+    updateHealth(playerBody);
+    if (first_aid_box2) {
+      scene.remove(first_aid_box2); // Remove the object from the scene
+      // world.remove(first_aid_body);
     }
+
+  }
   // Update animation based on movement
   updatePlayerAnimation();
 }
@@ -744,7 +742,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor2 = gltf.scene;
   floor2.scale.set(1, 1, 1); // Scale adjustment
   floor2.position.set(-1, 0.2, 0); // Position adjustment
-  floor2.visible=true;
+  floor2.visible = true;
   scene.add(floor2);
 });
 
@@ -753,7 +751,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor3 = gltf.scene;
   floor3.scale.set(1, 1, 1); // Scale adjustment
   floor3.position.set(4.63, 0.2, 0); // Position adjustment
-  floor3.visible=true;
+  floor3.visible = true;
   scene.add(floor3);
 });
 
@@ -762,7 +760,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor4 = gltf.scene;
   floor4.scale.set(1, 1, 1); // Scale adjustment
   floor4.position.set(-6.6, 0.2, 0); // Position adjustment
-  floor4.visible=true;
+  floor4.visible = true;
   scene.add(floor4);
 });
 
@@ -771,7 +769,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor5 = gltf.scene;
   floor5.scale.set(1, 1, 1); // Scale adjustment
   floor5.position.set(-1, 0.2, -8.54); // Position adjustment
-  floor5.visible=true;
+  floor5.visible = true;
   scene.add(floor5);
 });
 
@@ -781,7 +779,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor6 = gltf.scene;
   floor6.scale.set(1, 1, 1); // Scale adjustment
   floor6.position.set(4.63, 0.2, -8.54); // Position adjustment
-  floor6.visible=true;
+  floor6.visible = true;
   scene.add(floor6);
 });
 
@@ -790,7 +788,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor7 = gltf.scene;
   floor7.scale.set(1, 1, 1); // Scale adjustment
   floor7.position.set(-6.6, 0.2, -8.53); // Position adjustment
-  floor7.visible=true;
+  floor7.visible = true;
   scene.add(floor7);
 });
 
