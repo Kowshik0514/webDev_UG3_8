@@ -92,8 +92,8 @@ This project provides an immersive experience of an earthquake scenario where us
 
 - **Aarya**: House model design with colliders, health bar, door with functionality.
 - **Akash**: Chandelier, sound effects, table with colliders, and furniture.
-- **Jyothiraditya**: Earth quake tremors, stones falling , health reduction .
-- **Kowshik**: Character design, animations and movements with camera control.
+- **Jyothiraditya**: Earth quake tremors, stones system, health reduction.
+- **Kowshik**: Player animations, player movements and camera control with keys.
 - **Madhav**: Health-kit functionality, floor design, entry and exit system.
 - **Sanjay**: Floor cracks, front pages, road and street lights, light effects.
 
