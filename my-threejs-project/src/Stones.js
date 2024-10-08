@@ -57,7 +57,7 @@ export function updateHealth(playerBody) {
     // If player's health reaches 0, end the game
     if (playerHealth <= 0) {
         // alert('Game Over!');
-        document.getElementById('go').innerHTML = "You Lost bc";
+        document.getElementById('go').innerHTML = "Wasted";
         document.getElementById('restartButton').innerHTML = "Restart";
         document.getElementById('gameOverPopup').style.display = 'flex';
         // restartGame();
@@ -130,19 +130,23 @@ function checkStoneCollision(stoneBody, playerBody) {
     if (distance < 1.5 && stoneBody.position.y > 1) {
         console.log(stoneBody.position); // Adjust this distance based on your game's scale
         if (playerHealth > 0) {
-            playerHealth -= 6; // Decrease health by 10%
+            playerHealth -= 1; // Decrease health by 10%
             updateHealth(playerBody); // Update the health UI
         }
     }
 }
 
 // Function to update stone positions based on their physics bodies
-export function updateStones(playerBody) {
+export function updateStones(playerBody, world, scene) {
     stones.forEach(({ stone, stoneBody }) => {
         // Synchronize Three.js stone position with Cannon.js body position
         stone.position.copy(stoneBody.position);
         stone.quaternion.copy(stoneBody.quaternion); // Sync rotation if needed
-
+        if (stoneBody.position.y < 0.5) {
+            scene.remove(stone);
+            // Remove stone from the physics world
+            world.removeBody(stoneBody);
+        }
         // Check for collisions with the player
         checkStoneCollision(stoneBody, playerBody); // Check if the stone hits the player
     });

@@ -2,9 +2,9 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { chandelier, chandelierBody,stones } from './globals.js';
-import { playerBody, directionalLight, directionalLight2,planeBody,planeShape,texture1,texture2 } from './main.js'; // Assuming `directionalLight` is global
-import {  rstgame , first_aid_box, scene} from './main.js';
-import { loadStones, updateStones, removeStones } from './Stones.js';
+import { playerBody, directionalLight, directionalLight2,texture1,texture2,plane1 } from './main.js'; // Assuming `directionalLight` is global
+import {  rstgame , first_aid_box1,first_aid_box2,scene} from './main.js';
+import { loadStones, updateStones, removeStones ,refill_health} from './Stones.js';
 import { crack1,crack2,crack3,crack4,floor2,floor3,floor4,floor5,floor6,floor7 } from './main.js';
 
 let earthquakeActive = false; // Flag to control earthquake
@@ -52,7 +52,7 @@ dropChandelierBtn.addEventListener('click', () => {
 
   setTimeout(() => {
     dropChandelier();
-  }, 10000);
+  }, 30000);
 
   if (isDirectlyBelow) {
     console.log("Dropping chandelier");
@@ -204,9 +204,10 @@ function stopEarthquake() {
     earthquakeSound.currentTime = 0; // Reset the sound to the beginning
   }
 
-  planeShape.map = texture2; 
-  // Change to earthquake texture
-        planeShape.needsUpdate = true; 
+  // plane1.material = new THREE.MeshBasicMaterial({ map:texture2 });
+  // plane1.material.map=texture2;
+  // // Change to earthquake texture
+  //       plane1.material.needsUpdate = true; 
         // Notify Three.js to update the material
 
   crack1.visible = false;
@@ -232,8 +233,10 @@ document.getElementById('restartButton').addEventListener('click', () => {
 });
 
 export function restartGame() {
-  scene.add(first_aid_box);
+  scene.add(first_aid_box1);
   document.getElementById('gameOverPopup').style.display = 'none';
+  scene.add(first_aid_box2);
+  // document.getElementById('gameOverPopup').style.display = 'none';
 
   // Reset the chandelier position
   if (window.chandelier) {
