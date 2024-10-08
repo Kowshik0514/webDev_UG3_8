@@ -23,7 +23,7 @@
   </div>
 
   <div id="timerContainer">
-    <span id="timer">10</span>
+    <span id="timer">30</span>
   </div>
 
   <script type="module" src="/src/main.js"></script>
@@ -33,7 +33,7 @@
   <script type="module" src="/src/globals.js"></script>
 
   <script>
-    let timerDuration = 10;
+    let timerDuration = 30;
     const timerElement = document.getElementById('timer');
 
     // Function to start the countdown
@@ -59,12 +59,12 @@
     });
 
     // Add event listener to the "Restart" button
-    document.getElementById('restartButton').addEventListener('click', () => {
-      // restartGame(); // Call the restart game function
-         // startTimer(); // Start the timer again if you want it on restart -->
-         timerDuration = 10;
-         timerElement.textContent = timerDuration;
-    });
+    // document.getElementById('restartButton').addEventListener('click', () => {
+    //   // restartGame(); // Call the restart game function
+    //      // startTimer(); // Start the timer again if you want it on restart -->
+    //      timerDuration = 10;
+    //      timerElement.textContent = timerDuration;
+    // });
   </script>
 </body>
 

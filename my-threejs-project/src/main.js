@@ -80,7 +80,7 @@ document.getElementById('dropChandelierBtn').addEventListener('click', () => {
   startEarthquake(world, scene);
   setTimeout(() => {
     dropChandelier(world, scene); // Reset the flag
-  }, 10000);
+  }, 30000);
   // simulateEarthquake(100000);
   // if (isDirectlyBelow) {
   //   console.log("Dropping chandelier");
@@ -123,7 +123,7 @@ const sky = new THREE.Mesh(skyGeometry, skyMaterial);
 scene.add(sky);
 const planeGeometry1 = new THREE.PlaneGeometry(1000, 1000); // Visual ground plane
 const planeMaterial1 = new THREE.MeshStandardMaterial({ color: 0x808080 });
-const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
+export const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
 plane1.rotation.x = -Math.PI / 2; // Rotate the mesh to lie horizontally
 plane1.position.set(1, 0, 0); // Set ground position at Y = 0
 plane1.receiveShadow = true;
@@ -153,7 +153,7 @@ const planeBodyFront = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyFront.addShape(planeShapeFront);
-planeBodyFront.position.set(0.48, 0.48, -6);
+planeBodyFront.position.set(0.48, 0.48, -6.5);
 planeBodyFront.quaternion.setFromEuler(-Math.PI/2, 0, 0);
 world.addBody(planeBodyFront); // Add to physics world
 
@@ -162,7 +162,7 @@ const planeBodyRight = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyRight.addShape(planeShapeRight);
-planeBodyRight.position.set(7.4, 0.42, -3.8);
+planeBodyRight.position.set(7.6, 0.42, -3.8);
 planeBodyRight.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
 world.addBody(planeBodyRight); // Add to physics world
 
@@ -171,7 +171,7 @@ const planeBodyLeft = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyLeft.addShape(planeShapeLeft);
-planeBodyLeft.position.set(-6.8, 0.42, -3.8);
+planeBodyLeft.position.set(-7.5, 0.42, -3.8);
 planeBodyLeft.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
 world.addBody(planeBodyLeft); // Add to physics world
 const planeShapeBack1 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
@@ -348,36 +348,21 @@ gltfLoader.load('../models/door.glb', (gltf) => {
 
 
 
-export let first_aid_box;
+export let first_aid_box1;
+export let first_aid_box2;
 let first_aid_body;
 gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
-  first_aid_box = gltf.scene;
-  first_aid_box.scale.set(0.022, 0.022, 0.022); // Scale adjustment
-  first_aid_box.position.set(-1, 0.1, 2); // Position adjustment
-  scene.add(first_aid_box);
-  // first_aid_box.traverse((object) => {
-  //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
+  first_aid_box1 = gltf.scene;
+  first_aid_box1.scale.set(0.11, 0.11, 0.11); // Scale adjustment
+  first_aid_box1.position.set(-7.4, 1, -4.7); // Position adjustment
+  scene.add(first_aid_box1);
 
-  //   // Calculate the center and size of the bounding box
-  //   const center = new THREE.Vector3();
-  //   box.getCenter(center);
-  //   const size = new THREE.Vector3();
-  //   box.getSize(size);
-
-  //   // Create a Cannon.js box shape based on the size of the bounding box
-  //   const halfExtents = new CANNON.Vec3(0.022, 0.022, 0.022);
-  //   const shape = new CANNON.Box(halfExtents);
-
-  //   // Create a physical body in Cannon.js
-  //   const first_aid_body = new CANNON.Body({
-  //     mass: 0, // Mass of the object
-  //     position: new CANNON.Vec3(-1, 0.1, 2), // Use the center of the bounding box for positioning
-  //     shape: shape,
-  //   });
-
-  //   // Add the body to the physics world
-  //   world.addBody(first_aid_body);
-  // })
+});
+gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
+  first_aid_box2= gltf.scene;
+  first_aid_box2.scale.set(0.11, 0.11, 0.11); // Scale adjustment
+  first_aid_box2.position.set(7.4, 1, -4.7); // Position adjustment
+  scene.add(first_aid_box2);
 
 });
 // Define a flag to show if the player is near the door
@@ -470,23 +455,23 @@ gltfLoader.load('../models/room.glb', (gltf) => {
   room.position.set(0, -4.3, 0); // Position adjustment
   scene.add(room);
   // Load the textures
-// const textureLoader = new THREE.TextureLoader();
-// texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
+const textureLoader = new THREE.TextureLoader();
+texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
 
 // // Find the existing plane named 'Plane001'
-// plane001 = room.getObjectByName('Plane001');
-// texture2= plane001.material.map;
+
+texture2= plane1.material.map;
 
 // // Apply the texture to the plane's material;
 
 // // Animation loop (if needed)
-// function animate() {
-//     requestAnimationFrame(animate);
-//     renderer.render(scene, camera);
-// }
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
 
 // // Start the animation
-// animate();
+animate();
 
   // Traverse through each object in the room and create colliders
   // room.traverse((object) => {
@@ -734,16 +719,26 @@ function movePlayer() {
   // Reset Y velocity for better control
   playerBody.velocity.y = Math.max(playerBody.velocity.y, -20);
 
-  if((playerBody.position.x - first_aid_box.position.x >= -0.5 &&  playerBody.position.x - first_aid_box.position.x <= 0.5 ) && (playerBody.position.z - first_aid_box.position.z >= -0.5 &&  playerBody.position.z - first_aid_box.position.z <= 0.5 ))
+  if((playerBody.position.x - first_aid_box1.position.x >= -0.5 &&  playerBody.position.x - first_aid_box1.position.x <= 0.5 ) && (playerBody.position.z - first_aid_box1.position.z >= -0.5 &&  playerBody.position.z - first_aid_box1.position.z <= 0.5 ))
   {
     update(30);
      updateHealth(playerBody);
-     if (first_aid_box ) {
-      scene.remove(first_aid_box); // Remove the object from the scene
+     if (first_aid_box1) {
+      scene.remove(first_aid_box1); // Remove the object from the scene
       // world.remove(first_aid_body);
     }
-    console.log("mingey");
+
   }
+  if((playerBody.position.x - first_aid_box2.position.x >= -0.5 &&  playerBody.position.x - first_aid_box2.position.x <= 0.5 ) && (playerBody.position.z - first_aid_box2.position.z >= -0.5 &&  playerBody.position.z - first_aid_box2.position.z <= 0.5 ))
+    {
+      update(30);
+       updateHealth(playerBody);
+       if (first_aid_box2) {
+        scene.remove(first_aid_box2); // Remove the object from the scene
+        // world.remove(first_aid_body);
+      }
+  
+    }
   // Update animation based on movement
   updatePlayerAnimation();
 }

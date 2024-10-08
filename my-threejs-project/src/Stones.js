@@ -34,7 +34,6 @@ export function update(health)
 }
 
 export function refill_health() {
-    console.log("Aarya puk")
     playerHealth = 100; // Reset health for testing purposes
     // playerBody.position.set(0, 1.6, 0); // Reset player position (if applicable)
     healthBar.style.width = '100%'; // Reset health bar
@@ -58,7 +57,7 @@ export function updateHealth(playerBody) {
     // If player's health reaches 0, end the game
     if (playerHealth <= 0) {
         // alert('Game Over!');
-        document.getElementById('go').innerHTML = "You Lost bc";
+        document.getElementById('go').innerHTML = "Wasted";
         document.getElementById('restartButton').innerHTML = "Restart";
         document.getElementById('gameOverPopup').style.display = 'flex';
         // restartGame();
@@ -131,7 +130,7 @@ function checkStoneCollision(stoneBody, playerBody) {
     if (distance < 1.5 && stoneBody.position.y > 1) {
         console.log(stoneBody.position); // Adjust this distance based on your game's scale
         if (playerHealth > 0) {
-            playerHealth -= 6; // Decrease health by 10%
+            playerHealth -= 1; // Decrease health by 10%
             updateHealth(playerBody); // Update the health UI
         }
     }
