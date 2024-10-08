@@ -28,9 +28,8 @@ healthBarContainer.appendChild(healthBar);
 document.body.appendChild(healthBarContainer);
 
 
-export function update(health)
-{
-    playerHealth = Math.min(100 , playerHealth + health);
+export function update(health) {
+    playerHealth = Math.min(100, playerHealth + health);
 }
 
 export function refill_health() {
@@ -127,9 +126,13 @@ function checkStoneCollision(stoneBody, playerBody) {
     const distance = stoneBody.position.distanceTo(playerBody.position);
 
     // Check if the stone is close enough to the player to be considered a hit
-    if (distance < 1.5 && stoneBody.position.y > 1) {
+    if (distance < 1 && stoneBody.position.y > 1) {
         console.log(stoneBody.position); // Adjust this distance based on your game's scale
-        if (playerHealth > 0) {
+        if (playerBody.position.x > -1.1 && playerBody.position.x < 1.1 && playerBody.position.z > -5.4 && playerBody.position.z < -4.6) {
+            //donothing
+            console.log("Do Nothing");
+        }
+        else if (playerHealth > 0) {
             playerHealth -= 1; // Decrease health by 10%
             updateHealth(playerBody); // Update the health UI
         }
