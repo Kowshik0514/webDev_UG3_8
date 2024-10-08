@@ -335,14 +335,14 @@ let first_aid_body;
 gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
   first_aid_box1 = gltf.scene;
   first_aid_box1.scale.set(0.11, 0.11, 0.11);
-  first_aid_box1.position.set(-7.4, 1, -4.7);
+  first_aid_box1.position.set(4.4, 1, -0.8);
   scene.add(first_aid_box1);
 
 });
 gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
   first_aid_box2= gltf.scene;
   first_aid_box2.scale.set(0.11, 0.11, 0.11);
-  first_aid_box2.position.set(7.4, 1, -4.7);
+  first_aid_box2.position.set(-4.4, 1, -0.8);
   scene.add(first_aid_box2);
 
 });
@@ -497,7 +497,7 @@ document.addEventListener('click', () => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 8, run: 10 };
+const speed = { walk: 7, run: 5 };
 let isMoving = false;
 let isRunning = false;
 
@@ -626,6 +626,7 @@ function updatePlayerAnimation() {
   let newAction;
 
   // Check if the player is moving and if they're running
+  
   if (isMoving) {
     if (isRunning) {
       newAction = actions['crawl']; // Play run animation
@@ -633,9 +634,13 @@ function updatePlayerAnimation() {
       newAction = actions['walk']; // Play walk animation
     }
   } else {
-    newAction = actions['idle']; // Player is idle
+    newAction = actions['idle']; // PlayerBplayerBody is idle
   }
+  if((player.position.x>-1.1 && playerBody.position.x<1.1) && (playerBody.position.z>-5.4 && playerBody.position.z<-4.6)){
+    newAction = actions['sleep'];
+    playerBody.position.y = -0.05;
 
+  }
   // If the new action is different from the active action, blend the animations
   if (newAction && newAction !== activeAction) {
     previousAction = activeAction;
@@ -676,10 +681,14 @@ function movePlayer() {
   if (keys.space) {
     if (keys.shift) {
       // Shift + Space: Fly upward
-      playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
+      // playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
     } else if (playerBody.position.y <= 1.6) {
       // Normal jump (only if player is grounded)
-      playerBody.velocity.y = jumpForce; // Regular jump
+      /* The above code is setting the vertical velocity of the player's body to a value specified by
+      the variable `jumpForce`, which likely represents the force applied to make the player
+      character jump in a game or simulation. This line of code is responsible for implementing a
+      regular jump action for the player character. */
+      // playerBody.velocity.y = jumpForce; // Regular jump
     }
   }
 

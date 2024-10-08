@@ -31,7 +31,7 @@ export function createTable(scene, world, x, y, z) {
   const tableShape = new CANNON.Box(new CANNON.Vec3(1.8, 0.2, 0.7));
   const tableBody = new CANNON.Body({
     mass: 0,
-    position: new CANNON.Vec3(0, 0.7, -5), // Adjusted for height
+    position: new CANNON.Vec3(0, 0.8, -5), // Adjusted for height
   });
   tableBody.addShape(tableShape); // Table top shape
   world.addBody(tableBody);
