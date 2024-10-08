@@ -7,10 +7,10 @@ import { createForest } from './tree'; // Import tree functions
 import { createWall, createAllWalls } from './wall'; // Import wall creation functions
 import { loadChandelier, dropChandelier, startEarthquake } from './chandelier';
 import { chandelier, chandelierBody } from './globals.js';
-import { loadStones, updateStones, removeStones , playerHealth , updateHealth , update} from './Stones.js';
+import { loadStones, updateStones, removeStones, playerHealth, updateHealth, update } from './Stones.js';
 import { loadRoads, roads } from './road.js';
 import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
-import { createTable  } from './table.js';
+import { createTable } from './table.js';
 import { loadSofa } from './sofa.js';
 
 // Scene
@@ -47,17 +47,27 @@ createTable(scene, world);
 loadSofa(scene, world, { x: 6.5, y: 0.2, z: -4 }, -Math.PI / 2);
 loadSofa(scene, world, { x: -6.5, y: 0.2, z: -4 }, Math.PI / 2);
 
+// Load roads into the scene and physics world
+
+const roadPositions = [
+  new THREE.Vector3(0, 0.3, 6.8),
+  new THREE.Vector3(0, 0.3, 16.8),
+  new THREE.Vector3(0, 0.3, 26.8),
+];
+
+loadRoads(scene, world, roadPositions);
+
 const streetLight1Positions = [
-  new THREE.Vector3(4.2, 0, 10),
-  new THREE.Vector3(-7.2, 0, 10)
+  new THREE.Vector3(6.5, 0, 7),
+  new THREE.Vector3(-6.1, 0, 7)
 ];
 
 // Load street lights into the scene and physics world
 loadStreetLights1(scene, world, streetLight1Positions);
 
 const streetLight2Positions = [
-  new THREE.Vector3(-11.2, 0, 23),
-  new THREE.Vector3(8.2, 0, 23)
+  new THREE.Vector3(-10.8, 0, 17),
+  new THREE.Vector3(10.7, 0, 17)
 ];
 
 // Load street lights into the scene and physics world
@@ -142,7 +152,7 @@ const planeBodyFront = new CANNON.Body({
 });
 planeBodyFront.addShape(planeShapeFront);
 planeBodyFront.position.set(0.48, 0.48, -6.5);
-planeBodyFront.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+planeBodyFront.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBodyFront); // Add to physics world
 
 const planeShapeRight = new CANNON.Box(new CANNON.Vec3(4, 0.01, 2)); // Length 5, Breadth 5
@@ -151,7 +161,7 @@ const planeBodyRight = new CANNON.Body({
 });
 planeBodyRight.addShape(planeShapeRight);
 planeBodyRight.position.set(7.6, 0.42, -3.8);
-planeBodyRight.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
+planeBodyRight.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
 world.addBody(planeBodyRight); // Add to physics world
 
 const planeShapeLeft = new CANNON.Box(new CANNON.Vec3(4, 0.01, 2)); // Length 5, Breadth 5
@@ -160,7 +170,7 @@ const planeBodyLeft = new CANNON.Body({
 });
 planeBodyLeft.addShape(planeShapeLeft);
 planeBodyLeft.position.set(-7.5, 0.42, -3.8);
-planeBodyLeft.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
+planeBodyLeft.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
 world.addBody(planeBodyLeft); // Add to physics world
 const planeShapeBack1 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
 const planeBodyBack1 = new CANNON.Body({
@@ -168,7 +178,7 @@ const planeBodyBack1 = new CANNON.Body({
 });
 planeBodyBack1.addShape(planeShapeBack1);
 planeBodyBack1.position.set(6.23, 0.4, -1.5);
-planeBodyBack1.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+planeBodyBack1.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBodyBack1); // Add to physics world
 
 const planeShapeBack2 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
@@ -177,39 +187,39 @@ const planeBodyBack2 = new CANNON.Body({
 });
 planeBodyBack2.addShape(planeShapeBack2);
 planeBodyBack2.position.set(-6.5, 0.4, -1.5);
-planeBodyBack2.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+planeBodyBack2.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBodyBack2); // Add to physics world
 const planeShapeBack3 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
 const planeBodyBack3 = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyBack3.addShape(planeShapeBack3);
-planeBodyBack3.position.set(3.1,0.42,0.27);
-planeBodyBack3.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+planeBodyBack3.position.set(3.1, 0.42, 0.27);
+planeBodyBack3.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBodyBack3); // Add to physics world
 const planeShapeBack4 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
 const planeBodyBack4 = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyBack4.addShape(planeShapeBack4);
-planeBodyBack4.position.set(-3.4,0.42,0.19);
-planeBodyBack4.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+planeBodyBack4.position.set(-3.4, 0.42, 0.19);
+planeBodyBack4.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBodyBack4); // Add to physics world
 const planeShapeBack5 = new CANNON.Box(new CANNON.Vec3(1.2, 0.01, 2)); // Length 5, Breadth 5
 const planeBodyBack5 = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyBack5.addShape(planeShapeBack5);
-planeBodyBack5.position.set(4.4,0.42,-0.24);
-planeBodyBack5.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
+planeBodyBack5.position.set(4.4, 0.42, -0.24);
+planeBodyBack5.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
 world.addBody(planeBodyBack5); // Add to physics world
 const planeShapeBack6 = new CANNON.Box(new CANNON.Vec3(1.2, 0.01, 2)); // Length 5, Breadth 5
 const planeBodyBack6 = new CANNON.Body({
   mass: 0 // Static object
 });
 planeBodyBack6.addShape(planeShapeBack6);
-planeBodyBack6.position.set(-4.4,0.42,-0.24);
-planeBodyBack6.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
+planeBodyBack6.position.set(-4.4, 0.42, -0.24);
+planeBodyBack6.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
 world.addBody(planeBodyBack6); // Add to physics world
 
 // Lighting
@@ -281,11 +291,18 @@ gltfLoader.load('../models/mixed46.glb', (gltf) => {
 });
 let floor;
 //Door
+let door1;
+gltfLoader.load('../models/door.glb', (gltf) => {
+  door1 = gltf.scene;
+  door1.scale.set(0.5, 0.5, 0.5);
+  door1.position.set(-0.1, 0.42, 2);
+  scene.add(door1);
+})
 let door;
 gltfLoader.load('../models/door.glb', (gltf) => {
   door = gltf.scene;
-  door.scale.set(0.5, 0.5, 0.5); // Scale adjustment
-  door.position.set(-0.13,0.42,1.8); // Position adjustment
+  door.scale.set(0.5, 0.5, 0.5);
+  door.position.set(-0.13, 0.42, 1.8);
   scene.add(door);
   door.traverse((object) => {
     const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
@@ -317,15 +334,15 @@ export let first_aid_box2;
 let first_aid_body;
 gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
   first_aid_box1 = gltf.scene;
-  first_aid_box1.scale.set(0.11, 0.11, 0.11); // Scale adjustment
-  first_aid_box1.position.set(-7.4, 1, -4.7); // Position adjustment
+  first_aid_box1.scale.set(0.11, 0.11, 0.11);
+  first_aid_box1.position.set(4.4, 1, -0.8);
   scene.add(first_aid_box1);
 
 });
 gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
-  first_aid_box2= gltf.scene;
-  first_aid_box2.scale.set(0.11, 0.11, 0.11); // Scale adjustment
-  first_aid_box2.position.set(7.4, 1, -4.7); // Position adjustment
+  first_aid_box2 = gltf.scene;
+  first_aid_box2.scale.set(0.11, 0.11, 0.11);
+  first_aid_box2.position.set(-4.4, 1, -0.8);
   scene.add(first_aid_box2);
 
 });
@@ -417,27 +434,27 @@ window.addEventListener('keydown', (event) => {
 
 gltfLoader.load('../models/room.glb', (gltf) => {
   const room = gltf.scene;
-  room.scale.set(0.5, 0.5, 0.5); // Scale adjustment
-  room.position.set(0, -4.3, 0); // Position adjustment
+  room.scale.set(0.5, 0.5, 0.5);
+  room.position.set(0, -4.3, 0);
   scene.add(room);
   // Load the textures
-const textureLoader = new THREE.TextureLoader();
-texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
+  const textureLoader = new THREE.TextureLoader();
+  texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
 
-// // Find the existing plane named 'Plane001'
+  // // Find the existing plane named 'Plane001'
 
-texture2= plane1.material.map;
+  texture2 = plane1.material.map;
 
-// // Apply the texture to the plane's material;
+  // // Apply the texture to the plane's material;
 
-// // Animation loop (if needed)
-function animate() {
+  // // Animation loop (if needed)
+  function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-}
+  }
 
-// // Start the animation
-animate();
+  // // Start the animation
+  animate();
 
   // Traverse through each object in the room and create colliders
   // room.traverse((object) => {
@@ -469,7 +486,7 @@ animate();
   console.error('An error occurred while loading the GLB model:', error);
 });
 
-export let crack; // Declare the crack object
+export let crack1; // Declare the crack object
 
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
@@ -480,7 +497,7 @@ document.addEventListener('click', () => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 8, run: 10 };
+const speed = { walk: 7, run: 5 };
 let isMoving = false;
 let isRunning = false;
 
@@ -547,11 +564,13 @@ function animate() {
     });
   } else {
     // Set floor opacity to 0 if camera Y is less than or equal to 0
+    // arr = [floor2,floor3,floor4,floor5,floor6,floor,floor7];
     if (floor) {
       floor.material.opacity = 0.2;
       floor.material.transparent = true;
       floor.material.needsUpdate = true;  // Ensure material updates
     }
+
     // console.log(3);
     // Set road opacity to 0
     roads.forEach((road) => {
@@ -568,7 +587,7 @@ function animate() {
   world.step(1 / 60);
   // Update stones position
   checkProximityToDoor();
-  updateStones(playerBody);  // Add this to sync stone positions with physics bodies
+  updateStones(playerBody, world, scene);  // Add this to sync stone positions with physics bodies
 
   if (mixer) mixer.update(delta);
 
@@ -607,6 +626,7 @@ function updatePlayerAnimation() {
   let newAction;
 
   // Check if the player is moving and if they're running
+
   if (isMoving) {
     if (isRunning) {
       newAction = actions['crawl']; // Play run animation
@@ -614,9 +634,13 @@ function updatePlayerAnimation() {
       newAction = actions['walk']; // Play walk animation
     }
   } else {
-    newAction = actions['idle']; // Player is idle
+    newAction = actions['idle']; // PlayerBplayerBody is idle
   }
+  if ((player.position.x > -1.5 && playerBody.position.x < 1.5) && (playerBody.position.z > -6 && playerBody.position.z <-4)) {
+    newAction = actions['sleep'];
+    playerBody.position.y = -0.05;
 
+  }
   // If the new action is different from the active action, blend the animations
   if (newAction && newAction !== activeAction) {
     previousAction = activeAction;
@@ -650,43 +674,45 @@ function movePlayer() {
     playerBody.velocity.z = moveDirection.z * speedValue;
 
     const targetRotation = Math.atan2(moveDirection.x, moveDirection.z);
-    player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1)+Math.PI;
+    player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1) + Math.PI;
   }
 
   // Jumping
   if (keys.space) {
     if (keys.shift) {
       // Shift + Space: Fly upward
-      playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
+      // playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
     } else if (playerBody.position.y <= 1.6) {
       // Normal jump (only if player is grounded)
-      playerBody.velocity.y = jumpForce; // Regular jump
+      /* The above code is setting the vertical velocity of the player's body to a value specified by
+      the variable `jumpForce`, which likely represents the force applied to make the player
+      character jump in a game or simulation. This line of code is responsible for implementing a
+      regular jump action for the player character. */
+      // playerBody.velocity.y = jumpForce; // Regular jump
     }
   }
 
   // Reset Y velocity for better control
   playerBody.velocity.y = Math.max(playerBody.velocity.y, -20);
 
-  if((playerBody.position.x - first_aid_box1.position.x >= -0.5 &&  playerBody.position.x - first_aid_box1.position.x <= 0.5 ) && (playerBody.position.z - first_aid_box1.position.z >= -0.5 &&  playerBody.position.z - first_aid_box1.position.z <= 0.5 ))
-  {
+  if ((playerBody.position.x - first_aid_box1.position.x >= -0.5 && playerBody.position.x - first_aid_box1.position.x <= 0.5) && (playerBody.position.z - first_aid_box1.position.z >= -0.5 && playerBody.position.z - first_aid_box1.position.z <= 0.5)) {
     update(30);
-     updateHealth(playerBody);
-     if (first_aid_box1) {
+    updateHealth(playerBody);
+    if (first_aid_box1) {
       scene.remove(first_aid_box1); // Remove the object from the scene
       // world.remove(first_aid_body);
     }
 
   }
-  if((playerBody.position.x - first_aid_box2.position.x >= -0.5 &&  playerBody.position.x - first_aid_box2.position.x <= 0.5 ) && (playerBody.position.z - first_aid_box2.position.z >= -0.5 &&  playerBody.position.z - first_aid_box2.position.z <= 0.5 ))
-    {
-      update(30);
-       updateHealth(playerBody);
-       if (first_aid_box2) {
-        scene.remove(first_aid_box2); // Remove the object from the scene
-        // world.remove(first_aid_body);
-      }
-  
+  if ((playerBody.position.x - first_aid_box2.position.x >= -0.5 && playerBody.position.x - first_aid_box2.position.x <= 0.5) && (playerBody.position.z - first_aid_box2.position.z >= -0.5 && playerBody.position.z - first_aid_box2.position.z <= 0.5)) {
+    update(30);
+    updateHealth(playerBody);
+    if (first_aid_box2) {
+      scene.remove(first_aid_box2); // Remove the object from the scene
+      // world.remove(first_aid_body);
     }
+
+  }
   // Update animation based on movement
   updatePlayerAnimation();
 }
@@ -712,83 +738,124 @@ window.addEventListener('resize', () => {
 
 
 export let floor2;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor2 = gltf.scene;
   floor2.scale.set(1, 1, 1); // Scale adjustment
   floor2.position.set(-1, 0.2, 0); // Position adjustment
+  floor2.visible = true;
   scene.add(floor2);
-  // floor.traverse((object) => {
-  //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
-
-  //   // Calculate the center and size of the bounding box
-  //   const center = new THREE.Vector3();
-  //   box.getCenter(center);
-  //   const size = new THREE.Vector3();
-  //   box.getSize(size);
-
-  //   // Create a Cannon.js box shape based on the size of the bounding box
-  //   const halfExtents = new CANNON.Vec3(0.022, 0.022, 0.022);
-  //   const shape = new CANNON.Box(halfExtents);
-
-  //   // Create a physical body in Cannon.js
-  //   const first_aid_body = new CANNON.Body({
-  //     mass: 0, // Mass of the object
-  //     position: new CANNON.Vec3(-1, 0.1, 2), // Use the center of the bounding box for positioning
-  //     shape: shape,
-  //   });
-
-  //   // Add the body to the physics world
-  //   world.addBody(first_aid_body);
-  // })
-
 });
 
 export let floor3;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor3 = gltf.scene;
   floor3.scale.set(1, 1, 1); // Scale adjustment
   floor3.position.set(4.63, 0.2, 0); // Position adjustment
+  floor3.visible = true;
   scene.add(floor3);
 });
 
 export let floor4;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor4 = gltf.scene;
   floor4.scale.set(1, 1, 1); // Scale adjustment
   floor4.position.set(-6.6, 0.2, 0); // Position adjustment
+  floor4.visible = true;
   scene.add(floor4);
 });
 
 export let floor5;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor5 = gltf.scene;
   floor5.scale.set(1, 1, 1); // Scale adjustment
   floor5.position.set(-1, 0.2, -8.54); // Position adjustment
+  floor5.visible = true;
   scene.add(floor5);
 });
 
 
 export let floor6;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor6 = gltf.scene;
   floor6.scale.set(1, 1, 1); // Scale adjustment
   floor6.position.set(4.63, 0.2, -8.54); // Position adjustment
+  floor6.visible = true;
   scene.add(floor6);
 });
 
 export let floor7;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor7 = gltf.scene;
   floor7.scale.set(1, 1, 1); // Scale adjustment
   floor7.position.set(-6.6, 0.2, -8.53); // Position adjustment
+  floor7.visible = true;
   scene.add(floor7);
 });
+
+
+
+gltfLoader.load('../models/crack.glb', (gltf) => {
+  crack1 = gltf.scene;
+  crack1.scale.set(2, 1, 3); // Scale adjustment
+  crack1.position.set(3, 0.05, 0.53); // Position adjustment
+  crack1.traverse((child) => {
+    if (child.isMesh) {
+      child.material.color.set(0x808080); // Change color to red
+    }
+  });
+  crack1.visible = false;
+  scene.add(crack1);
+  console.log(1);
+});
+
+export let crack2;
+
+gltfLoader.load('../models/crack.glb', (gltf) => {
+  crack2 = gltf.scene;
+  crack2.scale.set(2, 1, 3); // Scale adjustment
+  crack2.traverse((child) => {
+    if (child.isMesh) {
+      child.material.color.set(0x808080); // Change color to red
+    }
+  });
+  crack2.position.set(3, 0.05, -4.5); // Position adjustment
+  crack2.visible = false;
+  scene.add(crack2);
+  console.log(1);
+});
+
+export let crack3;
+
+gltfLoader.load('../models/crack.glb', (gltf) => {
+  crack3 = gltf.scene;
+  crack3.scale.set(2, 1, 2); // Scale adjustment
+  crack3.position.set(-4, 0.05, -4.5); // Position adjustment
+  crack3.traverse((child) => {
+    if (child.isMesh) {
+      child.material.color.set(0x808080); // Change color to red
+    }
+  });
+  crack3.visible = false;
+  scene.add(crack3);
+  console.log(1);
+});
+
+export let crack4;
+
+gltfLoader.load('../models/crack.glb', (gltf) => {
+  crack4 = gltf.scene;
+  crack4.scale.set(2, 1, 2); // Scale adjustment
+  crack4.position.set(-4, 0.05, -0.53); // Position adjustment
+  crack4.traverse((child) => {
+    if (child.isMesh) {
+      child.material.color.set(0x808080); // Change color to red
+    }
+  });
+  crack4.visible = false;
+  scene.add(crack4);
+  console.log(1);
+});
+
 
 
 

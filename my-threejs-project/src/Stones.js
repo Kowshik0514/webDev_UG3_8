@@ -28,9 +28,8 @@ healthBarContainer.appendChild(healthBar);
 document.body.appendChild(healthBarContainer);
 
 
-export function update(health)
-{
-    playerHealth = Math.min(100 , playerHealth + health);
+export function update(health) {
+    playerHealth = Math.min(100, playerHealth + health);
 }
 
 export function refill_health() {
@@ -127,9 +126,13 @@ function checkStoneCollision(stoneBody, playerBody) {
     const distance = stoneBody.position.distanceTo(playerBody.position);
 
     // Check if the stone is close enough to the player to be considered a hit
-    if (distance < 1.5 && stoneBody.position.y > 1) {
+    if (distance < 1 && stoneBody.position.y > 1) {
         console.log(stoneBody.position); // Adjust this distance based on your game's scale
-        if (playerHealth > 0) {
+        if (playerBody.position.x > -1.5 && playerBody.position.x < 1.5 && playerBody.position.z > -6 && playerBody.position.z < -4) {
+            //donothing
+            console.log("Do Nothing");
+        }
+        else if (playerHealth > 0) {
             playerHealth -= 1; // Decrease health by 10%
             updateHealth(playerBody); // Update the health UI
         }
@@ -137,12 +140,16 @@ function checkStoneCollision(stoneBody, playerBody) {
 }
 
 // Function to update stone positions based on their physics bodies
-export function updateStones(playerBody) {
+export function updateStones(playerBody, world, scene) {
     stones.forEach(({ stone, stoneBody }) => {
         // Synchronize Three.js stone position with Cannon.js body position
         stone.position.copy(stoneBody.position);
         stone.quaternion.copy(stoneBody.quaternion); // Sync rotation if needed
-
+        if (stoneBody.position.y < 0.5) {
+            scene.remove(stone);
+            // Remove stone from the physics world
+            world.removeBody(stoneBody);
+        }
         // Check for collisions with the player
         checkStoneCollision(stoneBody, playerBody); // Check if the stone hits the player
     });
