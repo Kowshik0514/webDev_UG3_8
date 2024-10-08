@@ -146,9 +146,9 @@ export function startEarthquake(world, scene) {
     earthquakeSound.play();
   }
 
-  planeShape.map = texture1; 
+  // planeShape.map = texture1; 
   // Change to earthquake texture
-        planeShape.needsUpdate = true; 
+        // planeShape.needsUpdate = true; 
         // Notify Three.js to update the material
   crack1.visible = true;
   crack2.visible = true;
