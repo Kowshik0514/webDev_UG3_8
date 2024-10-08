@@ -10,9 +10,12 @@
 
 <body>
   <canvas id="bg"></canvas>
-  <button id="dropChandelierBtn" style="position: absolute; top: 10px; left: 10px;">Start Earthquake</button>
-  <button id="soundToggleBtn" style="position: absolute; top: 40px; left: 10px;">Turn Sound Off</button>
-  <button id="exitButton1" style="position: absolute; top: 70px; left: 10px;">Exit Game</button>
+  <div class="button-container">
+    <button id="dropChandelierBtn">Start Earthquake</button>
+    <button id="soundToggleBtn">Turn Sound Off</button>
+    <button id="exitButton1">Exit Game</button>
+  </div>
+  
   <!-- Game Over Pop-up -->
   <div id="gameOverPopup"
   style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 100;">

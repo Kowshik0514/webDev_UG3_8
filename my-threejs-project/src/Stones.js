@@ -34,7 +34,6 @@ export function update(health)
 }
 
 export function refill_health() {
-    console.log("Aarya puk")
     playerHealth = 100; // Reset health for testing purposes
     // playerBody.position.set(0, 1.6, 0); // Reset player position (if applicable)
     healthBar.style.width = '100%'; // Reset health bar
@@ -97,7 +96,7 @@ export function loadStones(scene, world) {
             const randomX = Math.random() * (2.5 - (-2.5)) + (-2.5); // Generates a value between -2.5 and 2.5
             // const randomX=0;
             // const randomZ=-0.85;
-            const startY = -4; // Stones start from ceiling height
+            const startY = 4; // Stones start from ceiling height
 
             // Set the stone's initial position
             stone.position.set(randomX, startY, randomZ);

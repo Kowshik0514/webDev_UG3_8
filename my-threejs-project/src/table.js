@@ -1,7 +1,6 @@
 // legs.js
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
-import { chandelier, chandelierBody } from './globals.js';
 
 // Function to create a table with physics body
 export function createTable(scene, world, x, y, z) {

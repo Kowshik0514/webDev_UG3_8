@@ -11,6 +11,7 @@ import { loadStones, updateStones, removeStones , playerHealth , updateHealth , 
 import { loadRoads, roads } from './road.js';
 import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
 import { createTable  } from './table.js';
+import { loadSofa } from './sofa.js';
 
 // Scene
 export const scene = new THREE.Scene();
@@ -41,6 +42,10 @@ createAllWalls(scene, world);
 loadChandelier(scene, world);
 
 createTable(scene, world);
+
+// Load sofa1 and sofa2 with different positions and rotations
+loadSofa(scene, world, { x: 6.5, y: 0.2, z: -4 }, -Math.PI / 2);
+loadSofa(scene, world, { x: -6.5, y: 0.2, z: -4 }, Math.PI / 2);
 
 const streetLight1Positions = [
   new THREE.Vector3(4.2, 0, 10),
@@ -110,15 +115,6 @@ planeBody.addShape(planeShape);
 planeBody.position.set(0, 0, 0);
 planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBody); // Add planeBody to the world
-// CANNON.js setup (Physics)
-// const planeShapeTop = new CANNON.Box(new CANNON.Vec3(15, 0.01, 15)); // Length 5, Breadth 5
-// const planeBodyTop = new CANNON.Body({
-//   mass: 0 // Static object
-// });
-// planeBodyTop.addShape(planeShapeTop);
-// planeBodyTop.position.set(0, 5.5, -3);
-// planeBodyTop.quaternion.setFromEuler(0, 0, 0);
-// world.addBody(planeBodyTop); // Add to physics world
 
 const planeShapeFront = new CANNON.Box(new CANNON.Vec3(15, 0.01, 15)); // Length 5, Breadth 5
 const planeBodyFront = new CANNON.Body({
@@ -195,26 +191,6 @@ planeBodyBack6.addShape(planeShapeBack6);
 planeBodyBack6.position.set(-4.4,0.42,-0.24);
 planeBodyBack6.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
 world.addBody(planeBodyBack6); // Add to physics world
-// THREE.js setup (Rendering)
-// const planeGeometryTop = new THREE.BoxGeometry(5, 0.02, 5); // Length 5, Breadth 5
-// const planeMaterialTop = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red color
-// const planeMeshTop = new THREE.Mesh(planeGeometryTop, planeMaterialTop);
-// scene.add(planeMeshTop); // Add to the THREE.js scene
-
-// // Sync CANNON.js body position with THREE.js mesh
-// planeMeshTop.position.copy(planeBodyTop.position);
-// planeMeshTop.quaternion.copy(planeBodyTop.quaternion);
-
-
-
-// Create Ground Mesh
-// const planeGeometry = new THREE.PlaneGeometry(10, 10);
-// const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xA1662F  });
-// const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-// plane.rotation.x = -Math.PI / 2;
-// plane.position.set(0, 0, 0);
-// plane.receiveShadow = true;
-// scene.add(plane);
 
 // Lighting
 let ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -240,7 +216,6 @@ export let playerBody = null;
 // export let plane001;
 export let texture1;
 export let texture2;
-
 
 // Load the character model
 gltfLoader.load('../models/mixed46.glb', (gltf) => {
@@ -315,10 +290,7 @@ gltfLoader.load('../models/door.glb', (gltf) => {
     // Add the body to the physics world
     world.addBody(body);
   })
-
 });
-
-
 
 export let first_aid_box;
 let first_aid_body;
@@ -327,31 +299,8 @@ gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
   first_aid_box.scale.set(0.022, 0.022, 0.022); // Scale adjustment
   first_aid_box.position.set(-1, 0.1, 2); // Position adjustment
   scene.add(first_aid_box);
-  // first_aid_box.traverse((object) => {
-  //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
-
-  //   // Calculate the center and size of the bounding box
-  //   const center = new THREE.Vector3();
-  //   box.getCenter(center);
-  //   const size = new THREE.Vector3();
-  //   box.getSize(size);
-
-  //   // Create a Cannon.js box shape based on the size of the bounding box
-  //   const halfExtents = new CANNON.Vec3(0.022, 0.022, 0.022);
-  //   const shape = new CANNON.Box(halfExtents);
-
-  //   // Create a physical body in Cannon.js
-  //   const first_aid_body = new CANNON.Body({
-  //     mass: 0, // Mass of the object
-  //     position: new CANNON.Vec3(-1, 0.1, 2), // Use the center of the bounding box for positioning
-  //     shape: shape,
-  //   });
-
-  //   // Add the body to the physics world
-  //   world.addBody(first_aid_body);
-  // })
-
 });
+
 // Define a flag to show if the player is near the door
 let nearDoor = false;
 const doorLeaveDistance = 2; // The distance within which the player can interact with the door
@@ -371,6 +320,7 @@ function hideLeaveRoomMessage() {
     messageBox.remove();
   }
 }
+
 function checkProximityToDoor() {
   if (!playerBody || !door) return;
 
@@ -436,6 +386,7 @@ window.addEventListener('keydown', (event) => {
     }
   }
 });
+
 gltfLoader.load('../models/room.glb', (gltf) => {
   const room = gltf.scene;
   room.scale.set(0.5, 0.5, 0.5); // Scale adjustment
@@ -446,10 +397,6 @@ gltfLoader.load('../models/room.glb', (gltf) => {
 });
 
 export let crack; // Declare the crack object
-
-const textureLoader = new THREE.TextureLoader();
-
-
 
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
@@ -676,6 +623,90 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+
+
+
+
+export let floor2;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor2 = gltf.scene;
+  floor2.scale.set(1, 1, 1); // Scale adjustment
+  floor2.position.set(-1, 0.2, 0); // Position adjustment
+  scene.add(floor2);
+  // floor.traverse((object) => {
+  //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
+
+  //   // Calculate the center and size of the bounding box
+  //   const center = new THREE.Vector3();
+  //   box.getCenter(center);
+  //   const size = new THREE.Vector3();
+  //   box.getSize(size);
+
+  //   // Create a Cannon.js box shape based on the size of the bounding box
+  //   const halfExtents = new CANNON.Vec3(0.022, 0.022, 0.022);
+  //   const shape = new CANNON.Box(halfExtents);
+
+  //   // Create a physical body in Cannon.js
+  //   const first_aid_body = new CANNON.Body({
+  //     mass: 0, // Mass of the object
+  //     position: new CANNON.Vec3(-1, 0.1, 2), // Use the center of the bounding box for positioning
+  //     shape: shape,
+  //   });
+
+  //   // Add the body to the physics world
+  //   world.addBody(first_aid_body);
+  // })
+
+});
+
+export let floor3;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor3 = gltf.scene;
+  floor3.scale.set(1, 1, 1); // Scale adjustment
+  floor3.position.set(4.63, 0.2, 0); // Position adjustment
+  scene.add(floor3);
+});
+
+export let floor4;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor4 = gltf.scene;
+  floor4.scale.set(1, 1, 1); // Scale adjustment
+  floor4.position.set(-6.6, 0.2, 0); // Position adjustment
+  scene.add(floor4);
+});
+
+export let floor5;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor5 = gltf.scene;
+  floor5.scale.set(1, 1, 1); // Scale adjustment
+  floor5.position.set(-1, 0.2, -8.54); // Position adjustment
+  scene.add(floor5);
+});
+
+
+export let floor6;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor6 = gltf.scene;
+  floor6.scale.set(1, 1, 1); // Scale adjustment
+  floor6.position.set(4.63, 0.2, -8.54); // Position adjustment
+  scene.add(floor6);
+});
+
+export let floor7;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor7 = gltf.scene;
+  floor7.scale.set(1, 1, 1); // Scale adjustment
+  floor7.position.set(-6.6, 0.2, -8.53); // Position adjustment
+  scene.add(floor7);
+});
+
 
 
 // Start the animation
