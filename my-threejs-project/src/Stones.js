@@ -3,7 +3,7 @@ import * as CANNON from 'cannon';
 import { stones } from './globals.js';
 import { restartGame } from './chandelier.js';
 // Add reference to the player object and playerHealth
-let playerHealth = 100; // Initialize player's health
+export let playerHealth = 100; // Initialize player's health
 const healthBarContainer = document.createElement('div');
 const healthBar = document.createElement('div');
 
@@ -27,6 +27,12 @@ healthBar.style.borderRadius = '5px';
 healthBarContainer.appendChild(healthBar);
 document.body.appendChild(healthBarContainer);
 
+
+export function update(health)
+{
+    playerHealth = Math.min(100 , playerHealth + health);
+}
+
 export function refill_health() {
     console.log("Aarya puk")
     playerHealth = 100; // Reset health for testing purposes
@@ -35,7 +41,7 @@ export function refill_health() {
     healthBar.style.backgroundColor = 'green'; // Reset health bar color
 }
 // Function to update health bar based on player's health
-function updateHealth(playerBody) {
+export function updateHealth(playerBody) {
     // Calculate the health percentage
     const healthPercentage = Math.max(playerHealth, 0); // Prevent negative width
     healthBar.style.width = `${healthPercentage}%`;
@@ -75,7 +81,7 @@ export function loadStones(scene, world) {
     const stoneLoader = new GLTFLoader();
 
     stoneLoader.load('../models/stones.glb', (gltf) => {
-        // console.log("Stones model loaded");
+        console.log("Stones model loaded");
 
         // Loop to create multiple stones
         for (let i = 0; i < 2; i++) {
@@ -87,9 +93,10 @@ export function loadStones(scene, world) {
             stone.scale.set(randomScaleX, randomScaleY, randomScaleZ);
 
             // Random x-coordinate between 0 and -3
-            const randomX = Math.random() * -3;
-            // Random z-coordinate between +4 and -4
-            const randomZ = Math.random() * 8 - 4; // Generates a value between +4 and -4
+            const randomZ = Math.random() * (-1.5 - (-5.5)) + (-5.5); // Generates a value between -1.5 and -5.5
+            const randomX = Math.random() * (2.5 - (-2.5)) + (-2.5); // Generates a value between -2.5 and 2.5
+            // const randomX=0;
+            // const randomZ=-0.85;
             const startY = -4; // Stones start from ceiling height
 
             // Set the stone's initial position
@@ -124,7 +131,7 @@ function checkStoneCollision(stoneBody, playerBody) {
     if (distance < 1.5 && stoneBody.position.y > 1) {
         console.log(stoneBody.position); // Adjust this distance based on your game's scale
         if (playerHealth > 0) {
-            playerHealth -= 5; // Decrease health by 10%
+            playerHealth -= 6; // Decrease health by 10%
             updateHealth(playerBody); // Update the health UI
         }
     }
