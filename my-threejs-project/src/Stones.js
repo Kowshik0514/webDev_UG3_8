@@ -3,7 +3,7 @@ import * as CANNON from 'cannon';
 import { stones } from './globals.js';
 import { restartGame } from './chandelier.js';
 // Add reference to the player object and playerHealth
-let playerHealth = 100; // Initialize player's health
+export let playerHealth = 80; // Initialize player's health
 const healthBarContainer = document.createElement('div');
 const healthBar = document.createElement('div');
 
@@ -27,6 +27,12 @@ healthBar.style.borderRadius = '5px';
 healthBarContainer.appendChild(healthBar);
 document.body.appendChild(healthBarContainer);
 
+
+export function update(health)
+{
+    playerHealth = Math.min(100 , playerHealth + health);
+}
+
 export function refill_health() {
     console.log("Aarya puk")
     playerHealth = 100; // Reset health for testing purposes
@@ -35,7 +41,7 @@ export function refill_health() {
     healthBar.style.backgroundColor = 'green'; // Reset health bar color
 }
 // Function to update health bar based on player's health
-function updateHealth(playerBody) {
+export function updateHealth(playerBody) {
     // Calculate the health percentage
     const healthPercentage = Math.max(playerHealth, 0); // Prevent negative width
     healthBar.style.width = `${healthPercentage}%`;
@@ -124,7 +130,7 @@ function checkStoneCollision(stoneBody, playerBody) {
     if (distance < 1.5 && stoneBody.position.y > 1) {
         console.log(stoneBody.position); // Adjust this distance based on your game's scale
         if (playerHealth > 0) {
-            playerHealth -= 5; // Decrease health by 10%
+            playerHealth -= 1; // Decrease health by 10%
             updateHealth(playerBody); // Update the health UI
         }
     }

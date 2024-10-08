@@ -7,7 +7,7 @@ import { createForest } from './tree'; // Import tree functions
 import { createWall, createAllWalls } from './wall'; // Import wall creation functions
 import { loadChandelier, dropChandelier, startEarthquake } from './chandelier';
 import { chandelier, chandelierBody } from './globals.js';
-import { loadStones, updateStones, removeStones } from './Stones.js';
+import { loadStones, updateStones, removeStones , playerHealth , updateHealth , update} from './Stones.js';
 import { loadRoads, roads } from './road.js';
 import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
 
@@ -244,6 +244,41 @@ gltfLoader.load('../models/door.glb', (gltf) => {
     // Add the body to the physics world
     world.addBody(body);
   })
+
+});
+
+
+
+let first_aid_box;
+let first_aid_body;
+gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
+  first_aid_box = gltf.scene;
+  first_aid_box.scale.set(0.022, 0.022, 0.022); // Scale adjustment
+  first_aid_box.position.set(-1, 0.1, 2); // Position adjustment
+  scene.add(first_aid_box);
+  // first_aid_box.traverse((object) => {
+  //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
+
+  //   // Calculate the center and size of the bounding box
+  //   const center = new THREE.Vector3();
+  //   box.getCenter(center);
+  //   const size = new THREE.Vector3();
+  //   box.getSize(size);
+
+  //   // Create a Cannon.js box shape based on the size of the bounding box
+  //   const halfExtents = new CANNON.Vec3(0.022, 0.022, 0.022);
+  //   const shape = new CANNON.Box(halfExtents);
+
+  //   // Create a physical body in Cannon.js
+  //   const first_aid_body = new CANNON.Body({
+  //     mass: 0, // Mass of the object
+  //     position: new CANNON.Vec3(-1, 0.1, 2), // Use the center of the bounding box for positioning
+  //     shape: shape,
+  //   });
+
+  //   // Add the body to the physics world
+  //   world.addBody(first_aid_body);
+  // })
 
 });
 // Define a flag to show if the player is near the door
@@ -597,6 +632,16 @@ function movePlayer() {
   // Reset Y velocity for better control
   playerBody.velocity.y = Math.max(playerBody.velocity.y, -20);
 
+  if((playerBody.position.x - first_aid_box.position.x >= -0.5 &&  playerBody.position.x - first_aid_box.position.x <= 0.5 ) && (playerBody.position.z - first_aid_box.position.z >= -0.5 &&  playerBody.position.z - first_aid_box.position.z <= 0.5 ))
+  {
+    update(30);
+     updateHealth(playerBody);
+     if (first_aid_box ) {
+      scene.remove(first_aid_box); // Remove the object from the scene
+      // world.remove(first_aid_body);
+    }
+    console.log("mingey");
+  }
   // Update animation based on movement
   updatePlayerAnimation();
 }
