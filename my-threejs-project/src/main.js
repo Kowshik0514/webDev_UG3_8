@@ -10,6 +10,8 @@ import { chandelier, chandelierBody } from './globals.js';
 import { loadStones, updateStones, removeStones , playerHealth , updateHealth , update} from './Stones.js';
 import { loadRoads, roads } from './road.js';
 import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
+import { createTable  } from './table.js';
+import { loadSofa } from './sofa.js';
 
 // Scene
 export const scene = new THREE.Scene();
@@ -39,16 +41,11 @@ createAllWalls(scene, world);
 // Load the chandelier
 loadChandelier(scene, world);
 
-// const roadPositions = [
-//   new THREE.Vector3(-1.5, 0, 7.8),
-//   new THREE.Vector3(-1.5, 0, 17.8),
-//   new THREE.Vector3(-1.5, 0, 27.8),
-//   // new THREE.Vector3(10, 0, 0),
-//   // new THREE.Vector3(-10, 0, 0)
-// ];
+createTable(scene, world);
 
-// Load roads into the scene and physics world
-// loadRoads(scene, world, roadPositions);
+// Load sofa1 and sofa2 with different positions and rotations
+loadSofa(scene, world, { x: 6.5, y: 0.2, z: -4 }, -Math.PI / 2);
+loadSofa(scene, world, { x: -6.5, y: 0.2, z: -4 }, Math.PI / 2);
 
 const streetLight1Positions = [
   new THREE.Vector3(4.2, 0, 10),
@@ -138,15 +135,6 @@ planeBody.addShape(planeShape);
 planeBody.position.set(0, 0, 0);
 planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBody); // Add planeBody to the world
-// CANNON.js setup (Physics)
-// const planeShapeTop = new CANNON.Box(new CANNON.Vec3(15, 0.01, 15)); // Length 5, Breadth 5
-// const planeBodyTop = new CANNON.Body({
-//   mass: 0 // Static object
-// });
-// planeBodyTop.addShape(planeShapeTop);
-// planeBodyTop.position.set(0, 5.5, -3);
-// planeBodyTop.quaternion.setFromEuler(0, 0, 0);
-// world.addBody(planeBodyTop); // Add to physics world
 
 const planeShapeFront = new CANNON.Box(new CANNON.Vec3(15, 0.01, 15)); // Length 5, Breadth 5
 const planeBodyFront = new CANNON.Body({
@@ -223,26 +211,6 @@ planeBodyBack6.addShape(planeShapeBack6);
 planeBodyBack6.position.set(-4.4,0.42,-0.24);
 planeBodyBack6.quaternion.setFromEuler(-Math.PI/2,Math.PI , -Math.PI/2);
 world.addBody(planeBodyBack6); // Add to physics world
-// THREE.js setup (Rendering)
-// const planeGeometryTop = new THREE.BoxGeometry(5, 0.02, 5); // Length 5, Breadth 5
-// const planeMaterialTop = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red color
-// const planeMeshTop = new THREE.Mesh(planeGeometryTop, planeMaterialTop);
-// scene.add(planeMeshTop); // Add to the THREE.js scene
-
-// // Sync CANNON.js body position with THREE.js mesh
-// planeMeshTop.position.copy(planeBodyTop.position);
-// planeMeshTop.quaternion.copy(planeBodyTop.quaternion);
-
-
-
-// Create Ground Mesh
-// const planeGeometry = new THREE.PlaneGeometry(10, 10);
-// const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xA1662F  });
-// const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-// plane.rotation.x = -Math.PI / 2;
-// plane.position.set(0, 0, 0);
-// plane.receiveShadow = true;
-// scene.add(plane);
 
 // Lighting
 let ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -269,9 +237,8 @@ export let playerBody = null;
 export let texture1;
 export let texture2;
 
-
 // Load the character model
-gltfLoader.load('../models/player.glb', (gltf) => {
+gltfLoader.load('../models/mixed46.glb', (gltf) => {
   player = gltf.scene;
   player.scale.set(0.5, 0.5, 0.5);
   player.rotation.y = Math.PI;
@@ -343,10 +310,7 @@ gltfLoader.load('../models/door.glb', (gltf) => {
     // Add the body to the physics world
     world.addBody(body);
   })
-
 });
-
-
 
 export let first_aid_box1;
 export let first_aid_box2;
@@ -384,6 +348,7 @@ function hideLeaveRoomMessage() {
     messageBox.remove();
   }
 }
+
 function checkProximityToDoor() {
   if (!playerBody || !door) return;
 
@@ -449,6 +414,7 @@ window.addEventListener('keydown', (event) => {
     }
   }
 });
+
 gltfLoader.load('../models/room.glb', (gltf) => {
   const room = gltf.scene;
   room.scale.set(0.5, 0.5, 0.5); // Scale adjustment
@@ -505,10 +471,6 @@ animate();
 
 export let crack; // Declare the crack object
 
-const textureLoader = new THREE.TextureLoader();
-
-
-
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
 document.addEventListener('click', () => {
@@ -518,7 +480,7 @@ document.addEventListener('click', () => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 15, run: 30 };
+const speed = { walk: 7, run: 10 };
 let isMoving = false;
 let isRunning = false;
 
@@ -602,20 +564,6 @@ function animate() {
       }
     });
   }
-  // if (camera.position.z < 3.5) {
-  //   if (frontWall) {
-  //     frontWall.material.opacity = 0.8;
-  //     frontWall.material.transparent = true;
-  //     frontWall.material.needsUpdate = true;
-  //   }
-  // }
-  // else {
-  //   if (frontWall) {
-  //     frontWall.material.opacity = 1;
-  //     frontWall.material.transparent = true;
-  //     frontWall.material.needsUpdate = true;
-  //   }
-  // }
   // Step the physics world
   world.step(1 / 60);
   // Update stones position
@@ -634,9 +582,9 @@ function animate() {
     player.quaternion.copy(playerBody.quaternion);
 
     // Calculate the camera position based on player and pitch/yaw
-    const cameraX = player.position.x + radius * Math.sin(yaw) * Math.cos(pitch);
+    const cameraX = player.position.x - radius * Math.sin(yaw) * Math.cos(pitch);
     const cameraY = player.position.y + radius * Math.sin(pitch);
-    const cameraZ = player.position.z + radius * Math.cos(yaw) * Math.cos(pitch);
+    const cameraZ = player.position.z - radius * Math.cos(yaw) * Math.cos(pitch);
 
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(player.position);
@@ -644,11 +592,11 @@ function animate() {
     // Rotate the player to match the camera's yaw
     player.rotation.y = yaw; // Sync player's Y rotation with the camera's yaw
   }
-  // console.log("xpos: " + player.position.x);
-  // // console.log("  ");
-  // console.log("ypos: " +player.position.y);
-  // // console.log("  ");
-  // console.log("zpos: "+player.position.z);
+
+  // if (tableTop){
+  //   tableTop.position.copy(tableBody.position);
+  //   tableTop.quaternion.copy(tableBody.quaternion);
+  // }
   renderer.render(scene, camera);
 }
 
@@ -661,7 +609,7 @@ function updatePlayerAnimation() {
   // Check if the player is moving and if they're running
   if (isMoving) {
     if (isRunning) {
-      newAction = actions['run']; // Play run animation
+      newAction = actions['crawl']; // Play run animation
     } else {
       newAction = actions['walk']; // Play walk animation
     }
@@ -688,10 +636,10 @@ function movePlayer() {
   const forward = getPlayerForwardDirection();
   const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
 
-  if (keys.w) moveDirection.add(forward);
-  if (keys.s) moveDirection.add(forward.clone().negate());
-  if (keys.a) moveDirection.add(right.clone().negate());
-  if (keys.d) moveDirection.add(right);
+  if (keys.s) moveDirection.add(forward);
+  if (keys.w) moveDirection.add(forward.clone().negate());
+  if (keys.d) moveDirection.add(right.clone().negate());
+  if (keys.a) moveDirection.add(right);
 
   moveDirection.normalize();
 
@@ -702,7 +650,7 @@ function movePlayer() {
     playerBody.velocity.z = moveDirection.z * speedValue;
 
     const targetRotation = Math.atan2(moveDirection.x, moveDirection.z);
-    player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1);
+    player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1)+Math.PI;
   }
 
   // Jumping
@@ -758,6 +706,90 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+
+
+
+
+export let floor2;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor2 = gltf.scene;
+  floor2.scale.set(1, 1, 1); // Scale adjustment
+  floor2.position.set(-1, 0.2, 0); // Position adjustment
+  scene.add(floor2);
+  // floor.traverse((object) => {
+  //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
+
+  //   // Calculate the center and size of the bounding box
+  //   const center = new THREE.Vector3();
+  //   box.getCenter(center);
+  //   const size = new THREE.Vector3();
+  //   box.getSize(size);
+
+  //   // Create a Cannon.js box shape based on the size of the bounding box
+  //   const halfExtents = new CANNON.Vec3(0.022, 0.022, 0.022);
+  //   const shape = new CANNON.Box(halfExtents);
+
+  //   // Create a physical body in Cannon.js
+  //   const first_aid_body = new CANNON.Body({
+  //     mass: 0, // Mass of the object
+  //     position: new CANNON.Vec3(-1, 0.1, 2), // Use the center of the bounding box for positioning
+  //     shape: shape,
+  //   });
+
+  //   // Add the body to the physics world
+  //   world.addBody(first_aid_body);
+  // })
+
+});
+
+export let floor3;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor3 = gltf.scene;
+  floor3.scale.set(1, 1, 1); // Scale adjustment
+  floor3.position.set(4.63, 0.2, 0); // Position adjustment
+  scene.add(floor3);
+});
+
+export let floor4;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor4 = gltf.scene;
+  floor4.scale.set(1, 1, 1); // Scale adjustment
+  floor4.position.set(-6.6, 0.2, 0); // Position adjustment
+  scene.add(floor4);
+});
+
+export let floor5;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor5 = gltf.scene;
+  floor5.scale.set(1, 1, 1); // Scale adjustment
+  floor5.position.set(-1, 0.2, -8.54); // Position adjustment
+  scene.add(floor5);
+});
+
+
+export let floor6;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor6 = gltf.scene;
+  floor6.scale.set(1, 1, 1); // Scale adjustment
+  floor6.position.set(4.63, 0.2, -8.54); // Position adjustment
+  scene.add(floor6);
+});
+
+export let floor7;
+// let first_aid_body;
+gltfLoader.load('../models/floor2.glb', (gltf) => {
+  floor7 = gltf.scene;
+  floor7.scale.set(1, 1, 1); // Scale adjustment
+  floor7.position.set(-6.6, 0.2, -8.53); // Position adjustment
+  scene.add(floor7);
+});
+
 
 
 // Start the animation

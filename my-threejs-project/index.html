@@ -4,33 +4,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Three.js Scene</title>
+  <title>Website with Slideshow</title>
   <link rel="stylesheet" href="/src/style.css">
 </head>
 
 <body>
-  <canvas id="bg"></canvas>
-  <button id="dropChandelierBtn" style="position: absolute; top: 10px; left: 10px;">Start Earthquake</button>
-  <button id="soundToggleBtn" style="position: absolute; top: 40px; left: 10px;">Turn Sound Off</button>
+  <!-- Slideshow Container -->
+  <div class="slideshow-container">
 
-  <!-- Game Over Pop-up -->
-  <div id="gameOverPopup"
-    style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 100;">
-    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
-      <h2 id="go">Play the Game</h2>
-      <button id="restartButton" class="dropChandelierBtn">Start</button>
+    <!-- Slides -->
+    <div class="mySlides fade">
+      <img src="/models/s4.png" alt="Slide 1" class="scaled-image">
+      <!-- <div class="text">Caption One</div> -->
+      <button id="startGameButton1" class="slide-button">Start Game</button>
     </div>
+
+    <div class="mySlides fade">
+      <img src="/models/s2.png" alt="Slide 2" class="scaled-image">
+      <!-- <div class="text">Caption Two</div> -->
+      <button id="startGameButton2" class="slide-button">Start Game</button>
+    </div>
+
+    <div class="mySlides fade">
+      <img src="/models/s3.png" alt="Slide 3" class="scaled-image">
+      <!-- <div class="text">Caption Three</div> -->
+      <button id="startGameButton3" class="slide-button">Start Game</button>
+    </div>
+
+    <!-- Next and Previous Buttons -->
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
   </div>
 
+  <br>
+
+  <!-- Dots/Indicators -->
+  <div style="text-align:center">
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
   <div id="timerContainer">
     <span id="timer">30</span>
   </div>
 
-  <script type="module" src="/src/main.js"></script>
-  <script type="module" src="/src/tree.js"></script>
-  <script type="module" src="/src/wall.js"></script>
-  <script type="module" src="/src/chandelier.js"></script>
-  <script type="module" src="/src/globals.js"></script>
+  <!-- Start Game Button -->
+  <div style="text-align: center; margin-top: 20px;">
+    <button id="startGameButton">Start Game</button>
+  </div>
 
   <script>
     let timerDuration = 30;
@@ -56,15 +76,53 @@
     const dropChandelierBtn = document.getElementById('dropChandelierBtn');
     dropChandelierBtn.addEventListener("click", function (event) {
       startTimer(); // Start the timer when the button is clicked
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+      showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+      let i;
+      const slides = document.getElementsByClassName("mySlides");
+      const dots = document.getElementsByClassName("dot");
+      if (n > slides.length) { slideIndex = 1 }
+      if (n < 1) { slideIndex = slides.length }
+      for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";  // Hide all slides
+      }
+      for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", ""); // Remove active class from all dots
+      }
+      slides[slideIndex - 1].style.display = "block"; // Show the current slide
+      dots[slideIndex - 1].className += " active"; // Mark the current dot as active
+    }
+
+    // Automatic slideshow (optional)
+    setInterval(function () {
+      plusSlides(1);
+    }, 1000); // Change slide every 5 seconds
+
+    // Redirect to game.html when "Start Game" button is clicked
+    let startGameBtn = document.getElementById('startGameButton1');
+    startGameBtn.addEventListener("click", function () {
+      window.location.href = "game.html"; // Redirect to game.html
     });
 
-    // Add event listener to the "Restart" button
-    // document.getElementById('restartButton').addEventListener('click', () => {
-    //   // restartGame(); // Call the restart game function
-    //      // startTimer(); // Start the timer again if you want it on restart -->
-    //      timerDuration = 10;
-    //      timerElement.textContent = timerDuration;
-    // });
+    startGameBtn = document.getElementById('startGameButton2');
+    startGameBtn.addEventListener("click", function () {
+      window.location.href = "game.html"; // Redirect to game.html
+    });
+
+    startGameBtn = document.getElementById('startGameButton3');
+    startGameBtn.addEventListener("click", function () {
+      window.location.href = "game.html"; // Redirect to game.html
+    });
   </script>
 </body>
 

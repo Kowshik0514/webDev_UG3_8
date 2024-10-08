@@ -96,7 +96,7 @@ export function loadStones(scene, world) {
             const randomX = Math.random() * (2.5 - (-2.5)) + (-2.5); // Generates a value between -2.5 and 2.5
             // const randomX=0;
             // const randomZ=-0.85;
-            const startY = -4; // Stones start from ceiling height
+            const startY = 4; // Stones start from ceiling height
 
             // Set the stone's initial position
             stone.position.set(randomX, startY, randomZ);
