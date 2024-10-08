@@ -137,12 +137,16 @@ function checkStoneCollision(stoneBody, playerBody) {
 }
 
 // Function to update stone positions based on their physics bodies
-export function updateStones(playerBody) {
+export function updateStones(playerBody, world, scene) {
     stones.forEach(({ stone, stoneBody }) => {
         // Synchronize Three.js stone position with Cannon.js body position
         stone.position.copy(stoneBody.position);
         stone.quaternion.copy(stoneBody.quaternion); // Sync rotation if needed
-
+        if (stoneBody.position.y < 0.5) {
+            scene.remove(stone);
+            // Remove stone from the physics world
+            world.removeBody(stoneBody);
+        }
         // Check for collisions with the player
         checkStoneCollision(stoneBody, playerBody); // Check if the stone hits the player
     });

@@ -281,11 +281,18 @@ gltfLoader.load('../models/mixed46.glb', (gltf) => {
 });
 let floor;
 //Door
+let door1;
+gltfLoader.load('../models/door.glb', (gltf) => {
+  door1 = gltf.scene;
+  door1.scale.set(0.5, 0.5, 0.5);
+  door1.position.set(-0.1, 0.42, 2);
+  scene.add(door1);
+})
 let door;
 gltfLoader.load('../models/door.glb', (gltf) => {
   door = gltf.scene;
-  door.scale.set(0.5, 0.5, 0.5); // Scale adjustment
-  door.position.set(-0.13,0.42,1.8); // Position adjustment
+  door.scale.set(0.5, 0.5, 0.5);
+  door.position.set(-0.13,0.42,1.8);
   scene.add(door);
   door.traverse((object) => {
     const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
@@ -317,15 +324,15 @@ export let first_aid_box2;
 let first_aid_body;
 gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
   first_aid_box1 = gltf.scene;
-  first_aid_box1.scale.set(0.11, 0.11, 0.11); // Scale adjustment
-  first_aid_box1.position.set(-7.4, 1, -4.7); // Position adjustment
+  first_aid_box1.scale.set(0.11, 0.11, 0.11);
+  first_aid_box1.position.set(-7.4, 1, -4.7);
   scene.add(first_aid_box1);
 
 });
 gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
   first_aid_box2= gltf.scene;
-  first_aid_box2.scale.set(0.11, 0.11, 0.11); // Scale adjustment
-  first_aid_box2.position.set(7.4, 1, -4.7); // Position adjustment
+  first_aid_box2.scale.set(0.11, 0.11, 0.11);
+  first_aid_box2.position.set(7.4, 1, -4.7);
   scene.add(first_aid_box2);
 
 });
@@ -417,8 +424,8 @@ window.addEventListener('keydown', (event) => {
 
 gltfLoader.load('../models/room.glb', (gltf) => {
   const room = gltf.scene;
-  room.scale.set(0.5, 0.5, 0.5); // Scale adjustment
-  room.position.set(0, -4.3, 0); // Position adjustment
+  room.scale.set(0.5, 0.5, 0.5);
+  room.position.set(0, -4.3, 0);
   scene.add(room);
   // Load the textures
 const textureLoader = new THREE.TextureLoader();
@@ -547,11 +554,13 @@ function animate() {
     });
   } else {
     // Set floor opacity to 0 if camera Y is less than or equal to 0
+    // arr = [floor2,floor3,floor4,floor5,floor6,floor,floor7];
     if (floor) {
       floor.material.opacity = 0.2;
       floor.material.transparent = true;
       floor.material.needsUpdate = true;  // Ensure material updates
     }
+    
     // console.log(3);
     // Set road opacity to 0
     roads.forEach((road) => {
@@ -568,7 +577,7 @@ function animate() {
   world.step(1 / 60);
   // Update stones position
   checkProximityToDoor();
-  updateStones(playerBody);  // Add this to sync stone positions with physics bodies
+  updateStones(playerBody,world, scene);  // Add this to sync stone positions with physics bodies
 
   if (mixer) mixer.update(delta);
 
@@ -712,81 +721,51 @@ window.addEventListener('resize', () => {
 
 
 export let floor2;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor2 = gltf.scene;
-  floor2.scale.set(1, 1, 1); // Scale adjustment
-  floor2.position.set(-1, 0.2, 0); // Position adjustment
+  floor2.scale.set(1, 1, 1);
+  floor2.position.set(-1, 0.2, 0);
   scene.add(floor2);
-  // floor.traverse((object) => {
-  //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
-
-  //   // Calculate the center and size of the bounding box
-  //   const center = new THREE.Vector3();
-  //   box.getCenter(center);
-  //   const size = new THREE.Vector3();
-  //   box.getSize(size);
-
-  //   // Create a Cannon.js box shape based on the size of the bounding box
-  //   const halfExtents = new CANNON.Vec3(0.022, 0.022, 0.022);
-  //   const shape = new CANNON.Box(halfExtents);
-
-  //   // Create a physical body in Cannon.js
-  //   const first_aid_body = new CANNON.Body({
-  //     mass: 0, // Mass of the object
-  //     position: new CANNON.Vec3(-1, 0.1, 2), // Use the center of the bounding box for positioning
-  //     shape: shape,
-  //   });
-
-  //   // Add the body to the physics world
-  //   world.addBody(first_aid_body);
-  // })
-
 });
 
 export let floor3;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor3 = gltf.scene;
-  floor3.scale.set(1, 1, 1); // Scale adjustment
-  floor3.position.set(4.63, 0.2, 0); // Position adjustment
+  floor3.scale.set(1, 1, 1);
+  floor3.position.set(4.63, 0.2, 0);
   scene.add(floor3);
 });
 
 export let floor4;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor4 = gltf.scene;
-  floor4.scale.set(1, 1, 1); // Scale adjustment
-  floor4.position.set(-6.6, 0.2, 0); // Position adjustment
+  floor4.scale.set(1, 1, 1);
+  floor4.position.set(-6.6, 0.2, 0);
   scene.add(floor4);
 });
 
 export let floor5;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor5 = gltf.scene;
-  floor5.scale.set(1, 1, 1); // Scale adjustment
-  floor5.position.set(-1, 0.2, -8.54); // Position adjustment
+  floor5.scale.set(1, 1, 1);
+  floor5.position.set(-1, 0.2, -8.54);
   scene.add(floor5);
 });
 
 
 export let floor6;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor6 = gltf.scene;
-  floor6.scale.set(1, 1, 1); // Scale adjustment
-  floor6.position.set(4.63, 0.2, -8.54); // Position adjustment
+  floor6.scale.set(1, 1, 1);
+  floor6.position.set(4.63, 0.2, -8.54);
   scene.add(floor6);
 });
 
 export let floor7;
-// let first_aid_body;
 gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor7 = gltf.scene;
-  floor7.scale.set(1, 1, 1); // Scale adjustment
-  floor7.position.set(-6.6, 0.2, -8.53); // Position adjustment
+  floor7.scale.set(1, 1, 1);
+  floor7.position.set(-6.6, 0.2, -8.53);
   scene.add(floor7);
 });
 
