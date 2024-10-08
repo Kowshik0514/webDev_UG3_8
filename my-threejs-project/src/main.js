@@ -47,17 +47,27 @@ createTable(scene, world);
 loadSofa(scene, world, { x: 6.5, y: 0.2, z: -4 }, -Math.PI / 2);
 loadSofa(scene, world, { x: -6.5, y: 0.2, z: -4 }, Math.PI / 2);
 
+// Load roads into the scene and physics world
+
+const roadPositions = [
+  new THREE.Vector3(0, 0.3, 6.8),
+  new THREE.Vector3(0, 0.3, 16.8),
+  new THREE.Vector3(0, 0.3, 26.8),
+];
+
+loadRoads(scene, world, roadPositions);
+
 const streetLight1Positions = [
-  new THREE.Vector3(4.2, 0, 10),
-  new THREE.Vector3(-7.2, 0, 10)
+  new THREE.Vector3(6.5, 0, 7),
+  new THREE.Vector3(-6.1, 0, 7)
 ];
 
 // Load street lights into the scene and physics world
 loadStreetLights1(scene, world, streetLight1Positions);
 
 const streetLight2Positions = [
-  new THREE.Vector3(-11.2, 0, 23),
-  new THREE.Vector3(8.2, 0, 23)
+  new THREE.Vector3(-10.8, 0, 17),
+  new THREE.Vector3(10.7, 0, 17)
 ];
 
 // Load street lights into the scene and physics world
@@ -396,7 +406,7 @@ gltfLoader.load('../models/room.glb', (gltf) => {
   console.error('An error occurred while loading the GLB model:', error);
 });
 
-export let crack; // Declare the crack object
+export let crack1; // Declare the crack object
 
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
@@ -634,6 +644,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor2 = gltf.scene;
   floor2.scale.set(1, 1, 1); // Scale adjustment
   floor2.position.set(-1, 0.2, 0); // Position adjustment
+  floor2.visible=true;
   scene.add(floor2);
   // floor.traverse((object) => {
   //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
@@ -667,6 +678,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor3 = gltf.scene;
   floor3.scale.set(1, 1, 1); // Scale adjustment
   floor3.position.set(4.63, 0.2, 0); // Position adjustment
+  floor3.visible=true;
   scene.add(floor3);
 });
 
@@ -676,6 +688,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor4 = gltf.scene;
   floor4.scale.set(1, 1, 1); // Scale adjustment
   floor4.position.set(-6.6, 0.2, 0); // Position adjustment
+  floor4.visible=true;
   scene.add(floor4);
 });
 
@@ -685,6 +698,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor5 = gltf.scene;
   floor5.scale.set(1, 1, 1); // Scale adjustment
   floor5.position.set(-1, 0.2, -8.54); // Position adjustment
+  floor5.visible=true;
   scene.add(floor5);
 });
 
@@ -695,6 +709,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor6 = gltf.scene;
   floor6.scale.set(1, 1, 1); // Scale adjustment
   floor6.position.set(4.63, 0.2, -8.54); // Position adjustment
+  floor6.visible=true;
   scene.add(floor6);
 });
 
@@ -704,8 +719,74 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
   floor7 = gltf.scene;
   floor7.scale.set(1, 1, 1); // Scale adjustment
   floor7.position.set(-6.6, 0.2, -8.53); // Position adjustment
+  floor7.visible=true;
   scene.add(floor7);
 });
+
+
+
+gltfLoader.load('../models/crack.glb', (gltf) => {
+  crack1 = gltf.scene;
+  crack1.scale.set(2, 1, 3); // Scale adjustment
+  crack1.position.set(3, 0.05, 0.53); // Position adjustment
+  crack1.traverse((child) => {
+    if (child.isMesh) {
+      child.material.color.set(0x808080); // Change color to red
+    }
+  });
+  crack1.visible = false;
+  scene.add(crack1);
+  console.log(1);
+});
+
+export let crack2;
+
+gltfLoader.load('../models/crack.glb', (gltf) => {
+  crack2 = gltf.scene;
+  crack2.scale.set(2, 1, 3); // Scale adjustment
+  crack2.traverse((child) => {
+    if (child.isMesh) {
+      child.material.color.set(0x808080); // Change color to red
+    }
+  });
+  crack2.position.set(3, 0.05, -4.5); // Position adjustment
+  crack2.visible = false;
+  scene.add(crack2);
+  console.log(1);
+});
+
+export let crack3;
+
+gltfLoader.load('../models/crack.glb', (gltf) => {
+  crack3 = gltf.scene;
+  crack3.scale.set(2, 1, 2); // Scale adjustment
+  crack3.position.set(-4, 0.05, -4.5); // Position adjustment
+  crack3.traverse((child) => {
+    if (child.isMesh) {
+      child.material.color.set(0x808080); // Change color to red
+    }
+  });
+  crack3.visible = false;
+  scene.add(crack3);
+  console.log(1);
+});
+
+export let crack4;
+
+gltfLoader.load('../models/crack.glb', (gltf) => {
+  crack4 = gltf.scene;
+  crack4.scale.set(2, 1, 2); // Scale adjustment
+  crack4.position.set(-4, 0.05, -0.53); // Position adjustment
+  crack4.traverse((child) => {
+    if (child.isMesh) {
+      child.material.color.set(0x808080); // Change color to red
+    }
+  });
+  crack4.visible = false;
+  scene.add(crack4);
+  console.log(1);
+});
+
 
 
 

@@ -5,6 +5,7 @@ import { chandelier, chandelierBody,stones } from './globals.js';
 import { playerBody, directionalLight, directionalLight2,planeBody,planeShape,texture1,texture2 } from './main.js'; // Assuming `directionalLight` is global
 import {  rstgame , first_aid_box, scene} from './main.js';
 import { loadStones, updateStones, removeStones } from './Stones.js';
+import { crack1,crack2,crack3,crack4,floor2,floor3,floor4,floor5,floor6,floor7 } from './main.js';
 
 let earthquakeActive = false; // Flag to control earthquake
 let earthquakeInterval;
@@ -149,6 +150,17 @@ export function startEarthquake(world, scene) {
   // Change to earthquake texture
         planeShape.needsUpdate = true; 
         // Notify Three.js to update the material
+  crack1.visible = true;
+  crack2.visible = true;
+  crack3.visible = true;
+  crack4.visible = true;
+
+  floor2.visible = false;
+  floor3.visible = false;
+  floor4.visible = false;
+  floor5.visible = false;
+  floor6.visible = false;
+  floor7.visible = false;
 
 
   earthquakeInterval = setInterval(() => {
@@ -197,6 +209,17 @@ function stopEarthquake() {
         planeShape.needsUpdate = true; 
         // Notify Three.js to update the material
 
+  crack1.visible = false;
+  crack2.visible = false;
+  crack3.visible = false;
+  crack4.visible = false;
+
+  floor2.visible = true;
+  floor3.visible = true;
+  floor4.visible = true;
+  floor5.visible = true;
+  floor6.visible = true;
+  floor7.visible = true;
 
   // Reset light intensity
   directionalLight.intensity = 1; // Reset to normal intensity
