@@ -8,7 +8,7 @@ import { createWall, createAllWalls } from './wall'; // Import wall creation fun
 import { loadChandelier, dropChandelier, startEarthquake } from './chandelier';
 import { chandelier, chandelierBody } from './globals.js';
 import { loadStones, updateStones, removeStones } from './Stones.js';
-import { loadRoads} from './road.js';
+import { loadRoads, roads} from './road.js';
 import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
 
 // Scene
@@ -91,26 +91,24 @@ document.getElementById('dropChandelierBtn').addEventListener('click', () => {
   // }
 });
 
-const greyPlaneGeometry = new THREE.PlaneGeometry(2, 4); // Adjust size as needed
-const greyPlaneMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 }); // Grey color
-const greyPlane = new THREE.Mesh(greyPlaneGeometry, greyPlaneMaterial);
 
-// Position the plane near the door
-greyPlane.position.set(-1.5, 2, 3.8); // Adjust position relative to the door's position
-greyPlane.rotation.z = -Math.PI / 2; // Rotate the plane vertically
+const frontWallGeometry = new THREE.BoxGeometry(9, 5.5, 0.001);
+const frontWallmaterial = new THREE.MeshBasicMaterial({color: 0xaaaaaa});
+const frontWall = new THREE.Mesh(frontWallGeometry, frontWallmaterial);
 
-// Add the plane to the scene
-scene.add(greyPlane);
+frontWall.position.set(-1.5, 2.75, 3);
 
-// Ground Plane
-const planeShape1 = new CANNON.Plane();
-const planeBody1 = new CANNON.Body({
-  mass: 0 // Mass of 0 for static objects
-});
-planeBody1.addShape(planeShape1);
-planeBody1.position.set(1, 0, 0);
-planeBody1.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-world.addBody(planeBody1); // Add planeBody to the world
+scene.add(frontWall);
+
+const frontWallShape = new CANNON.Box(new CANNON.Vec3(4.5, 2.75, 0.0005));
+const frontWallBody = new CANNON.Body({ mass: 0 });
+frontWallBody.addShape(frontWallShape);
+frontWallBody.position.set(-1.5, 2.75, 3);
+
+world.addBody(frontWallBody);
+
+
+
 
 // Sky Sphere (for a 360-degree sky effect)
 const skyGeometry = new THREE.SphereGeometry(500, 100, 100);
@@ -221,7 +219,7 @@ let door;
 gltfLoader.load('../models/door.glb', (gltf) => {
   door = gltf.scene;
   door.scale.set(0.5, 0.5, 0.5); // Scale adjustment
-  door.position.set(-1, 0.1, 4); // Position adjustment
+  door.position.set(-1.5, 0.3, 4.2); // Position adjustment
   scene.add(door);
   door.traverse((object) => {
     const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
@@ -254,7 +252,7 @@ const doorLeaveDistance = 2; // The distance within which the player can interac
 let isMessageDisplayed = false;
 
 // Position outside the room (where you want the player to be moved after leaving)
-const outsidePosition = new CANNON.Vec3(5, 1.6, 5); // Set this to where you want the player to appear after leaving
+const outsidePosition = new CANNON.Vec3(0, 1.6, 7); // Set this to where you want the player to appear after leaving
 
 // Function to check if the player is near the door
 let isOutsideRoom = false; // Track whether the player is inside or outside the room
@@ -341,10 +339,12 @@ gltfLoader.load('../models/room.glb', (gltf) => {
 // const textureLoader = new THREE.TextureLoader();
 texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
 
+
 // Find the existing plane named 'Plane001'
 plane001 = room.getObjectByName('Plane001');
 texture2= plane001.material.map;
 
+floor = room.getObjectByName('Plane001');
 // Apply the texture to the plane's material;
 
 // Animation loop (if needed)
@@ -452,15 +452,55 @@ function animate() {
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
   if (camera.position.y > 0) {
+    // Set floor opacity to 1 if camera Y is greater than 0
     if (floor) {
-      floor.material.opacity = 1;
+        floor.material.opacity = 1;
+        floor.material.needsUpdate = true;  // Ensure material updates
     }
-  }
-  else {
+
+    // Set road opacity to 1
+    roads.forEach((road) => {
+        if (road && road.material) {
+            road.material.opacity = 1;
+            road.material.transparent = true; 
+            road.material.needsUpdate = true; 
+        }
+    });
+} else {
+    // Set floor opacity to 0 if camera Y is less than or equal to 0
     if (floor) {
-      floor.material.opacity = 0;
+        floor.material.opacity = 0.2;
+        floor.material.transparent = true;
+        floor.material.needsUpdate = true;  // Ensure material updates
     }
+    // console.log(3);
+    // Set road opacity to 0
+    roads.forEach(( road ) => {
+      // console.log(road);
+        if (road ) {
+            road.material.opacity = 0.6;
+            // console.log(1);
+            road.material.transparent = true;
+            road.material.needsUpdate = true;
+        }
+    });
+}
+if(camera.position.z<3.5){
+  if(frontWall)
+  {
+    frontWall.material.opacity = 0.8;
+    frontWall.material.transparent = true;
+    frontWall.material.needsUpdate = true;
   }
+}
+else{
+  if(frontWall)
+  {
+    frontWall.material.opacity = 1;
+    frontWall.material.transparent = true;
+    frontWall.material.needsUpdate = true;
+  }
+}
   // Step the physics world
   world.step(1 / 60);
   // Update stones position

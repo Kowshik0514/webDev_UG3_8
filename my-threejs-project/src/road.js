@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
 
-const roads = []; // Array to store road objects and their physics bodies
+export let roads = []; // Array to store road objects and their physics bodies
 
 // Function to load roads as planes and add them to the scene and physics world
 export function loadRoads(scene, world, positions) {
@@ -35,30 +35,15 @@ export function loadRoads(scene, world, positions) {
         // Add road to the scene
         scene.add(road);
 
-        // Create a physics body for the road
-        // const roadBody = new CANNON.Body({
-        //     position: new CANNON.Vec3(position.x, position.y, position.z),
-        //     mass: 0 // Set mass to 0 for static objects
-        // });
-
-        // // Define the shape of the road in the physics world
-        // const roadShape = new CANNON.Box(new CANNON.Vec3(5, 0.1, 5)); // Half dimensions
-        // roadBody.addShape(roadShape);
-        // world.addBody(roadBody);
-
-        // // Store the road and its physics body
-        roads.push( road );
+        roads.push(road);
     });
 }
 
 export function removeRoad(index, scene, world) {
-    const { road } = roads[index];
+    const road  = roads[index];
     
     // Remove road from the Three.js scene
     scene.remove(road);
-    
-    // Remove road body from the Cannon.js world
-    world.remove(roadBody);
 
     // Remove the road and its physics body from the array
     roads.splice(index, 1);
