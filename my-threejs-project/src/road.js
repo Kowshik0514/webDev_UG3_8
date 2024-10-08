@@ -14,7 +14,7 @@ export function loadRoads(scene, world, positions) {
             console.log('Texture loaded successfully');
             texture.wrapS = THREE.RepeatWrapping;
             texture.wrapT = THREE.RepeatWrapping;
-            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            // texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
         },
         undefined,
         (error) => {
@@ -47,15 +47,20 @@ export function loadRoads(scene, world, positions) {
         // world.addBody(roadBody);
 
         // // Store the road and its physics body
-        // roads.push({ road, roadBody });
+        roads.push( road );
     });
 }
 
-// Function to update road positions based on their physics bodies
-export function updateRoads() {
-    roads.forEach(({ road, roadBody }) => {
-        // Synchronize Three.js road position with Cannon.js body position
-        // road.position.copy(roadBody.position);
-        // road.quaternion.copy(roadBody.quaternion); // Sync rotation if needed
-    });
+export function removeRoad(index, scene, world) {
+    const { road } = roads[index];
+    
+    // Remove road from the Three.js scene
+    scene.remove(road);
+    
+    // Remove road body from the Cannon.js world
+    world.remove(roadBody);
+
+    // Remove the road and its physics body from the array
+    roads.splice(index, 1);
 }
+

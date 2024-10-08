@@ -8,7 +8,8 @@ import { createWall, createAllWalls } from './wall'; // Import wall creation fun
 import { loadChandelier, dropChandelier, startEarthquake } from './chandelier';
 import { chandelier, chandelierBody } from './globals.js';
 import { loadStones, updateStones, removeStones } from './Stones.js';
-import { loadRoads, updateRoads } from './road.js';
+import { loadRoads} from './road.js';
+import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
 
 // Scene
 const scene = new THREE.Scene();
@@ -48,6 +49,22 @@ const roadPositions = [
 
 // Load roads into the scene and physics world
 loadRoads(scene, world, roadPositions);
+
+const streetLight1Positions = [
+  new THREE.Vector3(4.2, 0, 10),
+  new THREE.Vector3(-7.2, 0, 10)
+];
+
+// Load street lights into the scene and physics world
+loadStreetLights1(scene, world, streetLight1Positions);
+
+const streetLight2Positions = [
+  new THREE.Vector3(-11.2, 0, 23),
+  new THREE.Vector3(8.2, 0, 23)
+];
+
+// Load street lights into the scene and physics world
+loadStreetLights2(scene, world, streetLight2Positions);
 
 // Button to drop chandelier
 document.getElementById('dropChandelierBtn').addEventListener('click', () => {
@@ -455,8 +472,6 @@ function animate() {
   // Call movePlayer every frame
   movePlayer();
 
-  // Update road positions
-  updateRoads();
 
   if (player) {
     // Sync player position with physics body
