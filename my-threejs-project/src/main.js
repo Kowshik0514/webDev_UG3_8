@@ -10,6 +10,7 @@ import { chandelier, chandelierBody } from './globals.js';
 import { loadStones, updateStones, removeStones , playerHealth , updateHealth , update} from './Stones.js';
 import { loadRoads, roads } from './road.js';
 import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
+import { createTable  } from './table.js';
 
 // Scene
 export const scene = new THREE.Scene();
@@ -39,16 +40,7 @@ createAllWalls(scene, world);
 // Load the chandelier
 loadChandelier(scene, world);
 
-// const roadPositions = [
-//   new THREE.Vector3(-1.5, 0, 7.8),
-//   new THREE.Vector3(-1.5, 0, 17.8),
-//   new THREE.Vector3(-1.5, 0, 27.8),
-//   // new THREE.Vector3(10, 0, 0),
-//   // new THREE.Vector3(-10, 0, 0)
-// ];
-
-// Load roads into the scene and physics world
-// loadRoads(scene, world, roadPositions);
+createTable(scene, world);
 
 const streetLight1Positions = [
   new THREE.Vector3(4.2, 0, 10),
@@ -81,27 +73,7 @@ document.getElementById('dropChandelierBtn').addEventListener('click', () => {
   setTimeout(() => {
     dropChandelier(world, scene); // Reset the flag
   }, 10000);
-  // simulateEarthquake(100000);
-  // if (isDirectlyBelow) {
-  //   console.log("Dropping chandelier");
-  //       // Set chandelier body mass to 1 to allow it to fall
-  //   dropChandelier(); // Pass the player's body to check the position
-  // } else {
-  //   console.log("Player is not directly below the chandelier.");
-  // }
 });
-// loadStones(scene,world);
-
-// const greyPlaneGeometry = new THREE.PlaneGeometry(2, 4); // Adjust size as needed
-// const greyPlaneMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 }); // Grey color
-// const greyPlane = new THREE.Mesh(greyPlaneGeometry, greyPlaneMaterial);
-
-// // Position the plane near the door
-// greyPlane.position.set(-1.5, 2, 3.8); // Adjust position relative to the door's position
-// greyPlane.rotation.z = -Math.PI / 2; // Rotate the plane vertically
-
-// // Add the plane to the scene
-// scene.add(greyPlane);
 
 // Ground Plane
 const planeShape1 = new CANNON.Plane();
@@ -469,51 +441,6 @@ gltfLoader.load('../models/room.glb', (gltf) => {
   room.scale.set(0.5, 0.5, 0.5); // Scale adjustment
   room.position.set(0, -4.3, 0); // Position adjustment
   scene.add(room);
-  // Load the textures
-// const textureLoader = new THREE.TextureLoader();
-// texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
-
-// // Find the existing plane named 'Plane001'
-// plane001 = room.getObjectByName('Plane001');
-// texture2= plane001.material.map;
-
-// // Apply the texture to the plane's material;
-
-// // Animation loop (if needed)
-// function animate() {
-//     requestAnimationFrame(animate);
-//     renderer.render(scene, camera);
-// }
-
-// // Start the animation
-// animate();
-
-  // Traverse through each object in the room and create colliders
-  // room.traverse((object) => {
-  //   // if (object.isMesh && object.name === 'Cube010') {
-  //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
-
-  //   // Calculate the center and size of the bounding box
-  //   const center = new THREE.Vector3();
-  //   box.getCenter(center);
-  //   const size = new THREE.Vector3();
-  //   box.getSize(size);
-
-  //   // Create a Cannon.js box shape based on the size of the bounding box
-  //   const halfExtents = new CANNON.Vec3(size.x / 2, size.y / 2, size.z / 2);
-  //   const shape = new CANNON.Box(halfExtents);
-
-  //   // Create a physical body in Cannon.js
-  //   const body = new CANNON.Body({
-  //     mass: 0, // Mass of the object
-  //     position: new CANNON.Vec3(center.x, center.y, center.z), // Use the center of the bounding box for positioning
-  //     shape: shape,
-  //   });
-
-  //   // Add the body to the physics world
-  //   world.addBody(body);
-  //   // }
-  // });
 }, undefined, (error) => {
   console.error('An error occurred while loading the GLB model:', error);
 });
@@ -533,7 +460,7 @@ document.addEventListener('click', () => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 15, run: 30 };
+const speed = { walk: 7, run: 0 };
 let isMoving = false;
 let isRunning = false;
 
@@ -617,20 +544,6 @@ function animate() {
       }
     });
   }
-  // if (camera.position.z < 3.5) {
-  //   if (frontWall) {
-  //     frontWall.material.opacity = 0.8;
-  //     frontWall.material.transparent = true;
-  //     frontWall.material.needsUpdate = true;
-  //   }
-  // }
-  // else {
-  //   if (frontWall) {
-  //     frontWall.material.opacity = 1;
-  //     frontWall.material.transparent = true;
-  //     frontWall.material.needsUpdate = true;
-  //   }
-  // }
   // Step the physics world
   world.step(1 / 60);
   // Update stones position
@@ -659,11 +572,11 @@ function animate() {
     // Rotate the player to match the camera's yaw
     player.rotation.y = yaw; // Sync player's Y rotation with the camera's yaw
   }
-  // console.log("xpos: " + player.position.x);
-  // // console.log("  ");
-  // console.log("ypos: " +player.position.y);
-  // // console.log("  ");
-  // console.log("zpos: "+player.position.z);
+
+  // if (tableTop){
+  //   tableTop.position.copy(tableBody.position);
+  //   tableTop.quaternion.copy(tableBody.quaternion);
+  // }
   renderer.render(scene, camera);
 }
 
