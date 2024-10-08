@@ -43,8 +43,6 @@
     <span class="dot" onclick="currentSlide(1)"></span>
     <span class="dot" onclick="currentSlide(2)"></span>
     <span class="dot" onclick="currentSlide(3)"></span>
-  <div id="timerContainer">
-    <span id="timer">30</span>
   </div>
 
   <!-- Start Game Button -->
@@ -53,29 +51,6 @@
   </div>
 
   <script>
-    let timerDuration = 30;
-    const timerElement = document.getElementById('timer');
-
-    // Function to start the countdown
-    function startTimer() {
-      let timeLeft = timerDuration;
-
-      const countdown = setInterval(() => {
-        timerElement.textContent = timeLeft;
-        timeLeft--;
-
-        // Check if the time has run out
-        if (timeLeft < 0) {
-          clearInterval(countdown); // Stop the timer
-          timerElement.textContent = "Time's up!";
-        }
-      }, 1000); // Update every second
-    }
-
-    // Add event listener to the "Drop Chandelier" button
-    const dropChandelierBtn = document.getElementById('dropChandelierBtn');
-    dropChandelierBtn.addEventListener("click", function (event) {
-      startTimer(); // Start the timer when the button is clicked
     let slideIndex = 1;
     showSlides(slideIndex);
 
