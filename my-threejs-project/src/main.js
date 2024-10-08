@@ -487,7 +487,7 @@ document.addEventListener('click', () => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 7, run: 10 };
+const speed = { walk: 8, run: 10 };
 let isMoving = false;
 let isRunning = false;
 
