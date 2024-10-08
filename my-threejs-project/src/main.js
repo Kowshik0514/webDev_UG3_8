@@ -243,7 +243,7 @@ export let texture2;
 
 
 // Load the character model
-gltfLoader.load('../models/player.glb', (gltf) => {
+gltfLoader.load('../models/mixed46.glb', (gltf) => {
   player = gltf.scene;
   player.scale.set(0.5, 0.5, 0.5);
   player.rotation.y = Math.PI;
@@ -460,7 +460,7 @@ document.addEventListener('click', () => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 7, run: 0 };
+const speed = { walk: 7, run: 10 };
 let isMoving = false;
 let isRunning = false;
 
@@ -562,9 +562,9 @@ function animate() {
     player.quaternion.copy(playerBody.quaternion);
 
     // Calculate the camera position based on player and pitch/yaw
-    const cameraX = player.position.x + radius * Math.sin(yaw) * Math.cos(pitch);
+    const cameraX = player.position.x - radius * Math.sin(yaw) * Math.cos(pitch);
     const cameraY = player.position.y + radius * Math.sin(pitch);
-    const cameraZ = player.position.z + radius * Math.cos(yaw) * Math.cos(pitch);
+    const cameraZ = player.position.z - radius * Math.cos(yaw) * Math.cos(pitch);
 
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(player.position);
@@ -589,7 +589,7 @@ function updatePlayerAnimation() {
   // Check if the player is moving and if they're running
   if (isMoving) {
     if (isRunning) {
-      newAction = actions['run']; // Play run animation
+      newAction = actions['crawl']; // Play run animation
     } else {
       newAction = actions['walk']; // Play walk animation
     }
@@ -616,10 +616,10 @@ function movePlayer() {
   const forward = getPlayerForwardDirection();
   const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
 
-  if (keys.w) moveDirection.add(forward);
-  if (keys.s) moveDirection.add(forward.clone().negate());
-  if (keys.a) moveDirection.add(right.clone().negate());
-  if (keys.d) moveDirection.add(right);
+  if (keys.s) moveDirection.add(forward);
+  if (keys.w) moveDirection.add(forward.clone().negate());
+  if (keys.d) moveDirection.add(right.clone().negate());
+  if (keys.a) moveDirection.add(right);
 
   moveDirection.normalize();
 
@@ -630,7 +630,7 @@ function movePlayer() {
     playerBody.velocity.z = moveDirection.z * speedValue;
 
     const targetRotation = Math.atan2(moveDirection.x, moveDirection.z);
-    player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1);
+    player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1)+Math.PI;
   }
 
   // Jumping
