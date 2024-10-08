@@ -1,7 +1,7 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as CANNON from 'cannon';
 import { stones } from './globals.js';
-
+import { restartGame } from './chandelier.js';
 // Add reference to the player object and playerHealth
 let playerHealth = 100; // Initialize player's health
 const healthBarContainer = document.createElement('div');
@@ -27,6 +27,13 @@ healthBar.style.borderRadius = '5px';
 healthBarContainer.appendChild(healthBar);
 document.body.appendChild(healthBarContainer);
 
+export function refill_health() {
+    console.log("Aarya puk")
+    playerHealth = 100; // Reset health for testing purposes
+    // playerBody.position.set(0, 1.6, 0); // Reset player position (if applicable)
+    healthBar.style.width = '100%'; // Reset health bar
+    healthBar.style.backgroundColor = 'green'; // Reset health bar color
+}
 // Function to update health bar based on player's health
 function updateHealth(playerBody) {
     // Calculate the health percentage
@@ -44,7 +51,12 @@ function updateHealth(playerBody) {
 
     // If player's health reaches 0, end the game
     if (playerHealth <= 0) {
-        alert('Game Over!');
+        // alert('Game Over!');
+        document.getElementById('go').innerHTML = "You Lost bc";
+        document.getElementById('restartButton').innerHTML = "Restart";
+        document.getElementById('gameOverPopup').style.display = 'flex';
+        // restartGame();
+        // refill_health(playerBody)
         playerHealth = 100; // Reset health for testing purposes
         playerBody.position.set(0, 1.6, 0); // Reset player position (if applicable)
         healthBar.style.width = '100%'; // Reset health bar
@@ -109,10 +121,10 @@ function checkStoneCollision(stoneBody, playerBody) {
     const distance = stoneBody.position.distanceTo(playerBody.position);
 
     // Check if the stone is close enough to the player to be considered a hit
-    if (distance < 1.5 && stoneBody.position.y>1) { 
-           console.log(stoneBody.position); // Adjust this distance based on your game's scale
+    if (distance < 1.5 && stoneBody.position.y > 1) {
+        console.log(stoneBody.position); // Adjust this distance based on your game's scale
         if (playerHealth > 0) {
-            playerHealth -= 1; // Decrease health by 10%
+            playerHealth -= 5; // Decrease health by 10%
             updateHealth(playerBody); // Update the health UI
         }
     }

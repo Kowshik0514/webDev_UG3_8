@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { chandelier, chandelierBody,stones } from './globals.js';
-import { playerBody, directionalLight, directionalLight2,plane001,texture1,texture2 } from './main.js'; // Assuming `directionalLight` is global
-import {  rstgame } from './main.js';
-import { loadStones, updateStones, removeStones } from './Stones.js';
+import { chandelier, chandelierBody, stones } from './globals.js';
+import { playerBody, directionalLight, directionalLight2, plane001, texture1, texture2 } from './main.js'; // Assuming `directionalLight` is global
+import { rstgame } from './main.js';
+import { loadStones, updateStones, removeStones, refill_health } from './Stones.js';
 
 let earthquakeActive = false; // Flag to control earthquake
 let earthquakeInterval;
@@ -130,8 +130,8 @@ export function dropChandelier(world, scene) {
       document.getElementById('gameOverPopup').style.display = 'flex';
     }
   }
-
-  animate2();
+  if (earthquakeActive)
+    animate2();
 }
 
 // Function to simulate earthquake effect
@@ -145,10 +145,10 @@ export function startEarthquake(world, scene) {
     earthquakeSound.play();
   }
 
-  plane001.material.map = texture1; 
+  plane001.material.map = texture1;
   // Change to earthquake texture
-        plane001.material.needsUpdate = true; 
-        // Notify Three.js to update the material
+  plane001.material.needsUpdate = true;
+  // Notify Three.js to update the material
 
 
   earthquakeInterval = setInterval(() => {
@@ -192,12 +192,12 @@ function stopEarthquake() {
     earthquakeSound.currentTime = 0; // Reset the sound to the beginning
   }
 
-  plane001.material.map = texture2; 
+  plane001.material.map = texture2;
   // Change to earthquake texture
-        plane001.material.needsUpdate = true; 
-        // Notify Three.js to update the material
+  plane001.material.needsUpdate = true;
+  // Notify Three.js to update the material
 
-  
+
   // Reset light intensity
   directionalLight.intensity = 1; // Reset to normal intensity
   directionalLight2.intensity = 1; // Reset to normal intensity
@@ -212,14 +212,17 @@ export function restartGame() {
   document.getElementById('gameOverPopup').style.display = 'none';
 
   // Reset the chandelier position
-  window.chandelier.position.set(0, 4.5, -0.85);
-  window.chandelierBody.position.set(0, 4.5, -0.85);
-  window.chandelierBody.mass = 0;
+  if (window.chandelier) {
+    window.chandelier.position.set(0, 4.5, -0.85);
+    window.chandelierBody.position.set(0, 4.5, -0.85);
+    window.chandelierBody.mass = 0;
+  }
 
   // Reset player position and stop earthquake
   playerBody.position.set(0, 1, 0);
   stopEarthquake(); // Stop the earthquake effect
   rstgame();
+  refill_health();
 }
 
 // Load the earthquake sound when the page loads

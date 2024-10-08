@@ -8,7 +8,7 @@ import { createWall, createAllWalls } from './wall'; // Import wall creation fun
 import { loadChandelier, dropChandelier, startEarthquake } from './chandelier';
 import { chandelier, chandelierBody } from './globals.js';
 import { loadStones, updateStones, removeStones } from './Stones.js';
-import { loadRoads, roads} from './road.js';
+import { loadRoads, roads } from './road.js';
 import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
 
 // Scene
@@ -93,7 +93,7 @@ document.getElementById('dropChandelierBtn').addEventListener('click', () => {
 
 
 const frontWallGeometry = new THREE.BoxGeometry(9, 5.5, 0.001);
-const frontWallmaterial = new THREE.MeshBasicMaterial({color: 0xaaaaaa});
+const frontWallmaterial = new THREE.MeshBasicMaterial({ color: 0xaaaaaa });
 const frontWall = new THREE.Mesh(frontWallGeometry, frontWallmaterial);
 
 frontWall.position.set(-1.5, 2.75, 3);
@@ -336,25 +336,25 @@ gltfLoader.load('../models/room.glb', (gltf) => {
   room.position.set(0, -29, 0); // Position adjustment
   scene.add(room);
   // Load the textures
-// const textureLoader = new THREE.TextureLoader();
-texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
+  // const textureLoader = new THREE.TextureLoader();
+  texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
 
 
-// Find the existing plane named 'Plane001'
-plane001 = room.getObjectByName('Plane001');
-texture2= plane001.material.map;
+  // Find the existing plane named 'Plane001'
+  plane001 = room.getObjectByName('Plane001');
+  texture2 = plane001.material.map;
 
-floor = room.getObjectByName('Plane001');
-// Apply the texture to the plane's material;
+  floor = room.getObjectByName('Plane001');
+  // Apply the texture to the plane's material;
 
-// Animation loop (if needed)
-function animate() {
+  // Animation loop (if needed)
+  function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-}
+  }
 
-// Start the animation
-animate();
+  // Start the animation
+  animate();
 
   // Traverse through each object in the room and create colliders
   room.traverse((object) => {
@@ -454,53 +454,51 @@ function animate() {
   if (camera.position.y > 0) {
     // Set floor opacity to 1 if camera Y is greater than 0
     if (floor) {
-        floor.material.opacity = 1;
-        floor.material.needsUpdate = true;  // Ensure material updates
+      floor.material.opacity = 1;
+      floor.material.needsUpdate = true;  // Ensure material updates
     }
 
     // Set road opacity to 1
     roads.forEach((road) => {
-        if (road && road.material) {
-            road.material.opacity = 1;
-            road.material.transparent = true; 
-            road.material.needsUpdate = true; 
-        }
+      if (road && road.material) {
+        road.material.opacity = 1;
+        road.material.transparent = true;
+        road.material.needsUpdate = true;
+      }
     });
-} else {
+  } else {
     // Set floor opacity to 0 if camera Y is less than or equal to 0
     if (floor) {
-        floor.material.opacity = 0.2;
-        floor.material.transparent = true;
-        floor.material.needsUpdate = true;  // Ensure material updates
+      floor.material.opacity = 0.2;
+      floor.material.transparent = true;
+      floor.material.needsUpdate = true;  // Ensure material updates
     }
     // console.log(3);
     // Set road opacity to 0
-    roads.forEach(( road ) => {
+    roads.forEach((road) => {
       // console.log(road);
-        if (road ) {
-            road.material.opacity = 0.6;
-            // console.log(1);
-            road.material.transparent = true;
-            road.material.needsUpdate = true;
-        }
+      if (road) {
+        road.material.opacity = 0.6;
+        // console.log(1);
+        road.material.transparent = true;
+        road.material.needsUpdate = true;
+      }
     });
-}
-if(camera.position.z<3.5){
-  if(frontWall)
-  {
-    frontWall.material.opacity = 0.8;
-    frontWall.material.transparent = true;
-    frontWall.material.needsUpdate = true;
   }
-}
-else{
-  if(frontWall)
-  {
-    frontWall.material.opacity = 1;
-    frontWall.material.transparent = true;
-    frontWall.material.needsUpdate = true;
+  if (camera.position.z < 3.5) {
+    if (frontWall) {
+      frontWall.material.opacity = 0.8;
+      frontWall.material.transparent = true;
+      frontWall.material.needsUpdate = true;
+    }
   }
-}
+  else {
+    if (frontWall) {
+      frontWall.material.opacity = 1;
+      frontWall.material.transparent = true;
+      frontWall.material.needsUpdate = true;
+    }
+  }
   // Step the physics world
   world.step(1 / 60);
   // Update stones position
