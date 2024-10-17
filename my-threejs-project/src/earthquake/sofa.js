@@ -5,7 +5,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 const gltfLoader = new GLTFLoader();
 
 export function loadSofa(scene, world, position, rotationY) {
-  gltfLoader.load('../models/sofa.glb', (gltf) => {
+  gltfLoader.load('../models/earthquake/sofa.glb', (gltf) => {
     const sofa = gltf.scene;
     sofa.scale.set(0.01, 0.01, 0.01); // Scale adjustment
     sofa.position.set(position.x, position.y, position.z); // Position adjustment

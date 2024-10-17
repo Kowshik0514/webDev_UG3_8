@@ -36,3 +36,4 @@ jspm_packages/
 
 # Windows system files
 Thumbs.db
+/.hintrc

@@ -78,7 +78,7 @@ updateHealth1(); // Initialize health bar
 export function loadStones(scene, world) {
     const stoneLoader = new GLTFLoader();
 
-    stoneLoader.load('../models/stones.glb', (gltf) => {
+    stoneLoader.load('../models/earthquake/stones.glb', (gltf) => {
         console.log("Stones model loaded");
 
         // Loop to create multiple stones

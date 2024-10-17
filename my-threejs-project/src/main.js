@@ -3,15 +3,15 @@ import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as CANNON from 'cannon'; // Import Cannon.js
-import { createForest } from './tree'; // Import tree functions
-import { createWall, createAllWalls } from './wall'; // Import wall creation functions
-import { loadChandelier, dropChandelier, startEarthquake } from './chandelier';
-import { chandelier, chandelierBody } from './globals.js';
-import { loadStones, updateStones, removeStones, playerHealth, updateHealth, update } from './Stones.js';
-import { loadRoads, roads } from './road.js';
-import { loadStreetLights1, loadStreetLights2 } from './streetLight.js';
-import { createTable } from './table.js';
-import { loadSofa } from './sofa.js';
+import { createForest } from './earthquake/tree.js'; // Import tree functions
+import { createWall, createAllWalls } from './earthquake/wall.js'; // Import wall creation functions
+import { loadChandelier, dropChandelier, startEarthquake } from './earthquake/chandelier';
+import { chandelier, chandelierBody } from './earthquake/globals';
+import { loadStones, updateStones, removeStones, playerHealth, updateHealth, update } from './earthquake/Stones.js';
+import { loadRoads, roads } from './earthquake/road.js';
+import { loadStreetLights1, loadStreetLights2 } from './earthquake/streetLight.js';
+import { createTable } from './earthquake/table.js';
+import { loadSofa } from './earthquake/sofa.js';
 
 // Scene
 export const scene = new THREE.Scene();
@@ -248,7 +248,7 @@ export let texture1;
 export let texture2;
 
 // Load the character model
-gltfLoader.load('../models/mixed46.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/mixed46.glb', (gltf) => {
   player = gltf.scene;
   player.scale.set(0.5, 0.5, 0.5);
   player.rotation.y = Math.PI;
@@ -292,14 +292,14 @@ gltfLoader.load('../models/mixed46.glb', (gltf) => {
 let floor;
 //Door
 let door1;
-gltfLoader.load('../models/door.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/door.glb', (gltf) => {
   door1 = gltf.scene;
   door1.scale.set(0.5, 0.5, 0.5);
   door1.position.set(-0.1, 0.42, 2);
   scene.add(door1);
 })
 let door;
-gltfLoader.load('../models/door.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/door.glb', (gltf) => {
   door = gltf.scene;
   door.scale.set(0.5, 0.5, 0.5);
   door.position.set(-0.13, 0.42, 1.8);
@@ -332,14 +332,14 @@ gltfLoader.load('../models/door.glb', (gltf) => {
 export let first_aid_box1;
 export let first_aid_box2;
 let first_aid_body;
-gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/first_aid_box.glb', (gltf) => {
   first_aid_box1 = gltf.scene;
   first_aid_box1.scale.set(0.11, 0.11, 0.11);
   first_aid_box1.position.set(4.4, 1, -0.8);
   scene.add(first_aid_box1);
 
 });
-gltfLoader.load('../models/first_aid_box.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/first_aid_box.glb', (gltf) => {
   first_aid_box2 = gltf.scene;
   first_aid_box2.scale.set(0.11, 0.11, 0.11);
   first_aid_box2.position.set(-4.4, 1, -0.8);
@@ -432,14 +432,14 @@ window.addEventListener('keydown', (event) => {
   }
 });
 
-gltfLoader.load('../models/room.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/room.glb', (gltf) => {
   const room = gltf.scene;
   room.scale.set(0.5, 0.5, 0.5);
   room.position.set(0, -4.3, 0);
   scene.add(room);
   // Load the textures
   const textureLoader = new THREE.TextureLoader();
-  texture1 = textureLoader.load('../models/crack.jpg'); // Replace with your texture path
+  texture1 = textureLoader.load('../models/earthquake/crack.jpg'); // Replace with your texture path
 
   // // Find the existing plane named 'Plane001'
 
@@ -497,7 +497,7 @@ document.addEventListener('click', () => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 7, run: 5 };
+const speed = { walk: 10, run: 8 };
 let isMoving = false;
 let isRunning = false;
 
@@ -738,7 +738,7 @@ window.addEventListener('resize', () => {
 
 
 export let floor2;
-gltfLoader.load('../models/floor2.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/floor2.glb', (gltf) => {
   floor2 = gltf.scene;
   floor2.scale.set(1, 1, 1); // Scale adjustment
   floor2.position.set(-1, 0.2, 0); // Position adjustment
@@ -747,7 +747,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
 });
 
 export let floor3;
-gltfLoader.load('../models/floor2.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/floor2.glb', (gltf) => {
   floor3 = gltf.scene;
   floor3.scale.set(1, 1, 1); // Scale adjustment
   floor3.position.set(4.63, 0.2, 0); // Position adjustment
@@ -756,7 +756,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
 });
 
 export let floor4;
-gltfLoader.load('../models/floor2.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/floor2.glb', (gltf) => {
   floor4 = gltf.scene;
   floor4.scale.set(1, 1, 1); // Scale adjustment
   floor4.position.set(-6.6, 0.2, 0); // Position adjustment
@@ -765,7 +765,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
 });
 
 export let floor5;
-gltfLoader.load('../models/floor2.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/floor2.glb', (gltf) => {
   floor5 = gltf.scene;
   floor5.scale.set(1, 1, 1); // Scale adjustment
   floor5.position.set(-1, 0.2, -8.54); // Position adjustment
@@ -775,7 +775,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
 
 
 export let floor6;
-gltfLoader.load('../models/floor2.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/floor2.glb', (gltf) => {
   floor6 = gltf.scene;
   floor6.scale.set(1, 1, 1); // Scale adjustment
   floor6.position.set(4.63, 0.2, -8.54); // Position adjustment
@@ -784,7 +784,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
 });
 
 export let floor7;
-gltfLoader.load('../models/floor2.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/floor2.glb', (gltf) => {
   floor7 = gltf.scene;
   floor7.scale.set(1, 1, 1); // Scale adjustment
   floor7.position.set(-6.6, 0.2, -8.53); // Position adjustment
@@ -794,7 +794,7 @@ gltfLoader.load('../models/floor2.glb', (gltf) => {
 
 
 
-gltfLoader.load('../models/crack.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/crack.glb', (gltf) => {
   crack1 = gltf.scene;
   crack1.scale.set(2, 1, 3); // Scale adjustment
   crack1.position.set(3, 0.05, 0.53); // Position adjustment
@@ -810,7 +810,7 @@ gltfLoader.load('../models/crack.glb', (gltf) => {
 
 export let crack2;
 
-gltfLoader.load('../models/crack.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/crack.glb', (gltf) => {
   crack2 = gltf.scene;
   crack2.scale.set(2, 1, 3); // Scale adjustment
   crack2.traverse((child) => {
@@ -826,7 +826,7 @@ gltfLoader.load('../models/crack.glb', (gltf) => {
 
 export let crack3;
 
-gltfLoader.load('../models/crack.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/crack.glb', (gltf) => {
   crack3 = gltf.scene;
   crack3.scale.set(2, 1, 2); // Scale adjustment
   crack3.position.set(-4, 0.05, -4.5); // Position adjustment
@@ -842,7 +842,7 @@ gltfLoader.load('../models/crack.glb', (gltf) => {
 
 export let crack4;
 
-gltfLoader.load('../models/crack.glb', (gltf) => {
+gltfLoader.load('../models/earthquake/crack.glb', (gltf) => {
   crack4 = gltf.scene;
   crack4.scale.set(2, 1, 2); // Scale adjustment
   crack4.position.set(-4, 0.05, -0.53); // Position adjustment
