@@ -1,0 +1,76 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    --s: 37px;
+
+    --c: #0000, #282828 0.5deg 119.5deg, #0000 120deg;
+    --g1: conic-gradient(from 60deg at 56.25% calc(425% / 6), var(--c));
+    --g2: conic-gradient(from 180deg at 43.75% calc(425% / 6), var(--c));
+    --g3: conic-gradient(from -60deg at 50% calc(175% / 12), var(--c));
+
+    background-color: #1e1e1e;
+
+    background: var(--g1), var(--g1) var(--s) calc(1.73 * var(--s)), var(--g2),
+      var(--g2) var(--s) calc(1.73 * var(--s)), var(--g3) var(--s) 0,
+      var(--g3) 0 calc(1.73 * var(--s)) #1e1e1e;
+    background-size: calc(2 * var(--s)) calc(3.46 * var(--s));
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+    padding-top: 50px; 
+}
+
+.card {
+    width: 200px;
+    height: 300px;
+    background-color: white; 
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+}
+
+.card-image {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-title {
+    font-size: 1.5em;
+    margin: 16px 0;
+}
+
+.card-description {
+    font-size: 1em;
+    color: #555;
+}
+
+.card-button {
+    padding: 10px 20px;
+    background-color: black; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+}
+
+.card-button:hover {
+    background-color: #333; 
+    transform: scale(1.05); 
+}

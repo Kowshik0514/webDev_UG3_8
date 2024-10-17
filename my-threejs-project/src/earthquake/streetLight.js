@@ -8,7 +8,7 @@ const streetLights = []; // Array to store street light objects and their physic
 export function loadStreetLights1(scene, world, positions) {
     const loader = new GLTFLoader();
 
-    loader.load('../models/earthquake/street_light.glb', (gltf) => {
+    loader.load('../../models/earthquake/street_light.glb', (gltf) => {
         const model = gltf.scene;
         let a=1;
 
@@ -71,7 +71,7 @@ export function loadStreetLights1(scene, world, positions) {
 export function loadStreetLights2(scene, world, positions) {
     const loader = new GLTFLoader();
 
-    loader.load('../models/earthquake/street_light.glb', (gltf) => {
+    loader.load('../../models/earthquake/street_light.glb', (gltf) => {
         const model = gltf.scene;
         let a=0;
 

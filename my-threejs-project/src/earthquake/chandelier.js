@@ -2,10 +2,10 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { chandelier, chandelierBody,stones } from './globals.js';
-import { playerBody, directionalLight, directionalLight2,texture1,texture2,plane1 } from '../main.js'; // Assuming `directionalLight` is global
-import {  rstgame , first_aid_box1,first_aid_box2,scene} from '../main.js';
+import { playerBody, directionalLight, directionalLight2,texture1,texture2,plane1 } from './main.js'; // Assuming `directionalLight` is global
+import {  rstgame , first_aid_box1,first_aid_box2,scene} from './main.js';
 import { loadStones, updateStones, removeStones ,refill_health} from './Stones.js';
-import { crack1,crack2,crack3,crack4,floor2,floor3,floor4,floor5,floor6,floor7 } from '../main.js';
+import { crack1,crack2,crack3,crack4,floor2,floor3,floor4,floor5,floor6,floor7 } from './main.js';
 
 let earthquakeActive = false; // Flag to control earthquake
 let earthquakeInterval;
@@ -33,7 +33,7 @@ soundToggleBtn.addEventListener('click', () => {
 });
 // Load the earthquake sound
 function loadEarthquakeSound() {
-  earthquakeSound = new Audio('../sounds/earthquake.mp3');
+  earthquakeSound = new Audio('../../sounds/earthquake.mp3');
   earthquakeSound.loop = true; // Loop the sound during the earthquake
   thudSound = new Audio('../sounds/thud.mp3'); // Load the thud sound
 }
@@ -65,7 +65,7 @@ dropChandelierBtn.addEventListener('click', () => {
 export function loadChandelier(scene, world) {
   const chandelierLoader = new GLTFLoader();
 
-  chandelierLoader.load('../models/earthquake/chandelier.glb', (gltf) => {
+  chandelierLoader.load('../../models/earthquake/chandelier.glb', (gltf) => {
     window.chandelier = gltf.scene;
     window.chandelier.scale.set(0.0004, 0.0004, 0.0004);
     window.chandelier.position.set(0, 4.5, -0.85);

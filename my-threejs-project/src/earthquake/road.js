@@ -9,7 +9,7 @@ export function loadRoads(scene, world, positions) {
 
     // Load the texture with callbacks for debugging
     const roadTexture = textureLoader.load(
-        '../models/earthquake/road.jpg',
+        '../../models/earthquake/road.jpg',
         (texture) => {
             console.log('Texture loaded successfully');
             texture.wrapS = THREE.RepeatWrapping;

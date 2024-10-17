@@ -78,7 +78,7 @@ updateHealth1(); // Initialize health bar
 export function loadStones(scene, world) {
     const stoneLoader = new GLTFLoader();
 
-    stoneLoader.load('../models/earthquake/stones.glb', (gltf) => {
+    stoneLoader.load('../../models/earthquake/stones.glb', (gltf) => {
         console.log("Stones model loaded");
 
         // Loop to create multiple stones
@@ -155,16 +155,18 @@ export function updateStones(playerBody, world, scene) {
     });
 }
 
-// Function to remove stones from the scene and physics world
 export function removeStones(world, scene) {
     stones.forEach(({ stone, stoneBody }) => {
-        // Remove stone from the scene
-        scene.remove(stone);
-        // Remove stone from the physics world
-        world.removeBody(stoneBody);
+        if (stone) {
+            // console.log(`Removing stone at position: ${stone.position.toArray()}`);
+            scene.remove(stone);
+        } else {
+            console.warn('Attempted to remove a stone that is not valid or does not exist.');
+        }
+        if (stoneBody) {
+            world.removeBody(stoneBody);
+        }
     });
-
-    // Clear the stones array
     stones.length = 0;
     // console.log(`Total stones remaining: ${stones.length}`);
 }

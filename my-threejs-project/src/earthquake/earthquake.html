@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website with Slideshow</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <!-- Slideshow Container -->
+  <div class="slideshow-container">
+
+    <!-- Slides -->
+    <div class="mySlides fade">
+      <img src="../../images/s4.png" alt="Slide 1" class="scaled-image">
+      <!-- <div class="text">Caption One</div> -->
+      <button id="startGameButton1" class="slide-button">Start Game</button>
+    </div>
+
+    <div class="mySlides fade">
+      <img src="../../images/s2.png" alt="Slide 2" class="scaled-image">
+      <!-- <div class="text">Caption Two</div> -->
+      <button id="startGameButton2" class="slide-button">Start Game</button>
+    </div>
+
+    <div class="mySlides fade">
+      <img src="../../images/s3.png" alt="Slide 3" class="scaled-image">
+      <!-- <div class="text">Caption Three</div> -->
+      <button id="startGameButton3" class="slide-button">Start Game</button>
+    </div>
+
+    <!-- Next and Previous Buttons -->
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+  </div>
+
+  <br>
+
+  <!-- Dots/Indicators -->
+  <div style="text-align:center">
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
+  </div>
+
+  <!-- Start Game Button -->
+  <div style="text-align: center; margin-top: 20px;">
+    <button id="startGameButton">Start Game</button>
+  </div>
+
+  <script>
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+      showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+      let i;
+      const slides = document.getElementsByClassName("mySlides");
+      const dots = document.getElementsByClassName("dot");
+      if (n > slides.length) { slideIndex = 1 }
+      if (n < 1) { slideIndex = slides.length }
+      for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";  // Hide all slides
+      }
+      for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", ""); // Remove active class from all dots
+      }
+      slides[slideIndex - 1].style.display = "block"; // Show the current slide
+      dots[slideIndex - 1].className += " active"; // Mark the current dot as active
+    }
+
+    // Automatic slideshow (optional)
+    setInterval(function () {
+      plusSlides(1);
+    }, 1000); // Change slide every 5 seconds
+
+    // Redirect to game.html when "Start Game" button is clicked
+    let startGameBtn = document.getElementById('startGameButton1');
+    startGameBtn.addEventListener("click", function () {
+      window.location.href = "game.html"; // Redirect to game.html
+    });
+
+    startGameBtn = document.getElementById('startGameButton2');
+    startGameBtn.addEventListener("click", function () {
+      window.location.href = "game.html"; // Redirect to game.html
+    });
+
+    startGameBtn = document.getElementById('startGameButton3');
+    startGameBtn.addEventListener("click", function () {
+      window.location.href = "game.html"; // Redirect to game.html
+    });
+  </script>
+</body>
+
+</html>
