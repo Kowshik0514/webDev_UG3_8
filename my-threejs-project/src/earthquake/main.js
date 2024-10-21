@@ -637,7 +637,7 @@ function updatePlayerAnimation() {
     newAction = actions['idle']; // PlayerBplayerBody is idle
   }
   if ((player.position.x > -1.5 && playerBody.position.x < 1.5) && (playerBody.position.z > -6 && playerBody.position.z <-4)) {
-    newAction = actions['sleep'];
+    newAction = actions['crawl'];
     playerBody.position.y = -0.05;
 
   }
