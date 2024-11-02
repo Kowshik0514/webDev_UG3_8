@@ -4,37 +4,389 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Disaster Preparedness Simulation</title>
   <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-  <div class="container">
-    <div class="card">
-      <img src="./images/homepage/earthquake.avif" alt="Image" class="card-image">
-      <h3 class="card-title">Earthquake</h3>
-      <p class="card-description">In the face of shaking ground, your calm can keep you steady.</p>
-      <button type="button" class="card-button" onclick="location.href='./src/earthquake/earthquake.html'">Start</button>
+
+  
+  <header class="header">
+    <img src="./images/homepage/logo.avif" alt="Logo" class="logo">
+    <h1>Disaster Preparedness Simulation</h1>
+    <nav class="navbar">
+      <a href="#simulation">Simulations</a>
+      <a href="#news">News</a>
+      <a href="#other">Other Section</a> 
+      <a href="#about">About Us</a>
+    </nav>
+    <img src="./images/homepage/profile.png" alt="Profile Icon" class="profile-icon" onclick="toggleProfilePopup()">
+
+    
+    <div id="profile-popup" class="popup hidden">
+      <p style="font-weight: bold;">Welcome, User!</p>
+      <hr>
+      <p><a href="#">View Profile</a></p>
+      <p><a href="#">Settings</a></p>
+      <hr>
+      <p><a href="#">Logout</a></p>
     </div>
-    <div class="card">
-      <img src="./images/homepage/flood2.jpg" alt="Image" class="card-image">
-      <h3 class="card-title">Flood</h3>
-      <p class="card-description">Stay alert and rise above your strength can weather any storm.</p>
-      <button type="button" class="card-button" onclick="location.href='./src/flood/flood.html'">Start</button>
+  </header>
+
+  <div class="section-banner">
+    <div id="star-1">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
     </div>
-    <div class="card">
-      <img src="./images/homepage/flood.jpg" alt="Image" class="card-image">
-      <h3 class="card-title">Tsunami</h3>
-      <p class="card-description">Stand firm and act swiftly your focus will help you ride the waves.</p>
-      <button class="card-button">Start</button>
+
+    <div id="star-2">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
     </div>
-    <div class="card">
-      <img src="./images/homepage/earthquake.avif" alt="Image" class="card-image">
-      <h3 class="card-title">Wildfire</h3>
-      <p class="card-description">Keep moving and stay clear your quick actions can lead you to safety.</p>
-      <button class="card-button">Start</button>
+
+    <div id="star-3">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-4">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-5">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-6">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-7">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+    <div id="star-8">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-9">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-10">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-11">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-12">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-13">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-14">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-15">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-16">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-17">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-18">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-19">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-20">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-21">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-22">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-23">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-24">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-25">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-26">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-27">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
     </div>
   </div>
+
+  <section id="simulation">
+    <h2>Simulations</h2>
+    
+    
+    <div class="container">
+      <div class="card">
+        <img src="./images/homepage/earthquake.avif" alt="Earthquake Image" class="card-image">
+        <h3 class="card-title">Earthquake</h3>
+        <p class="card-description">In the face of shaking ground, your calm can keep you steady.</p>
+        <button type="button" class="card-button"
+          onclick="location.href='./src/earthquake/earthquake.html'">Start</button>
+      </div>
+      <div class="card">
+        <img src="./images/homepage/flood2.jpg" alt="Flood Image" class="card-image">
+        <h3 class="card-title">Flood</h3>
+        <p class="card-description">Stay alert and rise above, your strength can weather any storm.</p>
+        <button type="button" class="card-button" onclick="location.href='./src/flood/flood.html'">Start</button>
+      </div>
+      <div class="card">
+        <img src="./images/homepage/flood.jpg" alt="Tsunami Image" class="card-image">
+        <h3 class="card-title">Tsunami</h3>
+        <p class="card-description">Stand firm and act swiftly, your focus will help you ride the waves.</p>
+        <button class="card-button">Start</button>
+      </div>
+      <div class="card">
+        <img src="./images/homepage/earthquake.avif" alt="Wildfire Image" class="card-image">
+        <h3 class="card-title">Wildfire</h3>
+        <p class="card-description">Keep moving and stay clear, your quick actions can lead you to safety.</p>
+        <button class="card-button">Start</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="news">
+    <h2>News</h2>
+    
+    <p>This section contains the latest news related to disaster preparedness.</p>
+  </section>
+
+  <section id="other">
+    <h2>Other Section</h2>
+    
+    <p>This section contains other relevant information.</p>
+  </section>
+  <section id="about">
+    
+    <h2>About Us</h2>
+    
+    <p>This section contains information about the project.</p>
+  </section>
+
+  
+  <footer class="footer">
+    <p>&copy; 2024 Disaster Preparedness Simulation. All rights reserved.</p>
+  </footer>
+  <script src="script.js"></script>
 
 </body>
 
