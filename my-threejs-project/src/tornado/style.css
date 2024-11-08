@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: hsl(173, 73%, 50%); /* Change this to your desired color */
+}
+
+canvas {
+    color: aqua;
+    display: block;
+}
+
+.button-container {
+    position: absolute; /* Positioning the container absolutely */
+    top: 10px; /* Start position */
+    left: 10px; /* Start position */
+  }
+  
+  .button-container button {
+    background-color: #ff7f00; /* Orange background */
+    color: white;              /* White text */
+    border: none;              /* No border */
+    border-radius: 8px;       /* Rounded corners */
+    padding: 10px 20px;       /* Padding for better button size */
+    font-size: 16px;          /* Consistent font size */
+    font-family: 'Arial', sans-serif; /* Font for consistency */
+    cursor: pointer;          /* Pointer cursor on hover */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  }
+  
+  #startTornado {
+    margin-bottom: 10px; /* Space between buttons */
+  }
+  
+  #soundToggleBtn {
+    margin-bottom: 10px; /* Space between buttons */
+  }
+  
+  .button-container button:hover {
+    background-color: #e67300; /* Darker orange on hover */
+    transform: scale(1.05);    /* Slight zoom on hover */
+  }
+  
+  .button-container button:active {
+    background-color: #cc6600; /* Even darker orange on click */
+    transform: scale(1);       /* Reset scale on click */
+  }

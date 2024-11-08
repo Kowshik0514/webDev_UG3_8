@@ -47,9 +47,7 @@ dropChandelierBtn.addEventListener('click', () => {
   // Check if player's x and z positions match chandelier's x and z positions
   const isDirectlyBelow = Math.abs(playerPosition.x) - Math.abs(chandelierPosition.x) < 0.8 &&
     Math.abs(playerPosition.z) - Math.abs(chandelierPosition.z) < 0.8;
-
-
-
+    
   setTimeout(() => {
     dropChandelier();
   }, 30000);
