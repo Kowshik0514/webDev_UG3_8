@@ -1,0 +1,1 @@
+alert("Landslide is coming");
