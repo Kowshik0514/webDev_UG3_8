@@ -1,4 +1,4 @@
-// import './style.css';
+import './flood.css';
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -7,7 +7,74 @@ import { AnimationMixer } from 'three';
 import { Euler } from 'three';
 // Scene
 export const scene = new THREE.Scene();
+export let playerBody = null;
+playerBody = new CANNON.Body({
+  mass: 1, // Set player mass to 1 to respond to gravity
+  position: new CANNON.Vec3(0.5, 2.5, 0), // Initial position
+  fixedRotation: true, // Prevent unwanted rolling
+});
+let playerHealth = 100; // Initialize player's health
+const healthBarContainer = document.createElement('div');
+const healthBar = document.createElement('div');
 
+// Style the health bar container
+healthBarContainer.style.position = 'absolute';
+healthBarContainer.style.bottom = '20px'; // Position at the bottom
+healthBarContainer.style.left = '20px';   // Position to the left
+healthBarContainer.style.width = '200px'; // Fixed width for container
+healthBarContainer.style.height = '30px'; // Fixed height for container
+healthBarContainer.style.border = '2px solid black';
+healthBarContainer.style.backgroundColor = '#555'; // Darker background behind the health bar
+healthBarContainer.style.borderRadius = '5px';
+
+// Style the actual health bar
+healthBar.style.height = '100%'; // Full height of the container
+healthBar.style.width = '100%';  // Full width initially (100%)
+healthBar.style.backgroundColor = 'green'; // Green to indicate health
+healthBar.style.borderRadius = '5px';
+
+// Add the health bar to the container and then the container to the document
+healthBarContainer.appendChild(healthBar);
+document.body.appendChild(healthBarContainer);
+
+
+export function update(health) {
+    playerHealth = Math.min(100, playerHealth + health);
+}
+
+export function refill_health() {
+    playerHealth = 100; // Reset health for testing purposes
+    // playerBody.position.set(0, 1.6, 0); // Reset player position (if applicable)
+    healthBar.style.width = '100%'; // Reset health bar
+    healthBar.style.backgroundColor = 'green'; // Reset health bar color
+}
+export function updateHealth() {
+  // Calculate the health percentage
+  const healthPercentage = Math.max(playerHealth, 0); // Prevent negative width
+  healthBar.style.width = `${healthPercentage}%`;
+
+  // Change color based on health level
+  if (healthPercentage > 50) {
+      healthBar.style.backgroundColor = 'green';
+  } else if (healthPercentage > 25) {
+      healthBar.style.backgroundColor = 'yellow';
+  } else {
+      healthBar.style.backgroundColor = 'red';
+  }
+
+  // If player's health reaches 0, end the game
+  if (playerHealth <= 0) {
+      // alert('Game Over!');
+      document.getElementById('go').innerHTML = "Wasted";
+      document.getElementById('gameOverPopup').style.display = 'flex';
+      // restartGame();
+      // refill_health(playerBody)
+      playerHealth = 100; // Reset health for testing purposes
+      playerBody.position.set(0, 1.6, 0); // Reset player position (if applicable)
+      healthBar.style.width = '100%'; // Reset health bar
+      healthBar.style.backgroundColor = 'green'; // Reset health bar color
+  }
+}
 // Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 1.6, 3);
@@ -31,7 +98,7 @@ const planeBody1 = new CANNON.Body({
   mass: 0 // Mass of 0 for static objects
 });
 planeBody1.addShape(planeShape1);
-planeBody1.position.set(1, 0.1, 0);
+planeBody1.position.set(1, 0, 0);
 planeBody1.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(planeBody1); // Add planeBody to the world
 
@@ -87,7 +154,7 @@ let actions = {};
 let activeAction, previousAction;
 
 // Player physics body
-export let playerBody = null;
+
 // export let plane001;
 export let texture1;
 export let texture2;
@@ -111,11 +178,7 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
   const cylinder = new CANNON.Cylinder(0, 0, capsuleHeight - 2 * capsuleRadius, 8); // The middle cylinder
 
   // Create playerBody with mass
-  playerBody = new CANNON.Body({
-    mass: 1, // Set player mass to 1 to respond to gravity
-    position: new CANNON.Vec3(0.5, 2.5, 0), // Initial position
-    fixedRotation: true, // Prevent unwanted rolling
-  });
+ 
   
   // Optionally add a tiny, nearly invisible shape if minimal collision is required
   playerBody.addShape(new CANNON.Sphere(0.01), new CANNON.Vec3(0, 0, 0));
@@ -291,7 +354,9 @@ const clock = new THREE.Clock();
 
 let isRising = false;
 // Animation Loop
+let animationEnabled = true; 
 function animate() {
+  if (!animationEnabled) return;
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
 
@@ -321,18 +386,17 @@ function animate() {
     player.rotation.y = yaw; // Sync player's Y rotation with the camera's yaw
   }
 
-let rf = true;
   if (isRising && model) {
-    if(rf)
-    {
+    
         model.position.y += 0.0001;
-        rf = false;
-    }
-    else
-    {
-        model.position.y-=0.0001;
-        rf = true;
-    }
+        if(model.position.y-player.position.y<=0.75)
+          {
+            console.log("svsvs");
+            playerHealth -= 1;
+            updateHealth();
+          }
+        // console.log(model.position.y);
+  
      // Adjust the speed of rising water here
 
   }
@@ -343,9 +407,9 @@ let rf = true;
 // Function to update animation based on player's movement
 function updatePlayerAnimation() {
   if (!player || !mixer) return;
-  console.log("player position: ");
-  console.log(player.position.x);
-  console.log(player.position.z);
+  // console.log("player position: ");
+  console.log(player.position.y);
+  // console.log(player.position.z);
   let newAction;
 
   // Check if the player is moving and if they're running
