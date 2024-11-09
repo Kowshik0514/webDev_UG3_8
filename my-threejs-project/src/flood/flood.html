@@ -10,11 +10,11 @@
 
 <body>
   <canvas id="bg"></canvas>
-  <div class="button-container">
+  <!-- <div class="button-container">
     <button id="dropChandelierBtn">Start Flood</button>
     <button id="soundToggleBtn">Turn Sound Off</button>
     <button id="exitButton1">Exit Game</button>
-  </div>
+  </div> -->
 
   <!-- Game Over Pop-up -->
   <div id="gameOverPopup"
@@ -33,9 +33,6 @@
     </div>
   </div>
 
-  <div id="timerContainer">
-    <span id="timer">30</span>
-  </div>
 
   <script type="module" src="./flood.js"></script>
 
@@ -45,28 +42,17 @@
     const gameOverPopup = document.getElementById('gameOverPopup');
 
     // Function to start the countdown
-    function startTimer() {
-      let timeLeft = timerDuration;
-      const countdown = setInterval(() => {
-        timerElement.textContent = timeLeft;
-        timeLeft--;
-
-        // Check if the time has run out
-        if (timeLeft < 0) {
-          clearInterval(countdown); // Stop the timer
-          timerElement.textContent = "Time's up!";
-          gameOverPopup.style.display = 'flex'; // Show game over popup
-        }
-      }, 1000); // Update every second
-    }
 
     // Function to start the game
     function startGame() {
       gameOverPopup.style.display = 'none'; // Hide the game over popup
       localStorage.setItem("gameStarted", "true"); // Optionally set game state
       animationEnabled = false;
+    //   isRising=false;
+    //   console.log(model);
+    //   model.position.y = 0;
 
-      startTimer(); // Start the timer
+     // Start the timer
     }
 
     // Add event listener to the "Start Earthquake" button

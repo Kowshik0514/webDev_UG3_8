@@ -165,7 +165,7 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
   player.scale.set(0.5, 0.5, 0.5);
   player.rotation.y = Math.PI;
   scene.add(player);
-  console.log(player);
+  // console.log(player);
 
   // Add physics body for the player
   // Define the player capsule (capsule shape made of two spheres and a cylinder)
@@ -207,8 +207,8 @@ let model;
 gltfLoader.load('../../models/opt_wave2.glb', (gltf) => {
   model = gltf.scene;
   model.rotation.x = Math.PI; 
-  console.log("rotate \n");
-  console.log(model.rotation); 
+  // console.log("rotate \n");
+  // console.log(model.rotation); 
   model.scale.set(0.09, 0.005, 0.08); // Adjust scale if necessary
   scene.add(model);
   model.position.set(1, 0.5, 1); 
@@ -223,11 +223,11 @@ gltfLoader.load('../../models/opt_wave2.glb', (gltf) => {
     const action = mixer.clipAction(gltf.animations[0]);
     action.play();
   } else {
-    console.warn('No animations found in the model');
+    // console.warn('No animations found in the model');
   }
 
-  console.log("hi  ");
-  console.log(gltf.animations.length);
+  // console.log("hi  ");
+  // console.log(gltf.animations.length);
 });
 
 
@@ -240,7 +240,7 @@ gltfLoader.load('../../models/snowy_water_tank.glb', (gltf) => {
   scene.add(tank);
   tank.position.set(10, 8, 10); 
 
-  console.log("hi  ");
+  // console.log("hi  ");
 
   // Add physics body for the tank
   const tankShape = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1)); // Adjust shape based on tank
@@ -268,7 +268,7 @@ gltfLoader.load('../../models/apartment_plan.glb', (gltf) => {
   scene.add(room);
   room.position.set(-10, 0, 10); 
 
-  console.log("hi  ");
+  // console.log("hi  ");
 
   // Add physics body for the room
   const roomShape = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1)); // Adjust shape based on room
@@ -316,7 +316,7 @@ let pitch = 0;
 const radius = 3;
 
 window.addEventListener('keydown', (event) => {
-  console.log(event.key);  // Debug key presses
+  // console.log(event.key);  // Debug key presses
 
   if (event.key === ' ' || event.key.toLowerCase() in keys) {
     if (event.key === ' ') {
@@ -388,10 +388,10 @@ function animate() {
 
   if (isRising && model) {
     
-        model.position.y += 0.0001;
-        if(model.position.y-player.position.y<=0.75)
+        model.position.y += 0.01;
+        if(model.position.y-player.position.y>=0.75)
           {
-            console.log("svsvs");
+            // console.log("svsvs");
             playerHealth -= 1;
             updateHealth();
           }
@@ -408,7 +408,7 @@ function animate() {
 function updatePlayerAnimation() {
   if (!player || !mixer) return;
   // console.log("player position: ");
-  console.log(player.position.y);
+  // console.log(player.position.y);
   // console.log(player.position.z);
   let newAction;
 
