@@ -208,17 +208,17 @@ function stopEarthquake() {
   //       plane1.material.needsUpdate = true; 
         // Notify Three.js to update the material
 
-  crack1.visible = false;
-  crack2.visible = false;
-  crack3.visible = false;
-  crack4.visible = false;
+  if (crack1)  crack1.visible = false;
+  if (crack2) crack2.visible = false;
+  if (crack3) crack3.visible = false;
+  if(crack4) crack4.visible = false;
 
-  floor2.visible = true;
-  floor3.visible = true;
-  floor4.visible = true;
-  floor5.visible = true;
-  floor6.visible = true;
-  floor7.visible = true;
+  if(floor2) floor2.visible = true;
+  if(floor3) floor3.visible = true;
+  if(floor4) floor4.visible = true;
+  if(floor5) floor5.visible = true;
+  if(floor6) floor6.visible = true;
+  if(floor7) floor7.visible = true;
 
   // Reset light intensity
   directionalLight.intensity = 1; // Reset to normal intensity

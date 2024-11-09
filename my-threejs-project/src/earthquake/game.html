@@ -47,12 +47,12 @@
   <script>
     let timerDuration = 30;
     const timerElement = document.getElementById('timer');
-
+    let countdown;
     // Function to start the countdown
     function startTimer() {
       let timeLeft = timerDuration;
 
-      const countdown = setInterval(() => {
+        countdown = setInterval(() => {
         timerElement.textContent = timeLeft;
         timeLeft--;
 
@@ -72,7 +72,9 @@
 
     // Add event listener to the "Restart" button
     document.getElementById('restartButton').addEventListener('click', () => {
-      startTimer(); // Start the timer again if you want it on restart
+      //startTimer(); // Start the timer again if you want it on restart
+      clearInterval(countdown); // Stop the timer
+      timerElement.textContent = 30; // Reset the timer
     });
 
     // Add event listener to the "Exit" button to clear the game state and go back to index.html

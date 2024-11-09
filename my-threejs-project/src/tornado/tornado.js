@@ -10,7 +10,7 @@ export function createTornado(scene, world) {
     tornadoGroup.visible = true; // Initially, tornado is visible.
     const tornadoColliders = [];
 
-    loader.load('../../models/tornado.glb', (gltf) => {
+    loader.load('../../models/tornado/tornado.glb', (gltf) => {
         const tornado = gltf.scene;
         tornado.scale.set(10, 10, 10);
         tornadoGroup.add(tornado);
