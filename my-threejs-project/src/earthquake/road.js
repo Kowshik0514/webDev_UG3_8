@@ -11,7 +11,7 @@ export function loadRoads(scene, world, positions) {
     const roadTexture = textureLoader.load(
         '../../models/earthquake/road.jpg',
         (texture) => {
-            console.log('Texture loaded successfully');
+            // console.log('Texture loaded successfully');
             texture.wrapS = THREE.RepeatWrapping;
             texture.wrapT = THREE.RepeatWrapping;
             // texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
