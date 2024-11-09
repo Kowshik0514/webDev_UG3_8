@@ -18,7 +18,12 @@ renderer.shadowMap.enabled = true;
 const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0);
 
-createTornado(scene, world);
+
+const startTornadoButton = document.getElementById('startTornado');
+startTornadoButton.addEventListener('click', () => {
+  createTornado(scene, world);
+});
+
 loadHome(scene, world);
 
 // Sky background color
@@ -117,7 +122,8 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
   // Create playerBody with mass
   playerBody = new CANNON.Body({
     mass: 70, // Player mass
-    position: new CANNON.Vec3(30, 0, 30), // Initial player position
+    position: new CANNON.Vec3(-35, 0, -10),
+    // position: new CANNON.Vec3(30, 0, 30), // Initial player position
     fixedRotation: true, // Prevent rolling
     linearDamping: 0.3, // Helps to prevent the player from sliding when they are on the ground
     angularDamping: 0.3, // Damping for rotation to prevent spinning out of control
@@ -141,7 +147,7 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
 
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
-const jumpForce = 20;
+const jumpForce = 5;
 const speed = { walk: 20, run: 20 };
 let isMoving = false;
 let isRunning = false;
