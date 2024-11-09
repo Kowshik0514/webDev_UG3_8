@@ -1,12 +1,13 @@
+import * as CANNON from 'cannon';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import * as CANNON from 'cannon';
 
 export var tornadoGroup = null;
+
 export function createTornado(scene, world) {
     const loader = new GLTFLoader();
     tornadoGroup = new THREE.Group();
-    tornadoGroup.visible = false;
+    tornadoGroup.visible = true; // Initially, tornado is visible.
     const tornadoColliders = [];
 
     loader.load('../../models/tornado.glb', (gltf) => {
@@ -14,41 +15,19 @@ export function createTornado(scene, world) {
         tornado.scale.set(10, 10, 10);
         tornadoGroup.add(tornado);
         scene.add(tornadoGroup);
-
-        const tornadoHeight = 70;
-        const tornadoRadius = 20;
-
-        const cylinderShape = new CANNON.Cylinder(tornadoRadius, tornadoRadius, tornadoHeight, 8);
-        const tornadoBody = new CANNON.Body({
-            mass: 1,
-            position: new CANNON.Vec3(tornadoGroup.position.x, tornadoGroup.position.y, tornadoGroup.position.z)
-        });
-
-        tornadoBody.addShape(cylinderShape);
-        world.addBody(tornadoBody);
-        tornadoColliders.push(tornadoBody);
     });
+
+    scene.background = new THREE.Color(0x7A7A7A); // Change background to grey
 
     let tornadoAngle = 0;
     const radiusLimit = 10;
-
-    // Load and set up tornado sound
-    const listener = new THREE.AudioListener();
-    scene.add(listener);
-    const tornadoSound = new THREE.Audio(listener);
-    const audioLoader = new THREE.AudioLoader();
-    audioLoader.load('../../sounds/tornado.mp3', (buffer) => {
-        tornadoSound.setBuffer(buffer);
-        tornadoSound.setLoop(true);
-        tornadoSound.setVolume(0.5); // Adjust volume as needed
-    });
 
     // Create a texture for the raindrop (a thin vertical line)
     const rainTexture = new THREE.TextureLoader().load('../../images/raindrop.jpg'); // A vertical line texture
     rainTexture.wrapS = THREE.RepeatWrapping;
     rainTexture.wrapT = THREE.RepeatWrapping;
 
-    // Initialize the rain particles (now using Sprite for a rectangular shape)
+    // Initialize rain particles (using Sprite for a rectangular shape)
     const rainSprites = [];
     const rainCount = 1000;
     let rainDensity = 0;  // Start with no rain
@@ -97,12 +76,33 @@ export function createTornado(scene, world) {
         isRainActive = false;  // Mark rain as inactive
     }
 
+    // Function to add tornado colliders and physics body
+    function createTornadoColliders() {
+        const tornadoHeight = 70;
+        const tornadoRadius = 20;
+
+        // Create the collider shape for the tornado
+        const cylinderShape = new CANNON.Cylinder(tornadoRadius, tornadoRadius, tornadoHeight, 8);
+        const tornadoBody = new CANNON.Body({
+            mass: 1,
+            position: new CANNON.Vec3(tornadoGroup.position.x, tornadoGroup.position.y, tornadoGroup.position.z)
+        });
+
+        // Add the shape to the body
+        tornadoBody.addShape(cylinderShape);
+        world.addBody(tornadoBody);
+
+        // Store the tornado body for future updates
+        tornadoColliders.push(tornadoBody);
+    }
+
     function animateTornado() {
         tornadoAngle += 0.01;
         tornadoGroup.rotation.y += 0.02;
         tornadoGroup.position.x = Math.cos(tornadoAngle) * radiusLimit;
         tornadoGroup.position.z = Math.sin(tornadoAngle) * radiusLimit;
 
+        // Update tornado collider position
         tornadoColliders.forEach((collider) => {
             collider.position.set(
                 tornadoGroup.position.x,
@@ -138,39 +138,58 @@ export function createTornado(scene, world) {
     animateTornado();
 
     // Button handlers for controlling tornado and sound
-    const startTornadoButton = document.getElementById('startTornado');
-    const exitButton = document.getElementById('exitButton1');
+    const restartGame = document.getElementById('restartGame');
     const soundToggleButton = document.getElementById('soundToggleBtn');
     
     let isSoundMuted = false;
 
-    // Show tornado, change background color to grey, and play sound when "Start Tornado" button is clicked
-    startTornadoButton.addEventListener('click', () => {
-        tornadoGroup.visible = true;
-        scene.background = new THREE.Color(0x7A7A7A); // Change background to grey
-        if (!tornadoSound.isPlaying && !isSoundMuted) tornadoSound.play();
-        
-        startRain();  // Start the rain animation
+    // Load tornado sound (replace the path with your actual sound path)
+    const tornadoSound = new Audio('../../sounds/tornado.mp3');
+    tornadoSound.loop = true; // Loop the sound as long as the tornado is active
+
+    // Function to start tornado sound
+    function startSound() {
+        if (!isSoundMuted) {
+            tornadoSound.play();
+        }
+    }
+
+    // Function to stop tornado sound
+    function stopSound() {
+        tornadoSound.pause();
+        tornadoSound.currentTime = 0; // Reset to start
+    }
+
+    startRain();  // Start the rain animation
+
+    // Only create tornado colliders and physics body once the tornado is visible
+    createTornadoColliders();
+
+    // Ensure tornado sound is playing if tornado is visible
+    if (tornadoGroup.visible && !isSoundMuted) {
+        startSound();
+    }
+
+    // Sound toggle button event listener
+    soundToggleButton.addEventListener('click', () => {
+        if (isSoundMuted) {
+            isSoundMuted = false;
+            startSound(); // Play sound again
+            soundToggleButton.textContent = 'Turn Sound Off'; // Change button text
+        } else {
+            isSoundMuted = true;
+            stopSound(); // Stop sound
+            soundToggleButton.textContent = 'Turn Sound On'; // Change button text
+        }
     });
 
     // Hide tornado, reset background to original color, and stop sound when "Exit Game" button is clicked
-    exitButton.addEventListener('click', () => {
+    restartGame.addEventListener('click', () => {
         tornadoGroup.visible = false;
         scene.background = new THREE.Color(0x87CEEB); // Reset background to sky blue or original color
-        if (tornadoSound.isPlaying) tornadoSound.stop();
         
         stopRain();  // Stop the rain animation
+        stopSound(); // Stop the sound when exiting the game
     });
 
-    // Toggle sound on/off when "Turn Sound Off" button is clicked
-    soundToggleButton.addEventListener('click', () => {
-        isSoundMuted = !isSoundMuted;
-        if (isSoundMuted) {
-            tornadoSound.pause();
-            soundToggleButton.textContent = "Turn Sound On";
-        } else {
-            if (tornadoGroup.visible) tornadoSound.play();
-            soundToggleButton.textContent = "Turn Sound Off";
-        }
-    });
 }
