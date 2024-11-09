@@ -9,14 +9,60 @@
 
 <body>
     <canvas id="bg"></canvas>
-    <div class="button-container">
+
+    <!-- Hamburger Menu Icon -->
+    <div class="hamburger" id="hamburgerMenu">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <!-- Buttons Container -->
+    <div class="button-container" id="buttonContainer">
         <button id="startTornado">Start Tornado</button>
         <button id="soundToggleBtn">Turn Sound Off</button>
-        <button id="exitButton1">Exit Game</button>
+        <button id="restartGame">Restart Game</button>
+        <button id="exitButton">Exit Game</button>
     </div>
-    
-    <script type="module" src="./main.js"></script> <!-- Ensure this path is correct -->
-    <script type="module" src="./tornado.js"></script> 
 
+    <script type="module" src="./main.js"></script> <!-- Ensure this path is correct -->
+    <script type="module" src="./tornado.js"></script>
+
+    <script>
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const buttonContainer = document.getElementById('buttonContainer');
+        
+        // Toggle the button container visibility when hamburger menu is clicked
+        hamburgerMenu.addEventListener('click', (e) => {
+            e.stopPropagation();  // Prevent event bubbling so it doesn't close immediately
+            buttonContainer.classList.toggle('active');
+        });
+
+        // Close the menu after clicking any button
+        const buttons = document.querySelectorAll('.button-container button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                buttonContainer.classList.remove('active'); // Hide the menu
+            });
+        });
+
+        // Exit game button logic to redirect
+        document.getElementById('exitButton').addEventListener('click', () => {
+            window.location.href = "../../index.html"; // Go back to the start page
+        });
+
+        // Close the menu when tapping anywhere outside the button container
+        document.addEventListener('click', (e) => {
+            // Check if the click is outside the button container and the hamburger menu
+            if (!buttonContainer.contains(e.target) && !hamburgerMenu.contains(e.target)) {
+                buttonContainer.classList.remove('active');
+            }
+        });
+
+        // Prevent click inside the button container from propagating to document (i.e., prevent closing)
+        buttonContainer.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
 </body>
 </html>

@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as CANNON from 'cannon'; // Import Cannon.js
-
-
+import { AnimationMixer } from 'three';
+import { Euler } from 'three';
 // Scene
 export const scene = new THREE.Scene();
 
@@ -65,77 +65,7 @@ const planeShapeFront = new CANNON.Box(new CANNON.Vec3(15, 0.01, 15)); // Length
 const planeBodyFront = new CANNON.Body({
   mass: 0 // Static object
 });
-planeBodyFront.addShape(planeShapeFront);
-planeBodyFront.position.set(0.48, 0.48, -6.5);
-planeBodyFront.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-world.addBody(planeBodyFront); // Add to physics world
 
-const planeShapeRight = new CANNON.Box(new CANNON.Vec3(4, 0.01, 2)); // Length 5, Breadth 5
-const planeBodyRight = new CANNON.Body({
-  mass: 0 // Static object
-});
-planeBodyRight.addShape(planeShapeRight);
-planeBodyRight.position.set(7.6, 0.42, -3.8);
-planeBodyRight.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
-world.addBody(planeBodyRight); // Add to physics world
-
-const planeShapeLeft = new CANNON.Box(new CANNON.Vec3(4, 0.01, 2)); // Length 5, Breadth 5
-const planeBodyLeft = new CANNON.Body({
-  mass: 0 // Static object
-});
-planeBodyLeft.addShape(planeShapeLeft);
-planeBodyLeft.position.set(-7.5, 0.42, -3.8);
-planeBodyLeft.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
-world.addBody(planeBodyLeft); // Add to physics world
-const planeShapeBack1 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
-const planeBodyBack1 = new CANNON.Body({
-  mass: 0 // Static object
-});
-planeBodyBack1.addShape(planeShapeBack1);
-planeBodyBack1.position.set(6.23, 0.4, -1.5);
-planeBodyBack1.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-world.addBody(planeBodyBack1); // Add to physics world
-
-const planeShapeBack2 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
-const planeBodyBack2 = new CANNON.Body({
-  mass: 0 // Static object
-});
-planeBodyBack2.addShape(planeShapeBack2);
-planeBodyBack2.position.set(-6.5, 0.4, -1.5);
-planeBodyBack2.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-world.addBody(planeBodyBack2); // Add to physics world
-const planeShapeBack3 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
-const planeBodyBack3 = new CANNON.Body({
-  mass: 0 // Static object
-});
-planeBodyBack3.addShape(planeShapeBack3);
-planeBodyBack3.position.set(3.1, 0.42, 0.27);
-planeBodyBack3.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-world.addBody(planeBodyBack3); // Add to physics world
-const planeShapeBack4 = new CANNON.Box(new CANNON.Vec3(2.2, 0.01, 3)); // Length 5, Breadth 5
-const planeBodyBack4 = new CANNON.Body({
-  mass: 0 // Static object
-});
-planeBodyBack4.addShape(planeShapeBack4);
-planeBodyBack4.position.set(-3.4, 0.42, 0.19);
-planeBodyBack4.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-world.addBody(planeBodyBack4); // Add to physics world
-const planeShapeBack5 = new CANNON.Box(new CANNON.Vec3(1.2, 0.01, 2)); // Length 5, Breadth 5
-const planeBodyBack5 = new CANNON.Body({
-  mass: 0 // Static object
-});
-planeBodyBack5.addShape(planeShapeBack5);
-planeBodyBack5.position.set(4.4, 0.42, -0.24);
-planeBodyBack5.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
-world.addBody(planeBodyBack5); // Add to physics world
-const planeShapeBack6 = new CANNON.Box(new CANNON.Vec3(1.2, 0.01, 2)); // Length 5, Breadth 5
-const planeBodyBack6 = new CANNON.Body({
-  mass: 0 // Static object
-});
-planeBodyBack6.addShape(planeShapeBack6);
-planeBodyBack6.position.set(-4.4, 0.42, -0.24);
-planeBodyBack6.quaternion.setFromEuler(-Math.PI / 2, Math.PI, -Math.PI / 2);
-world.addBody(planeBodyBack6); // Add to physics world
 
 // Lighting
 let ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -182,10 +112,14 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
 
   // Create playerBody with mass
   playerBody = new CANNON.Body({
-    mass: 1, // Player mass
-    position: new CANNON.Vec3(0.5, 2.5, 0), // Initial player position
-    fixedRotation: true, // Prevent rolling
+    mass: 1, // Set player mass to 1 to respond to gravity
+    position: new CANNON.Vec3(0.5, 2.5, 0), // Initial position
+    fixedRotation: true, // Prevent unwanted rolling
   });
+  
+  // Optionally add a tiny, nearly invisible shape if minimal collision is required
+  playerBody.addShape(new CANNON.Sphere(0.01), new CANNON.Vec3(0, 0, 0));
+  
 
   // Add the shapes to the playerBody to form a capsule
   playerBody.addShape(sphereTop, new CANNON.Vec3(0, (capsuleHeight - capsuleRadius) / 2, 0));  // Position top sphere
@@ -206,48 +140,86 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
 });
 
 
-
 let model;
-gltfLoader.load('../../models/newwater.glb', (gltf) => {
+gltfLoader.load('../../models/opt_wave2.glb', (gltf) => {
   model = gltf.scene;
-  model.scale.set(1, 0.01,1); // Adjust scale if necessary
+  model.rotation.x = Math.PI; 
+  console.log("rotate \n");
+  console.log(model.rotation); 
+  model.scale.set(0.09, 0.005, 0.08); // Adjust scale if necessary
   scene.add(model);
-  model.position.set(4, 0.7, 0); 
+  model.position.set(1, 0.5, 1); 
+  
+  mixer = new AnimationMixer(model);
+  const action = mixer.clipAction(gltf.animations[0]);
 
-  // Add physics body for the model
-  const modelShape = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1)); // Adjust shape based on model
-  const modelTransform = new Ammo.btTransform();
-  modelTransform.setIdentity();
-  modelTransform.setOrigin(new Ammo.btVector3(0, 0, 0)); // Adjust position
-  const modelMass = 1;
-  const modelLocalInertia = new Ammo.btVector3(0, 0, 0);
-  modelShape.calculateLocalInertia(modelMass, modelLocalInertia);
-  const modelMotionState = new Ammo.btDefaultMotionState(modelTransform);
-  const modelBodyInfo = new Ammo.btRigidBodyConstructionInfo(modelMass, modelMotionState, modelShape, modelLocalInertia);
-  const modelBody = new Ammo.btRigidBody(modelBodyInfo);
-  physicsWorld.addRigidBody(modelBody);
+  if (gltf.animations.length) {
+    mixer = new AnimationMixer(model);
+
+    // Play the first animation found
+    const action = mixer.clipAction(gltf.animations[0]);
+    action.play();
+  } else {
+    console.warn('No animations found in the model');
+  }
+
+  console.log("hi  ");
+  console.log(gltf.animations.length);
 });
 
 
-let cloud;
-gltfLoader.load('../../models/ship_in_clouds.glb', (gltf) => {
-  cloud = gltf.scene;
-  cloud.scale.set(10, 9,10); // Adjust scale if necessary
-  scene.add(cloud);
-  cloud.position.set(1,1,1); 
+let tank;
+gltfLoader.load('../../models/snowy_water_tank.glb', (gltf) => {
+  tank = gltf.scene;
+  // tank.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
-  // Add physics body for the cloud
-  const cloudShape = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1)); // Adjust shape based on cloud
-  const cloudTransform = new Ammo.btTransform();
-  cloudTransform.setIdentity();
-  cloudTransform.setOrigin(new Ammo.btVector3(0, 0, 0)); // Adjust position
-  const cloudMass = 1;
-  const cloudLocalInertia = new Ammo.btVector3(0, 0, 0);
-  cloudShape.calculateLocalInertia(cloudMass, cloudLocalInertia);
-  const cloudMotionState = new Ammo.btDefaultMotionState(cloudTransform);
-  const cloudBodyInfo = new Ammo.btRigidBodyConstructionInfo(cloudMass, cloudMotionState, cloudShape, cloudLocalInertia);
-  const cloudBody = new Ammo.btRigidBody(cloudBodyInfo);
-  physicsWorld.addRigidBody(cloudBody);
+  tank.scale.set(10, 10,10); // Adjust scale if necessary
+  scene.add(tank);
+  tank.position.set(10, 8, 10); 
+
+  console.log("hi  ");
+
+  // Add physics body for the tank
+  const tankShape = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1)); // Adjust shape based on tank
+  const tankTransform = new Ammo.btTransform();
+  tankTransform.setIdentity();
+  tankTransform.setOrigin(new Ammo.btVector3(0, 0, 0)); // Adjust position
+  const tankMass = 1;
+  const tankLocalInertia = new Ammo.btVector3(0, 0, 0);
+  tankShape.calculateLocalInertia(tankMass, tankLocalInertia);
+  const tankMotionState = new Ammo.btDefaultMotionState(tankTransform);
+  const tankBodyInfo = new Ammo.btRigidBodyConstructionInfo(tankMass, tankMotionState, tankShape, tankLocalInertia);
+  const tankBody = new Ammo.btRigidBody(tankBodyInfo);
+  physicsWorld.addRigidBody(tankBody);
+
+});
+
+
+
+let room;
+gltfLoader.load('../../models/apartment_plan.glb', (gltf) => {
+  room = gltf.scene;
+  // room.setRotationFromEuler(new Euler(0, Math.PI, 0));
+
+  room.scale.set(1, 1,1); // Adjust scale if necessary
+  scene.add(room);
+  room.position.set(-10, 0, 10); 
+
+  console.log("hi  ");
+
+  // Add physics body for the room
+  const roomShape = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1)); // Adjust shape based on room
+  const roomTransform = new Ammo.btTransform();
+  roomTransform.setIdentity();
+  roomTransform.setOrigin(new Ammo.btVector3(0, 0, 0)); // Adjust position
+  const roomMass = 1;
+  const roomLocalInertia = new Ammo.btVector3(0, 0, 0);
+  roomShape.calculateLocalInertia(roomMass, roomLocalInertia);
+  const roomMotionState = new Ammo.btDefaultMotionState(roomTransform);
+  const roomBodyInfo = new Ammo.btRigidBodyConstructionInfo(roomMass, roomMotionState, roomShape, roomLocalInertia);
+  const roomBody = new Ammo.btRigidBody(roomBodyInfo);
+  physicsWorld.addRigidBody(roomBody);
+
 });
 
 
@@ -322,11 +294,11 @@ let isRising = false;
 function animate() {
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
+
+  if (mixer) mixer.update(delta);
   
   // Step the physics world
   world.step(1 / 60);
-
-  if (mixer) mixer.update(delta);
 
   // Call movePlayer every frame
   movePlayer();
@@ -358,7 +330,7 @@ let rf = true;
     }
     else
     {
-        model.position.y-=0.005;
+        model.position.y-=0.0001;
         rf = true;
     }
      // Adjust the speed of rising water here
@@ -371,24 +343,22 @@ let rf = true;
 // Function to update animation based on player's movement
 function updatePlayerAnimation() {
   if (!player || !mixer) return;
-
+  console.log("player position: ");
+  console.log(player.position.x);
+  console.log(player.position.z);
   let newAction;
 
   // Check if the player is moving and if they're running
 
   if (isMoving) {
     if (isRunning) {
-      newAction = actions['crawl']; // Play run animation
+      newAction = actions['walk'];
+      // newAction = actions['crawl']; // Play run animation
     } else {
       newAction = actions['walk']; // Play walk animation
     }
   } else {
     newAction = actions['idle']; // PlayerBplayerBody is idle
-  }
-  if ((player.position.x > -1.5 && playerBody.position.x < 1.5) && (playerBody.position.z > -6 && playerBody.position.z <-4)) {
-    newAction = actions['crawl'];
-    playerBody.position.y = -0.05;
-
   }
   // If the new action is different from the active action, blend the animations
   if (newAction && newAction !== activeAction) {
@@ -425,14 +395,7 @@ function movePlayer() {
   }
 
   // Jumping
-  if (keys.space) {
-    if (keys.shift) {
-      // Shift + Space: Fly upward
-      // playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
-    } else if (playerBody.position.y <= 1.6) {
-
-    }
-  }
+ 
 
   // Reset Y velocity for better control
   playerBody.velocity.y = Math.max(playerBody.velocity.y, -20);

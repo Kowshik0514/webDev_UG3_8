@@ -2,7 +2,8 @@ import * as CANNON from 'cannon';
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'; // Import the GLTFLoader
-import { createTornado } from './tornado.js';
+import { createTornado, tornadoGroup } from './tornado.js';
+import { loadHome } from './survive.js';
 
 // Scene setup
 export const scene = new THREE.Scene();
@@ -17,7 +18,13 @@ renderer.shadowMap.enabled = true;
 const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0);
 
-createTornado(scene, world);
+
+const startTornadoButton = document.getElementById('startTornado');
+startTornadoButton.addEventListener('click', () => {
+  createTornado(scene, world);
+});
+
+loadHome(scene, world);
 
 // Sky background color
 scene.background = new THREE.Color(0x87ceeb); // Light blue sky color
@@ -103,7 +110,6 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
   player.scale.set(0.5, 0.5, 0.5);
   player.rotation.y = Math.PI;
   scene.add(player);
-  console.log(player);
 
   // Add physics body for the player
   const capsuleRadius = 0.25; // Player's radius (thickness)
@@ -116,7 +122,8 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
   // Create playerBody with mass
   playerBody = new CANNON.Body({
     mass: 70, // Player mass
-    position: new CANNON.Vec3(0, 0, 0), // Initial player position
+    position: new CANNON.Vec3(-35, 0, -10),
+    // position: new CANNON.Vec3(30, 0, 30), // Initial player position
     fixedRotation: true, // Prevent rolling
     linearDamping: 0.3, // Helps to prevent the player from sliding when they are on the ground
     angularDamping: 0.3, // Damping for rotation to prevent spinning out of control
@@ -140,10 +147,14 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
 
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
-const jumpForce = 20;
-const speed = { walk: 15, run: 8 };
+const jumpForce = 5;
+const speed = { walk: 20, run: 20 };
 let isMoving = false;
 let isRunning = false;
+// Define the maximum jump height near the tornado
+const randomJumpForceMin = 4;
+const randomJumpForceMax = 6;
+const tornadoProximityDistance = 15; // The distance within which the player should jump randomly
 
 let yaw = 0;
 const pitchLimit = Math.PI / 2 - 0.1;
@@ -248,8 +259,29 @@ function movePlayer() {
     }
   }
 
+    // Check for proximity to the tornado and apply random jump
+    checkTornadoProximity();
+
   playerBody.velocity.y = Math.max(playerBody.velocity.y, -20);
   updatePlayerAnimation();
+}
+
+
+// Function to check if the player is close to the tornado and make them jump randomly
+function checkTornadoProximity() {
+  if (!tornadoGroup || !player) return;
+
+  // Calculate distance from the player to the tornado
+  const tornadoPos = tornadoGroup.position;
+  const playerPos = player.position;
+
+  const distanceToTornado = playerPos.distanceTo(tornadoPos);
+
+  // If the player is within the proximity range of the tornado, make them jump randomly
+  if (distanceToTornado < tornadoProximityDistance) {
+    // Apply a random jump force vertically when close to the tornado
+    playerBody.velocity.y = THREE.MathUtils.randFloat(randomJumpForceMin, randomJumpForceMax);
+  }
 }
 
 function updatePlayerAnimation() {
