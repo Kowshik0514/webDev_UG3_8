@@ -50,9 +50,9 @@ loadSofa(scene, world, { x: -6.5, y: 0.2, z: -4 }, Math.PI / 2);
 // Load roads into the scene and physics world
 
 const roadPositions = [
-  new THREE.Vector3(0, 0.3, 6.8),
-  new THREE.Vector3(0, 0.3, 16.8),
-  new THREE.Vector3(0, 0.3, 26.8),
+  new THREE.Vector3(0, 0.12, 6.8),
+  new THREE.Vector3(0, 0.12, 16.8),
+  new THREE.Vector3(0, 0.12, 26.8),
 ];
 
 loadRoads(scene, world, roadPositions);
@@ -242,7 +242,11 @@ let actions = {};
 let activeAction, previousAction;
 
 // Player physics body
-export let playerBody = null;
+export let playerBody = new CANNON.Body({
+  mass: 1, // Player mass
+  position: new CANNON.Vec3(0.5, 0.1, 0), // Initial player position
+  fixedRotation: true, // Prevent rolling
+});
 // export let plane001;
 export let texture1;
 export let texture2;
@@ -268,7 +272,7 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
   // Create playerBody with mass
   playerBody = new CANNON.Body({
     mass: 1, // Player mass
-    position: new CANNON.Vec3(0.5, 2.5, 0), // Initial player position
+    position: new CANNON.Vec3(0.5, 0.1, 0), // Initial player position
     fixedRotation: true, // Prevent rolling
   });
 
@@ -497,7 +501,7 @@ document.addEventListener('click', () => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 10, run: 8 };
+const speed = { walk: 9, run: 8 };
 let isMoving = false;
 let isRunning = false;
 
@@ -515,7 +519,7 @@ window.addEventListener('keydown', (event) => {
     } else {
       keys[event.key.toLowerCase()] = true;
     }
-    isMoving = keys.w || keys.a || keys.s || keys.d;
+    isMoving = keys.w ;
     isRunning = keys.shift;
   }
 });
@@ -636,9 +640,9 @@ function updatePlayerAnimation() {
   } else {
     newAction = actions['idle']; // PlayerBplayerBody is idle
   }
-  if ((player.position.x > -1.5 && playerBody.position.x < 1.5) && (playerBody.position.z > -6 && playerBody.position.z <-4)) {
+  if ((player.position.x > -1.5 && playerBody.position.x < 1.5) && (playerBody.position.z > -6 && playerBody.position.z <-4.3)) {
     newAction = actions['crawl'];
-    playerBody.position.y = -0.05;
+    playerBody.position.y = 0.2;
 
   }
   // If the new action is different from the active action, blend the animations
@@ -660,10 +664,10 @@ function movePlayer() {
   const forward = getPlayerForwardDirection();
   const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
 
-  if (keys.s) moveDirection.add(forward);
+  // if (keys.s) moveDirection.add(forward);
   if (keys.w) moveDirection.add(forward.clone().negate());
-  if (keys.d) moveDirection.add(right.clone().negate());
-  if (keys.a) moveDirection.add(right);
+  // if (keys.d) moveDirection.add(right.clone().negate());
+  // if (keys.a) moveDirection.add(right);
 
   moveDirection.normalize();
 

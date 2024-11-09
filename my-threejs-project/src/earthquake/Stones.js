@@ -133,7 +133,7 @@ function checkStoneCollision(stoneBody, playerBody) {
             console.log("Do Nothing");
         }
         else if (playerHealth > 0) {
-            playerHealth -= 1; // Decrease health by 10%
+            playerHealth -= 5; // Decrease health by 10%
             updateHealth(playerBody); // Update the health UI
         }
     }
