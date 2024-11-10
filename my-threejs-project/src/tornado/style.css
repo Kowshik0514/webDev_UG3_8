@@ -10,6 +10,9 @@ canvas {
   display: block; /* Ensure canvas takes full screen */
 }
 
+ #gameOverPopup2 {
+  display: none;
+}
 /* Hamburger Menu Styles */
 .hamburger {
   display: block;

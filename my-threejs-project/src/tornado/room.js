@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as CANNON from 'cannon';
+import {player, restartGame} from './main.js';
+import { playerHealth, updateHealth2} from './main.js';
 
 export function loadHome(scene, world) {
     const loader = new GLTFLoader();
@@ -34,6 +36,7 @@ export function loadHome(scene, world) {
             carModel.rotation.x = Math.PI / 2;
             carModel.rotation.y = -Math.PI / 2;
             carModel.rotation.z = Math.PI / 2;
+            carModel.hasFallen = false; // Add a property to track if the car has fallen
             scene.add(carModel);
 
             // Push the car object into the vehicles array
@@ -46,15 +49,16 @@ export function loadHome(scene, world) {
             carModel.scale.set(0.4, 0.4, 0.4); // Scale the car model
             carModel.position.set(-20, -0.5, -5); // Initial position of the car
             scene.add(carModel);
-
+            carModel.hasFallen = false; // Add a property to track if the car has fallen
             // Push the car object into the vehicles array
             vehicles.push({ model: carModel, speed: 0.06 });
         });
     }
     
     loadCar1();
+    // loadCar2();
     // Start loading car2 at 0 seconds, then every 18 seconds (0, 18, 36, ...)
-    setInterval(loadCar1, 9000); // Load car2 every 18 seconds starting immediately
+    // setInterval(loadCar1, 9000); // Load car2 every 18 seconds starting immediately
 
     // Start loading car1 at 9 seconds, then every 18 seconds (9, 27, 45, ...)
     // setTimeout(() => {
@@ -62,11 +66,13 @@ export function loadHome(scene, world) {
     // }, 9000); // Delay the first load of car1 by 9 seconds
 
     // Load a truck model
+    let truckModel;
     loader.load('../../models/tornado/truck.glb', (gltfTruck) => {
-        const truckModel = gltfTruck.scene;
+        truckModel = gltfTruck.scene;
         truckModel.scale.set(0.05, 0.05, 0.05); // Scale the truck model
         truckModel.position.set(-25, 1.7, 100); // Initial position of the truck
         truckModel.rotation.set(0, Math.PI, 0);
+        truckModel.hasFallen = false; // Add a property to track if the truck has fallen
         scene.add(truckModel);
         vehicles.push({ model: truckModel, speed: -0.1 }); // Add the truck to vehicles array
     });
@@ -95,6 +101,41 @@ export function loadHome(scene, world) {
                     vehicle.model.position.z = 10; // Reset to the start of the road
                 }
             }
+            // console.log(player);
+            let distanceToPlayer = 10; // Initialize distance to player
+            if(player) {distanceToPlayer = vehicle.model.position.distanceTo(player.position); }// Calculate distance to player
+
+        // Check if the vehicle is near the player
+        if (distanceToPlayer < 6 ) { // Adjust this threshold as needed
+            // Apply the "falling" effect by lowering the Y position and marking it as fallen
+            // vehicle.model.position.y -= 0.1; // Fall speed; adjust as needed
+            // vehicle.model.rotation.x += 0.05; // Optional: Add rotation for a tumbling effect
+            if( vehicle.model===truckModel){
+                if(vehicle.model.rotation.z>-1.6){
+            vehicle.model.rotation.z -=0.05;
+            vehicle.speed = 0;
+            vehicle.hasFallen = true;
+                }
+                else
+                {
+                    console.log("truck fallen");
+                    // playerHealth=0;
+                    vehicle.model.position.z = 100; // Reset to the start of the road (on the other side)
+                    vehicle.model.rotation.z = 0;
+                    vehicle.speed =-0.1;
+                    vehicle.hasFallen = false;
+                    updateHealth2();
+                    // vehicle.model.hasFallen = false; // Reset the fallen state
+                    // vehicles.remove(vehicle);
+                }
+            }
+            // if(player.position.x<vehicle.model.position.x){
+                // restartGame();
+            // }
+
+        }
+
+        // Optional: Reset fallen vehicles after they "fall" out of sight
     
             // Handle position reset for trucks
             if (vehicle.speed < 0) { // For trucks (moving backward)
