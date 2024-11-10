@@ -198,7 +198,7 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
     const action = mixer.clipAction(clip);
     actions[clip.name.toLowerCase()] = action;
   });
-  activeAction = actions['idle'];
+  activeAction = actions['walk'];
   activeAction.play();
 });
 
@@ -262,9 +262,8 @@ gltfLoader.load('../../models/snowy_water_tank.glb', (gltf) => {
 let room;
 gltfLoader.load('../../models/house.glb', (gltf) => {
   room = gltf.scene;
-  // room.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
-  room.scale.set(1.2, 1,1.2); // Adjust scale if necessary
+
   scene.add(room);
   room.position.set(0, 0, 0); 
 
@@ -622,23 +621,19 @@ function animate() {
 // Function to update animation based on player's movement
 function updatePlayerAnimation() {
   if (!player || !mixer) return;
-  // console.log("player position: ");
-  // console.log(player.position.y);
-  // console.log(player.position.z);
   let newAction;
-
-  // Check if the player is moving and if they're running
 
   if (isMoving) {
     if (isRunning) {
-      newAction = actions['walk'];
-      // newAction = actions['crawl']; // Play run animation
+      newAction = actions['crawl']; // Play run animation
     } else {
       newAction = actions['walk']; // Play walk animation
+      // newAction = actions['run']; 
     }
   } else {
     newAction = actions['idle']; // PlayerBplayerBody is idle
   }
+
   // If the new action is different from the active action, blend the animations
   if (newAction && newAction !== activeAction) {
     previousAction = activeAction;
@@ -663,7 +658,6 @@ function movePlayer() {
 
   moveDirection.normalize();
 
-  // Update player physics body
   if (moveDirection.length() > 0) {
     const speedValue = isRunning ? speed.run : speed.walk;
     playerBody.velocity.x = moveDirection.x * speedValue;
@@ -673,14 +667,16 @@ function movePlayer() {
     player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1) + Math.PI;
   }
 
-  // Jumping
- 
+  if (keys.space) {
+    if (keys.shift) {
+      // Shift + Space: Fly upward
+      playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
+    } else if (playerBody.position.y <= 1.6) {
+      // playerBody.velocity.y = jumpForce;
+    }
+  }
 
-  // Reset Y velocity for better control
   playerBody.velocity.y = Math.max(playerBody.velocity.y, -20);
-
-
-  // Update animation based on movement
   updatePlayerAnimation();
 }
 
@@ -692,6 +688,12 @@ function getPlayerForwardDirection() {
   );
   return forward.normalize();
 }
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;

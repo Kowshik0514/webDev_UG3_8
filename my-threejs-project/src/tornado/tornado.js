@@ -2,9 +2,33 @@ import * as CANNON from 'cannon';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-export var tornadoGroup = null;
+export var tornadoBody = null;
+export var tornadoGroup=null;
+export let isTornadoactive=false;
+const rainSprites = [];
+let isRainActive = false;  // Rain starts inactive
+const tornadoSound = new Audio('../../sounds/tornado.mp3');
+export function startRain() {
+    rainSprites.forEach(sprite => {
+        sprite.visible = true;  // Make the rain visible
+    });
+    isRainActive = true;  // Mark rain as active
+}
 
+// Function to stop the rain animation when the tornado stops
+export function stopRain() {
+    rainSprites.forEach(sprite => {
+        sprite.visible = false;  // Hide the rain
+    });
+    isRainActive = false;  // Mark rain as inactive
+}
+export function stopSound() {
+    tornadoSound.pause();
+    tornadoSound.currentTime = 0; // Reset to start
+}
 export function createTornado(scene, world) {
+    isTornadoactive=true;
+    if(tornadoGroup)scene.remove(tornadoGroup);
     const loader = new GLTFLoader();
     tornadoGroup = new THREE.Group();
     tornadoGroup.visible = true; // Initially, tornado is visible.
@@ -28,10 +52,8 @@ export function createTornado(scene, world) {
     rainTexture.wrapT = THREE.RepeatWrapping;
 
     // Initialize rain particles (using Sprite for a rectangular shape)
-    const rainSprites = [];
     const rainCount = 1000;
     let rainDensity = 0;  // Start with no rain
-    let isRainActive = false;  // Rain starts inactive
 
     // Create the rain sprites (rectangular shape using the texture)
     for (let i = 0; i < rainCount; i++) {
@@ -61,20 +83,6 @@ export function createTornado(scene, world) {
     }
 
     // Function to start the rain animation when the tornado starts
-    function startRain() {
-        rainSprites.forEach(sprite => {
-            sprite.visible = true;  // Make the rain visible
-        });
-        isRainActive = true;  // Mark rain as active
-    }
-
-    // Function to stop the rain animation when the tornado stops
-    function stopRain() {
-        rainSprites.forEach(sprite => {
-            sprite.visible = false;  // Hide the rain
-        });
-        isRainActive = false;  // Mark rain as inactive
-    }
 
     // Function to add tornado colliders and physics body
     function createTornadoColliders() {
@@ -83,7 +91,7 @@ export function createTornado(scene, world) {
 
         // Create the collider shape for the tornado
         const cylinderShape = new CANNON.Cylinder(tornadoRadius, tornadoRadius, tornadoHeight, 8);
-        const tornadoBody = new CANNON.Body({
+        tornadoBody = new CANNON.Body({
             mass: 1,
             position: new CANNON.Vec3(tornadoGroup.position.x, tornadoGroup.position.y, tornadoGroup.position.z)
         });
@@ -144,7 +152,6 @@ export function createTornado(scene, world) {
     let isSoundMuted = false;
 
     // Load tornado sound (replace the path with your actual sound path)
-    const tornadoSound = new Audio('../../sounds/tornado.mp3');
     tornadoSound.loop = true; // Loop the sound as long as the tornado is active
 
     // Function to start tornado sound
@@ -155,10 +162,7 @@ export function createTornado(scene, world) {
     }
 
     // Function to stop tornado sound
-    function stopSound() {
-        tornadoSound.pause();
-        tornadoSound.currentTime = 0; // Reset to start
-    }
+
 
     startRain();  // Start the rain animation
 
@@ -191,5 +195,16 @@ export function createTornado(scene, world) {
         stopRain();  // Stop the rain animation
         stopSound(); // Stop the sound when exiting the game
     });
+
+}
+export function removeTornado(scene,world)
+{
+    isTornadoactive=false;
+    scene.background = new THREE.Color(0x87ceeb);
+    if(tornadoGroup){
+        console.log("ygfs");
+    scene.remove(tornadoGroup);
+    world.removeBody(tornadoBody);
+    }
 
 }

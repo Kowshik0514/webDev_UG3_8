@@ -2,8 +2,8 @@ import * as CANNON from 'cannon';
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'; // Import the GLTFLoader
-import { createTornado, tornadoGroup } from './tornado.js';
-import { loadHome } from './room.js';
+import { createTornado, tornadoGroup,tornadoBody,removeTornado,startRain,stopRain,stopSound,isTornadoactive } from './tornado.js';
+import { loadHome } from './survive.js';
 
 // Scene setup
 export const scene = new THREE.Scene();
@@ -17,6 +17,7 @@ renderer.shadowMap.enabled = true;
 // Physics world
 const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0);
+let checkCaught=false;
 
 const startTornadoButton = document.getElementById('startTornado');
 startTornadoButton.addEventListener('click', () => {
@@ -24,7 +25,73 @@ startTornadoButton.addEventListener('click', () => {
 });
 
 loadHome(scene, world);
+let playerHealth = 100; // Initialize player's health
+const healthBarContainer = document.createElement('div');
+const healthBar = document.createElement('div');
 
+// Style the health bar container
+healthBarContainer.style.position = 'absolute';
+healthBarContainer.style.bottom = '20px'; // Position at the bottom
+healthBarContainer.style.left = '20px';   // Position to the left
+healthBarContainer.style.width = '200px'; // Fixed width for container
+healthBarContainer.style.height = '30px'; // Fixed height for container
+healthBarContainer.style.border = '2px solid black';
+healthBarContainer.style.backgroundColor = '#555'; // Darker background behind the health bar
+healthBarContainer.style.borderRadius = '5px';
+
+// Style the actual health bar
+healthBar.style.height = '100%'; // Full height of the container
+healthBar.style.width = '100%';  // Full width initially (100%)
+healthBar.style.backgroundColor = 'green'; // Green to indicate health
+healthBar.style.borderRadius = '5px';
+
+// Add the health bar to the container and then the container to the document
+healthBarContainer.appendChild(healthBar);
+document.body.appendChild(healthBarContainer);
+
+
+export function update(health) {
+    playerHealth = Math.min(100, playerHealth + health);
+}
+
+export function refill_health() {
+    playerHealth = 100; // Reset health for testing purposes
+    // playerBody.position.set(0, 1.6, 0); // Reset player position (if applicable)
+    healthBar.style.width = '100%'; // Reset health bar
+    healthBar.style.backgroundColor = 'green'; // Reset health bar color
+}
+export function updateHealth() {
+  // Calculate the health percentage
+  const healthPercentage = Math.max(playerHealth, 0); // Prevent negative width
+  healthBar.style.width = `${healthPercentage}%`;
+
+  // Change color based on health level
+  if (healthPercentage > 50) {
+      healthBar.style.backgroundColor = 'green';
+  } else if (healthPercentage > 25) {
+      healthBar.style.backgroundColor = 'yellow';
+  } else {
+      healthBar.style.backgroundColor = 'red';
+  }
+
+  // If player's health reaches 0, end the game
+  if (playerHealth <= 0) {
+      // alert('Game Over!');
+      document.getElementById('go').innerHTML = "Wasted";
+      document.getElementById('gameOverPopup').style.display = 'flex';
+      removeTornado(scene,world);
+      stopRain();
+      stopSound();
+      // restartGame();
+      // refill_health(playerBody)
+      playerHealth = 100; // Reset health for testing purposes
+      playerBody.position.set(0, 1.6, 0); // Reset player position (if applicable)
+      healthBar.style.width = '100%'; // Reset health bar
+      healthBar.style.backgroundColor = 'green'; // Reset health bar color
+      player.position.x=0;
+      playerHealth=100;
+  }
+}
 // Sky background color
 scene.background = new THREE.Color(0x87ceeb); // Light blue sky color
 
@@ -151,16 +218,15 @@ const speed = { walk: 20, run: 20 };
 let isMoving = false;
 let isRunning = false;
 // Define the maximum jump height near the tornado
-const randomJumpForceMin = 4;
-const randomJumpForceMax = 6;
+const randomJumpForceMin = 1;
+const randomJumpForceMax = 3;
 const tornadoProximityDistance = 15; // The distance within which the player should jump randomly
 
 let yaw = 0;
 const pitchLimit = Math.PI / 2 - 0.1;
 let pitch = 0;
 const radius = 3;
-
-window.addEventListener('keydown', (event) => {
+function handleKeyDown(event) {
   if (event.key === ' ' || event.key.toLowerCase() in keys) {
     if (event.key === ' ') {
       keys.space = true;
@@ -170,9 +236,9 @@ window.addEventListener('keydown', (event) => {
     isMoving = keys.w || keys.a || keys.s || keys.d;
     isRunning = keys.shift;
   }
-});
+}
 
-window.addEventListener('keyup', (event) => {
+function handleKeyUp(event) {
   if (event.key === ' ' || event.key.toLowerCase() in keys) {
     if (event.key === ' ') {
       keys.space = false;
@@ -182,19 +248,36 @@ window.addEventListener('keyup', (event) => {
     isMoving = keys.w || keys.a || keys.s || keys.d;
     isRunning = keys.shift;
   }
-});
+}
 
-document.addEventListener('mousemove', (event) => {
+function handleMouseMove(event) {
   if (controls.isLocked) {
     yaw -= event.movementX * 0.002;
     pitch -= event.movementY * (-0.002);
     pitch = Math.max(-pitchLimit, Math.min(pitchLimit, pitch));
   }
-});
+}
+
+// Add event listeners only when checkCaught is false
+function updateEventListeners() {
+  if (!checkCaught) {
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    document.addEventListener('mousemove', handleMouseMove);
+  } else {
+    // Remove event listeners when checkCaught becomes true
+    window.removeEventListener('keydown', handleKeyDown);
+    window.removeEventListener('keyup', handleKeyUp);
+    document.removeEventListener('mousemove', handleMouseMove);
+  }
+}
+
+// Call updateEventListeners whenever checkCaught changes
 
 const clock = new THREE.Clock();
 
 function animate() {
+  // updateHealth();
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
   world.step(1 / 60);
@@ -267,8 +350,16 @@ function movePlayer() {
 
 
 // Function to check if the player is close to the tornado and make them jump randomly
+// Set a constant for the swirl speed (adjust as needed)
+// Constants to control the swirling effect and inward force
+// Define parameters for circular motion
+// Define parameters for circular motion
+const circleRadius = 10; // Distance from the tornado center for circular motion
+let angleAroundTornado = 0; // Initial angle in radians
+const angularSpeed = 0.05; // Speed at which the player revolves around the tornado
+
 function checkTornadoProximity() {
-  if (!tornadoGroup || !player) return;
+  if (!tornadoGroup || !player || !isTornadoactive) {updateEventListeners();checkCaught=false;return;}
 
   // Calculate distance from the player to the tornado
   const tornadoPos = tornadoGroup.position;
@@ -276,12 +367,42 @@ function checkTornadoProximity() {
 
   const distanceToTornado = playerPos.distanceTo(tornadoPos);
 
-  // If the player is within the proximity range of the tornado, make them jump randomly
+  // If the player is within the proximity range of the tornado, start circular motion
   if (distanceToTornado < tornadoProximityDistance) {
-    // Apply a random jump force vertically when close to the tornado
+    let newAction = actions['idle'];
+    previousAction.fadeOut(0.2);
+    activeAction.reset().fadeIn(0.2).play();
+    activeAction = newAction;
+    checkCaught=true;
+    // Apply a random jump force vertically (optional for vertical movement)
+    updateEventListeners();
+    playerHealth -= 0.8;
+    updateHealth();
+    
+    playerBody.velocity.x=0;
+     playerBody.velocity.z=0;
     playerBody.velocity.y = THREE.MathUtils.randFloat(randomJumpForceMin, randomJumpForceMax);
+
+    // Update the angle to make the player revolve around the tornado
+    angleAroundTornado += angularSpeed;
+   
+    // Calculate new position relative to the tornado's current position
+    player.position.y=3;
+    player.position.x = tornadoPos.x + circleRadius ;
+    player.position.z = tornadoPos.z + circleRadius ;
+  }
+  if(!(distanceToTornado < tornadoProximityDistance)&&checkCaught)
+  {
+    let newAction = actions['idle'];
+    previousAction.fadeOut(0.2);
+    activeAction.reset().fadeIn(0.2).play();
+    playerBody.velocity.x=0;
+     playerBody.velocity.z=0;
   }
 }
+
+
+
 
 function updatePlayerAnimation() {
   if (!player || !mixer) return;
@@ -322,6 +443,35 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+document.getElementById('restartGame').addEventListener('click', () => {
+  player.position.x=0;
+  player.position.z=0;
+  playerBody.velocity.x=0;
+    playerBody.velocity.z=0;
+    checkCaught=false;
+    updateEventListeners();
+  restartGame();
+});
+function restartGame()
+{
+  playerBody.position.set(0, 0, 0);
+  if(checkCaught)
+  {
+    player.position.x=0;
+    player.position.z=0;
+    playerBody.velocity.x=0;
+    playerBody.velocity.z=0;
+    newAction = actions['idle'];
+    previousAction.fadeOut(0.2);
+    activeAction.reset().fadeIn(0.2).play();
+    activeAction = newAction;
+  }
+  checkCaught=false;
+  updateEventListeners();
+    
+  
+  refill_health();
+}
 
 // Start the animation loop
 animate();
