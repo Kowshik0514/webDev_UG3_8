@@ -16,6 +16,20 @@
     <button id="exitButton1">Exit Game</button>
   </div> 
 
+  <div id="popup">
+    <p>Add this to your bag?</p>
+    <button id="yesButton">Yes</button>
+    <button id="noButton">No</button>
+    </div>
+
+  <audio id="myAudio" src="../../models/flood_warning.mp3"></audio>
+
+  <button id="displayButton" >Show Names</button>
+    <!-- Overlay with names list -->
+    <div id="overlay">
+        <button id="closeButton">x</button>
+        <div id="nameList"></div>
+    </div>
   <!-- Game Over Pop-up -->
   <div id="gameOverPopup"
     style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 100;">
@@ -37,6 +51,10 @@
   <script type="module" src="./flood.js"></script>
 
   <script>
+
+
+
+
     let timerDuration = 30;
     const timerElement = document.getElementById('timer');
     const gameOverPopup = document.getElementById('gameOverPopup');
@@ -49,17 +67,9 @@
       localStorage.removeItem("gameStarted"); // Clear the game started state
     //   localStorage.setItem("gameStarted", "true"); // Optionally set game state
       animationEnabled = false;
-    //   isRising=false;
-    //   console.log(model);
-    //   model.position.y = 0;
 
      // Start the timer
     }
-
-    // Add event listener to the "Start Earthquake" button
-    // document.getElementById('dropChandelierBtn').addEventListener("click", startGame);
-    // document.getElementById('dropChandelierBtn').addEventListener("click", startGame);
-    // document.getElementById('restartButton').addEventListener("click", startGame);
 
     // Add event listener to the "Restart" button
     document.getElementById('restartButton').addEventListener("click", startGame);
