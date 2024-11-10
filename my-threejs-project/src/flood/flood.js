@@ -169,35 +169,25 @@ gltfLoader.load("../../models/global_models/player2.glb", (gltf) => {
   scene.add(player);
   // console.log(player);
 
-  // Add physics body for the player
-  // Define the player capsule (capsule shape made of two spheres and a cylinder)
   const capsuleRadius = 0.25; // Player's radius (thickness)
   const capsuleHeight = 0.5; // Player's height
 
   // Create a capsule collider using two spheres and a cylinder
   const sphereTop = new CANNON.Sphere(0.25); // Top of the capsule
   const sphereBottom = new CANNON.Sphere(0); // Bottom of the capsule
-  const cylinder = new CANNON.Cylinder(
-    0,
-    0,
-    capsuleHeight - 2 * capsuleRadius,
-    8
-  ); // The middle cylinder
+  const cylinder = new CANNON.Cylinder(0,0,capsuleHeight - 2 * capsuleRadius,8); // The middle cylinder
 
   // Create playerBody with mass
-
+  playerBody = new CANNON.Body({
+    mass: 1, // Player mass
+    position: new CANNON.Vec3(0.5, 0.1, 0), // Initial player position
+    fixedRotation: true, // Prevent rolling
+  });
   // Optionally add a tiny, nearly invisible shape if minimal collision is required
-  playerBody.addShape(new CANNON.Sphere(0.01), new CANNON.Vec3(0, 0, 0));
 
   // Add the shapes to the playerBody to form a capsule
-  playerBody.addShape(
-    sphereTop,
-    new CANNON.Vec3(0, (capsuleHeight - capsuleRadius) / 2, 0)
-  ); // Position top sphere
-  playerBody.addShape(
-    sphereBottom,
-    new CANNON.Vec3(0, -(capsuleHeight - capsuleRadius) / 2, 0)
-  ); // Position bottom sphere
+  playerBody.addShape(sphereTop,new CANNON.Vec3(0, (capsuleHeight - capsuleRadius) / 2, 0)); // Position top sphere
+  playerBody.addShape(sphereBottom,new CANNON.Vec3(0, -(capsuleHeight - capsuleRadius) / 2, 0)); // Position bottom sphere
   playerBody.addShape(cylinder); // Add the cylinder in the middle
 
   // Add playerBody to the physics world
@@ -248,26 +238,6 @@ gltfLoader.load("../../models/snowy_water_tank.glb", (gltf) => {
   tank.scale.set(10, 10, 10); // Adjust scale if necessary
   scene.add(tank);
   tank.position.set(10, 8, 10);
-
-  // console.log("hi  ");
-
-  // Add physics body for the tank
-  const tankShape = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1)); // Adjust shape based on tank
-  const tankTransform = new Ammo.btTransform();
-  tankTransform.setIdentity();
-  tankTransform.setOrigin(new Ammo.btVector3(0, 0, 0)); // Adjust position
-  const tankMass = 1;
-  const tankLocalInertia = new Ammo.btVector3(0, 0, 0);
-  tankShape.calculateLocalInertia(tankMass, tankLocalInertia);
-  const tankMotionState = new Ammo.btDefaultMotionState(tankTransform);
-  const tankBodyInfo = new Ammo.btRigidBodyConstructionInfo(
-    tankMass,
-    tankMotionState,
-    tankShape,
-    tankLocalInertia
-  );
-  const tankBody = new Ammo.btRigidBody(tankBodyInfo);
-  physicsWorld.addRigidBody(tankBody);
 });
 
 let room;
@@ -292,8 +262,10 @@ function checkDistanceToPole() {
   if (pole) {
     // Replace with the actual character position
     // Example position, adjust accordingly
-    const distancex = Math.abs(pole.position.x - player.position.x);
-    const distancez = Math.abs(pole.position.z - player.position.z);
+    let distancex;
+    let distancez;
+    if(player)  distancex = Math.abs(pole.position.x - player.position.x);
+    if(player) distancez = Math.abs(pole.position.z - player.position.z);
 
     if (distancex < 0.7 && distancez < 0.7) {
       playerHealth = 0;
@@ -447,8 +419,10 @@ function checkDistanceToPaper() {
   if (paper) {
     // Replace with the actual character position
     // Example position, adjust accordingly
-    const distancex = Math.abs(paper.position.x - player.position.x);
-    const distancez = Math.abs(paper.position.z - player.position.z);
+    let distancex;
+    let distancez;
+    if(player) distancex = Math.abs(paper.position.x - player.position.x);
+    if(player) distancez = Math.abs(paper.position.z - player.position.z);
 
     hidePopup2();
     if (
@@ -695,7 +669,7 @@ window.addEventListener("resize", () => {
 });
 function restartGame() {
   isRising = false;
-  model.position.y = 0;
+  if(model) model.position.y = 0;
   refill_health();
 }
 animate();
