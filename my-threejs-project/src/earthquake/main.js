@@ -438,8 +438,6 @@ gltfLoader.load('../../models/earthquake/room.glb', (gltf) => {
   room.position.set(0, -4.3, 0);
   scene.add(room);
   // Load the textures
-  const textureLoader = new THREE.TextureLoader();
-  texture1 = textureLoader.load('../../models/earthquake/crack.jpg'); // Replace with your texture path
 
   texture2 = plane1.material.map;
   function animate() {

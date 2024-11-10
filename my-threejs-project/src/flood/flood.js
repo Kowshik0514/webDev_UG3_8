@@ -176,7 +176,6 @@ gltfLoader.load("../../models/global_models/player2.glb", (gltf) => {
   const sphereTop = new CANNON.Sphere(0.25); // Top of the capsule
   const sphereBottom = new CANNON.Sphere(0); // Bottom of the capsule
   const cylinder = new CANNON.Cylinder(0,0,capsuleHeight - 2 * capsuleRadius,8); // The middle cylinder
-  const cylinder = new CANNON.Cylinder(0,0,capsuleHeight - 2 * capsuleRadius,8); // The middle cylinder
 
   // Create playerBody with mass
   playerBody = new CANNON.Body({
@@ -270,10 +269,6 @@ function checkDistanceToPole() {
   if (pole) {
     // Replace with the actual character position
     // Example position, adjust accordingly
-    let distancex;
-    let distancez;
-    if(player)  distancex = Math.abs(pole.position.x - player.position.x);
-    if(player) distancez = Math.abs(pole.position.z - player.position.z);
     let distancex;
     let distancez;
     if(player)  distancex = Math.abs(pole.position.x - player.position.x);
