@@ -77,8 +77,8 @@ export function updateHealth() {
   // If player's health reaches 0, end the game
   if (playerHealth <= 0) {
       alert('Game Over!');
-      document.getElementById('go').innerHTML = "Wasted";
-      document.getElementById('gameOverPopup').style.display = 'flex';
+      document.getElementById('go').innerHTML = "Stay away from the tornado!!";
+      document.getElementById('gameOverPopup2').style.display = 'flex';
       removeTornado(scene,world);
       stopRain();
       stopSound();
@@ -207,13 +207,13 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
     mass: 70, // Player mass
     position: new CANNON.Vec3(-35, 0, -10),
     // position: new CANNON.Vec3(30, 0, 30), // Initial player position
-    fixedRotation: true, // Prevent rolling
-    linearDamping: 0.3, // Helps to prevent the player from sliding when they are on the ground
-    angularDamping: 0.3, // Damping for rotation to prevent spinning out of control
+    fixedRotation: true, 
+    linearDamping: 0.3, 
+    angularDamping: 0.3,
   });
 
-  playerBody.addShape(sphereTop, new CANNON.Vec3(0, (capsuleHeight - capsuleRadius) / 2, 0));  // Position top sphere
-  playerBody.addShape(sphereBottom, new CANNON.Vec3(0, -(capsuleHeight - capsuleRadius) / 2, 0));  // Position bottom sphere
+  playerBody.addShape(sphereTop, new CANNON.Vec3(0, (capsuleHeight - capsuleRadius) / 2, 0));  
+  playerBody.addShape(sphereBottom, new CANNON.Vec3(0, -(capsuleHeight - capsuleRadius) / 2, 0));
   playerBody.addShape(cylinder); // Add the cylinder in the middle
 
   world.addBody(playerBody);
@@ -231,7 +231,7 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 20, run: 20 };
+const speed = { walk: 10, run: 8 };
 let isMoving = false;
 let isRunning = false;
 // Define the maximum jump height near the tornado

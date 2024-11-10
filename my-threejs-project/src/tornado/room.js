@@ -124,7 +124,7 @@ export function loadHome(scene, world) {
             // vehicle.model.rotation.x += 0.05; // Optional: Add rotation for a tumbling effect
             if( vehicle.model===truckModel || vehicle.model===truckModel2){
                 if(vehicle.model.rotation.z>-1.6){
-            vehicle.model.rotation.z -=0.03;
+            vehicle.model.rotation.z -=0.05;
             vehicle.speed = 0;
             vehicle.hasFallen = true;
                 }

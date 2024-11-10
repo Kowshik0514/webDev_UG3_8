@@ -19,11 +19,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-document.addEventListener("click", function(event) {
-    const popup = document.getElementById("profile-popup");
-    const profileIcon = document.querySelector(".profile-icon");
+// document.addEventListener("click", function(event) {
+//     const popup = document.getElementById("profile-popup");
+//     const profileIcon = document.querySelector(".profile-icon");
 
-    if (!popup.contains(event.target) && !profileIcon.contains(event.target)) {
-        popup.classList.add("hidden");
-    }
-});
+//     if (!popup.contains(event.target) && !profileIcon.contains(event.target)) {
+//         popup.classList.add("hidden");
+//     }
+// });
