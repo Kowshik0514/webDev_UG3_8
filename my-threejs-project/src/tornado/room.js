@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as CANNON from 'cannon';
 import {player, restartGame} from './main.js';
 import { playerHealth, updateHealth2} from './main.js';
+import { isTornadoactive } from './tornado.js';
 
 export function loadHome(scene, world) {
     const loader = new GLTFLoader();
@@ -58,7 +59,7 @@ export function loadHome(scene, world) {
     loadCar1();
     // loadCar2();
     // Start loading car2 at 0 seconds, then every 18 seconds (0, 18, 36, ...)
-    // setInterval(loadCar1, 9000); // Load car2 every 18 seconds starting immediately
+    setInterval(loadCar1, 9000); // Load car2 every 18 seconds starting immediately
 
     // Start loading car1 at 9 seconds, then every 18 seconds (9, 27, 45, ...)
     // setTimeout(() => {
@@ -70,11 +71,22 @@ export function loadHome(scene, world) {
     loader.load('../../models/tornado/truck.glb', (gltfTruck) => {
         truckModel = gltfTruck.scene;
         truckModel.scale.set(0.05, 0.05, 0.05); // Scale the truck model
-        truckModel.position.set(-25, 1.7, 100); // Initial position of the truck
+        truckModel.position.set(-25, 1.7, 110); // Initial position of the truck
         truckModel.rotation.set(0, Math.PI, 0);
         truckModel.hasFallen = false; // Add a property to track if the truck has fallen
         scene.add(truckModel);
         vehicles.push({ model: truckModel, speed: -0.1 }); // Add the truck to vehicles array
+    });
+
+    let truckModel2;
+    loader.load('../../models/tornado/truck.glb', (gltfTruck) => {
+        truckModel2 = gltfTruck.scene;
+        truckModel2.scale.set(0.05, 0.05, 0.05); // Scale the truck model
+        truckModel2.position.set(-25, 1.7, 45); // Initial position of the truck
+        truckModel2.rotation.set(0, Math.PI, 0);
+        truckModel2.hasFallen = false; // Add a property to track if the truck has fallen
+        scene.add(truckModel2);
+        vehicles.push({ model: truckModel2, speed: -0.1 }); // Add the truck to vehicles array
     });
 
     // Load a cycle model
@@ -106,13 +118,13 @@ export function loadHome(scene, world) {
             if(player) {distanceToPlayer = vehicle.model.position.distanceTo(player.position); }// Calculate distance to player
 
         // Check if the vehicle is near the player
-        if (distanceToPlayer < 6 ) { // Adjust this threshold as needed
+        if (distanceToPlayer < 6 && isTornadoactive) { // Adjust this threshold as needed
             // Apply the "falling" effect by lowering the Y position and marking it as fallen
             // vehicle.model.position.y -= 0.1; // Fall speed; adjust as needed
             // vehicle.model.rotation.x += 0.05; // Optional: Add rotation for a tumbling effect
-            if( vehicle.model===truckModel){
+            if( vehicle.model===truckModel || vehicle.model===truckModel2){
                 if(vehicle.model.rotation.z>-1.6){
-            vehicle.model.rotation.z -=0.05;
+            vehicle.model.rotation.z -=0.03;
             vehicle.speed = 0;
             vehicle.hasFallen = true;
                 }
@@ -140,7 +152,7 @@ export function loadHome(scene, world) {
             // Handle position reset for trucks
             if (vehicle.speed < 0) { // For trucks (moving backward)
                 if (vehicle.model.position.z < 0) {
-                    vehicle.model.position.z = 100; // Reset to the start of the road (on the other side)
+                    vehicle.model.position.z = 110; // Reset to the start of the road (on the other side)
                 }
             }
         });
