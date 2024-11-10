@@ -180,7 +180,7 @@ gltfLoader.load("../../models/global_models/player2.glb", (gltf) => {
   // Create playerBody with mass
   playerBody = new CANNON.Body({
     mass: 1, // Player mass
-    position: new CANNON.Vec3(0.5, 0.1, 0), // Initial player position
+    position: new CANNON.Vec3(5, 10, 0), // Initial player position
     fixedRotation: true, // Prevent rolling
   });
   // Optionally add a tiny, nearly invisible shape if minimal collision is required
@@ -202,33 +202,33 @@ gltfLoader.load("../../models/global_models/player2.glb", (gltf) => {
   activeAction = actions["idle"];
   activeAction.play();
 });
-
+let water_mixer;
 let model;
-// gltfLoader.load('../../models/opt_wave2.glb', (gltf) => {
-//   model = gltf.scene;
-//   model.rotation.x = Math.PI;
-//   // console.log("rotate \n");
-//   // console.log(model.rotation);
-//   model.scale.set(0.09, 0.005, 0.08); // Adjust scale if necessary
-//   scene.add(model);
-//   model.position.set(1, 0, 1);
+gltfLoader.load('../../models/opt_wave2.glb', (gltf) => {
+  model = gltf.scene;
+  model.rotation.x = Math.PI;
+  // console.log("rotate \n");
+  // console.log(model.rotation);
+  model.scale.set(0.09, 0.005, 0.08); // Adjust scale if necessary
+  scene.add(model);
+  model.position.set(1, 0.7, 1);
 
-//   mixer = new AnimationMixer(model);
-//   const action = mixer.clipAction(gltf.animations[0]);
+  water_mixer = new AnimationMixer(model);
+  const action = water_mixer.clipAction(gltf.animations[0]);
 
-//   if (gltf.animations.length) {
-//     mixer = new AnimationMixer(model);
+  if (gltf.animations.length) {
+    water_mixer = new AnimationMixer(model);
 
-//     // Play the first animation found
-//     const action = mixer.clipAction(gltf.animations[0]);
-//     action.play();
-//   } else {
-//     // console.warn('No animations found in the model');
-//   }
+    // Play the first animation found
+    const action = water_mixer.clipAction(gltf.animations[0]);
+    action.play();
+  } else {
+    // console.warn('No animations found in the model');
+  }
 
-//   // console.log("hi  ");
-//   // console.log(gltf.animations.length);
-// });
+  // console.log("hi  ");
+  // console.log(gltf.animations.length);
+});
 
 let tank;
 gltfLoader.load("../../models/snowy_water_tank.glb", (gltf) => {
@@ -534,6 +534,7 @@ function animate() {
   const delta = clock.getDelta();
 
   if (mixer) mixer.update(delta);
+  if (water_mixer) water_mixer.update(delta);
 
   // Step the physics world
   world.step(1 / 60);
@@ -672,4 +673,18 @@ function restartGame() {
   if(model) model.position.y = 0;
   refill_health();
 }
+document.getElementById("restartGameBtn").addEventListener("click",() => {
+  isRising = false;
+  if(model)
+    {
+      model.position.y = 0;
+      model.position.x = 0;
+      model.position.z = 0;
+    } 
+  refill_health();
+})
+
+document.getElementById("startFloodBtn").addEventListener("click" ,() => {
+  isRising = true;
+})
 animate();

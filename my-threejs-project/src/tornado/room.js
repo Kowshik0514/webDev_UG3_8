@@ -20,7 +20,8 @@ export function loadHome(scene, world) {
     // Load the home model
     loader.load('../../models/tornado/tornadoHome.glb', (gltfHome) => {
         const homeModel = gltfHome.scene;
-        homeModel.position.set(-20, 0, -20); // Position the home
+        homeModel.rotateOnAxis(new THREE.Vector3(0, 1, 0), 5*Math.PI/13); // Rotate the home model
+        homeModel.position.set(0, 0, 40); // Position the home
         homeModel.scale.set(0.002, 0.002, 0.002); // Scale the home model
         scene.add(homeModel);
     });

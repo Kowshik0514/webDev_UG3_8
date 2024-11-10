@@ -592,13 +592,13 @@ function updatePlayerAnimation() {
   }
   else if(isMoving_back){
     newAction = actions['walk_backward'];
-  } else {
+  } 
+  else {
     newAction = actions['idle']; 
   }
   if ((player.position.x > -1.5 && playerBody.position.x < 1.5) && (playerBody.position.z > -6 && playerBody.position.z <-4.3)) {
     newAction = actions['crawl'];
     playerBody.position.y = 0.2;
-
   }
   // If the new action is different from the active action, blend the animations
   if (newAction && newAction !== activeAction) {

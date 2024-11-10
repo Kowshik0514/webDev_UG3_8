@@ -188,7 +188,7 @@ export let player = null; // Declare player variable
 let texture1, texture2;
 
 // Load the character model
-gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
+gltfLoader.load('../../models/global_models/player2.glb', (gltf) => {
   player = gltf.scene;
   player.scale.set(0.5, 0.5, 0.5);
   player.rotation.y = Math.PI;
@@ -205,7 +205,7 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
   // Create playerBody with mass
   playerBody = new CANNON.Body({
     mass: 70, // Player mass
-    position: new CANNON.Vec3(-35, 0, -10),
+    position: new CANNON.Vec3(20, 0, 20),
     // position: new CANNON.Vec3(30, 0, 30), // Initial player position
     fixedRotation: true, 
     linearDamping: 0.3, 
@@ -233,6 +233,7 @@ const keys = { w: false, a: false, s: false, d: false, space: false, shift: fals
 const jumpForce = 5;
 const speed = { walk: 10, run: 8 };
 let isMoving = false;
+let isMoving_back = false;
 let isRunning = false;
 // Define the maximum jump height near the tornado
 const randomJumpForceMin = 1;
@@ -250,8 +251,9 @@ function handleKeyDown(event) {
     } else {
       keys[event.key.toLowerCase()] = true;
     }
-    isMoving = keys.w || keys.a || keys.s || keys.d;
+    isMoving = keys.w || keys.a || keys.d;
     isRunning = keys.shift;
+    isMoving_back = keys.s;
   }
 }
 
@@ -262,8 +264,9 @@ function handleKeyUp(event) {
     } else {
       keys[event.key.toLowerCase()] = false;
     }
-    isMoving = keys.w || keys.a || keys.s || keys.d;
+    isMoving = keys.w || keys.a || keys.d;
     isRunning = keys.shift;
+    isMoving_back = keys.s;
   }
 }
 
@@ -429,10 +432,14 @@ function updatePlayerAnimation() {
     if (isRunning) {
       newAction = actions['crawl']; // Play run animation
     } else {
-      newAction = actions['walk']; // Play walk animation
+      newAction = actions['walk_forward']; // Play walk animation
       // newAction = actions['run']; 
     }
-  } else {
+  } 
+  else if(isMoving_back){
+    newAction = actions['walk_backward'];
+  } 
+  else {
     newAction = actions['idle']; // PlayerBplayerBody is idle
   }
 
