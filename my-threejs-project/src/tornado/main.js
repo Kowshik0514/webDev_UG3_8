@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'; // Import the GLTFLoader
 import { createTornado, tornadoGroup } from './tornado.js';
-import { loadHome } from './survive.js';
+import { loadHome } from './room.js';
 
 // Scene setup
 export const scene = new THREE.Scene();
@@ -17,7 +17,6 @@ renderer.shadowMap.enabled = true;
 // Physics world
 const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0);
-
 
 const startTornadoButton = document.getElementById('startTornado');
 startTornadoButton.addEventListener('click', () => {
