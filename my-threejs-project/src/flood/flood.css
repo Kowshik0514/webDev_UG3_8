@@ -281,3 +281,54 @@ body {
   background-color: #FF6347;
   z-index: 1000; /* Tomato color for No */
 }
+
+
+
+#popup2 {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 1000;
+}
+
+/* Button styling */
+#popup2 button {
+  margin: 10px;
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#popup2 button#noButton {
+  background-color: #FF6347;
+  z-index: 1000; /* Tomato color for No */
+}
+
+
+#warningPopup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 0, 0, 0.9); /* Red background for warning */
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 1000;
+  font-size: 18px;
+  font-weight: bold;
+}

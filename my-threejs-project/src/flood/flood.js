@@ -211,7 +211,7 @@ gltfLoader.load('../../models/opt_wave2.glb', (gltf) => {
   // console.log(model.rotation); 
   model.scale.set(0.09, 0.005, 0.08); // Adjust scale if necessary
   scene.add(model);
-  model.position.set(1, 0.5, 1); 
+  model.position.set(1, -1, 1); 
   
   mixer = new AnimationMixer(model);
   const action = mixer.clipAction(gltf.animations[0]);
@@ -264,26 +264,55 @@ gltfLoader.load('../../models/house.glb', (gltf) => {
   room = gltf.scene;
   // room.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
-  room.scale.set(1, 1,1); // Adjust scale if necessary
+  room.scale.set(1.2, 1,1.2); // Adjust scale if necessary
   scene.add(room);
   room.position.set(0, 0, 0); 
 
-  // console.log("hi  ");
-
-  // Add physics body for the room
-  const roomShape = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1)); // Adjust shape based on room
-  const roomTransform = new Ammo.btTransform();
-  roomTransform.setIdentity();
-  roomTransform.setOrigin(new Ammo.btVector3(0, 0, 0)); // Adjust position
-  const roomMass = 1;
-  const roomLocalInertia = new Ammo.btVector3(0, 0, 0);
-  roomShape.calculateLocalInertia(roomMass, roomLocalInertia);
-  const roomMotionState = new Ammo.btDefaultMotionState(roomTransform);
-  const roomBodyInfo = new Ammo.btRigidBodyConstructionInfo(roomMass, roomMotionState, roomShape, roomLocalInertia);
-  const roomBody = new Ammo.btRigidBody(roomBodyInfo);
-  physicsWorld.addRigidBody(roomBody);
-
 });
+
+
+let pole;
+gltfLoader.load('../../models/pole.glb', (gltf) => {
+  pole = gltf.scene;
+  // pole.setRotationFromEuler(new Euler(0, Math.PI, 0));
+
+  pole.scale.set(1, 1, 1); // Adjust scale if necessary
+  scene.add(pole);
+  pole.position.set(-1,5,10); 
+});
+
+function checkDistanceToPole() {
+  if (pole) {
+      // Replace with the actual character position
+     // Example position, adjust accordingly
+      const distancex = Math.abs(pole.position.x - player.position.x);
+      const distancez = Math.abs(pole.position.z - player.position.z);
+
+      if(distancex < 0.7 && distancez <0.7)
+      {
+          playerHealth = 0;
+          updateHealth();
+      }
+      else if( distancex < 1 && distancez < 1)
+      {
+         showWarning();
+      }
+      else if(distancex >=1 || distancez >= 1)
+      {
+          hideWarning();
+      }
+      
+  }
+}
+
+function showWarning() {
+    document.getElementById("warningPopup").style.display = "block";
+}
+
+function hideWarning() {
+    document.getElementById("warningPopup").style.display = "none";
+}
+
 
 
 
@@ -292,9 +321,21 @@ gltfLoader.load('../../models/table2.glb', (gltf) => {
   table = gltf.scene;
   // table.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
-  table.scale.set(-3, 1,-3); // Adjust scale if necessary
+  table.scale.set(0.1, 0.11,0.1); // Adjust scale if necessary
   scene.add(table);
-  table.position.set(1,0.7,1); 
+  table.position.set(-1,0.2,2); 
+
+
+});
+
+let table2;
+gltfLoader.load('../../models/table2.glb', (gltf) => {
+  table2 = gltf.scene;
+  // table2.setRotationFromEuler(new Euler(0, Math.PI, 0));
+
+  table2.scale.set(0.1, 0.11,0.1); // Adjust scale if necessary
+  scene.add(table2);
+  table2.position.set(-1,0.2,-2); 
 
 
 });
@@ -308,8 +349,11 @@ gltfLoader.load('../../models/fruit_bowl.glb', (gltf) => {
 
   fruit.scale.set(2, 2,2); // Adjust scale if necessary
   scene.add(fruit);
-  fruit.position.set(3,1.1,3);
+  fruit.position.set(-0.7,0.93,2);
 });
+
+
+const names = [];
 
 
 
@@ -317,22 +361,18 @@ function showPopup() {
   document.getElementById("popup").style.display = "block";
 }
 
-// Hide the pop-up
 function hidePopup() {
   document.getElementById("popup").style.display = "none";
 }
-
 let flag = true;
-
 let taken = true;
 document.getElementById("yesButton").addEventListener("click", () => {
 
-  names.push("Fruit"); // Add fruit to the bag
+  names.push("Fruits"); // Add fruit to the bag
   flag = false;
   hidePopup();
   taken = false;
   scene.remove(fruit); 
-  
 });
 
 document.getElementById("noButton").addEventListener("click" , () => {
@@ -344,13 +384,15 @@ function checkDistanceToFruit() {
   if (fruit) {
       // Replace with the actual character position
      // Example position, adjust accordingly
-      const distance = Math.abs(fruit.position.x - player.position.x);
+      const distancex = Math.abs(fruit.position.x - player.position.x);
+      const distancez = Math.abs(fruit.position.z - player.position.z);
+
       hidePopup();
-      if( distance < 1 && flag === true && taken == true )
+      if( distancex < 0.6 && flag === true && taken == true && distancez < 0.6)
       {
         showPopup();
       }
-      else if(distance >=2)
+      else if(distancex >=0.6 || distancez >= 0.6)
       {
         hidePopup();
         flag = true;
@@ -358,7 +400,8 @@ function checkDistanceToFruit() {
   }
 }
 
-const names = [];
+
+
 
 document.getElementById("displayButton").addEventListener("click",showOverlay);
 document.getElementById("closeButton").addEventListener("click",hideOverlay);
@@ -377,24 +420,73 @@ function hideOverlay() {
     document.getElementById("overlay").style.display = "none";
 }
 
-// Event listener for button click
-
-
-
-// Event listener for button click
-
-
-
 let radio;
 gltfLoader.load('../../models/radio.glb', (gltf) => {
   radio = gltf.scene;
   // radio.setRotationFromEuler(new Euler(0, Math.PI, 0));
-
+  radio.rotation.y = Math.PI/2; 
   radio.scale.set(0.0008, 0.001,0.001); // Adjust scale if necessary
   scene.add(radio);
-  radio.position.set(1,1.3,1); 
+  radio.position.set(-1.2,1.1,2); 
 
 });
+
+let paper;
+gltfLoader.load('../../models/papers__envelopes.glb', (gltf) => {
+  paper = gltf.scene;
+  // paper.setRotationFromEuler(new Euler(0, Math.PI, 0));
+  paper.rotation.y = Math.PI/2; 
+  paper.scale.set(0.8, 1, 1); // Adjust scale if necessary
+  scene.add(paper);
+  paper.position.set(-1.2,0.95,-2); 
+
+});
+
+function showPopup2() {
+  document.getElementById("popup2").style.display = "block";
+}
+
+function hidePopup2() {
+  document.getElementById("popup2").style.display = "none";
+}
+
+
+let flag2 = true;
+let taken2 = true;
+document.getElementById("yesButton2").addEventListener("click", () => {
+
+  names.push("Certificates"); // Add fruit to the bag
+  flag2 = false;
+  hidePopup2();
+  taken2 = false;
+  scene.remove(paper); 
+});
+
+document.getElementById("noButton2").addEventListener("click" , () => {
+  flag2 = false;
+  hidePopup2();
+
+});
+function checkDistanceToPaper() {
+  if (paper) {
+      // Replace with the actual character position
+     // Example position, adjust accordingly
+      const distancex = Math.abs(paper.position.x - player.position.x);
+      const distancez = Math.abs(paper.position.z - player.position.z);
+
+      hidePopup2();
+      if( distancex < 0.7 && flag2 === true && taken2 == true && distancez < 0.7)
+      {
+        showPopup2();
+      }
+      else if(distancex >=0.7 || distancez >= 0.7)
+      {
+        hidePopup2();
+        flag2 = true;
+      }
+  }
+}
+
 
 
 
@@ -477,7 +569,7 @@ let animationEnabled = true;
 function animate() {
   if (!animationEnabled) return;
 
-  checkDistanceToFruit();
+
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
 
@@ -489,7 +581,9 @@ function animate() {
   // Call movePlayer every frame
   movePlayer();
 
-
+  checkDistanceToFruit();
+  checkDistanceToPaper();
+  checkDistanceToPole();
   if (player) {
     // Sync player position with physics body
     player.position.copy(playerBody.position);
