@@ -176,6 +176,7 @@ gltfLoader.load("../../models/global_models/player2.glb", (gltf) => {
   const sphereTop = new CANNON.Sphere(0.25); // Top of the capsule
   const sphereBottom = new CANNON.Sphere(0); // Bottom of the capsule
   const cylinder = new CANNON.Cylinder(0,0,capsuleHeight - 2 * capsuleRadius,8); // The middle cylinder
+  const cylinder = new CANNON.Cylinder(0,0,capsuleHeight - 2 * capsuleRadius,8); // The middle cylinder
 
   // Create playerBody with mass
   playerBody = new CANNON.Body({
@@ -183,9 +184,16 @@ gltfLoader.load("../../models/global_models/player2.glb", (gltf) => {
     position: new CANNON.Vec3(5, 10, 0), // Initial player position
     fixedRotation: true, // Prevent rolling
   });
+  playerBody = new CANNON.Body({
+    mass: 1, // Player mass
+    position: new CANNON.Vec3(0.5, 0.1, 0), // Initial player position
+    fixedRotation: true, // Prevent rolling
+  });
   // Optionally add a tiny, nearly invisible shape if minimal collision is required
 
   // Add the shapes to the playerBody to form a capsule
+  playerBody.addShape(sphereTop,new CANNON.Vec3(0, (capsuleHeight - capsuleRadius) / 2, 0)); // Position top sphere
+  playerBody.addShape(sphereBottom,new CANNON.Vec3(0, -(capsuleHeight - capsuleRadius) / 2, 0)); // Position bottom sphere
   playerBody.addShape(sphereTop,new CANNON.Vec3(0, (capsuleHeight - capsuleRadius) / 2, 0)); // Position top sphere
   playerBody.addShape(sphereBottom,new CANNON.Vec3(0, -(capsuleHeight - capsuleRadius) / 2, 0)); // Position bottom sphere
   playerBody.addShape(cylinder); // Add the cylinder in the middle
@@ -235,7 +243,7 @@ gltfLoader.load("../../models/snowy_water_tank.glb", (gltf) => {
   tank = gltf.scene;
   // tank.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
-  tank.scale.set(10, 10, 10); // Adjust scale if necessary
+  tank.scale.set(8, 8, 8); // Adjust scale if necessary
   scene.add(tank);
   tank.position.set(10, 8, 10);
 });
@@ -262,6 +270,10 @@ function checkDistanceToPole() {
   if (pole) {
     // Replace with the actual character position
     // Example position, adjust accordingly
+    let distancex;
+    let distancez;
+    if(player)  distancex = Math.abs(pole.position.x - player.position.x);
+    if(player) distancez = Math.abs(pole.position.z - player.position.z);
     let distancex;
     let distancez;
     if(player)  distancex = Math.abs(pole.position.x - player.position.x);
@@ -339,6 +351,52 @@ document.getElementById("noButton").addEventListener("click", () => {
   flag = false;
   hidePopup();
 });
+let checkClimb = false;
+let checkClimb1=false;
+let climbMessageDisplayed = false;
+let offset=0.5;
+
+function checkNearLadder() {
+  if (
+    playerBody.position.x <= 10.27 + offset &&
+    playerBody.position.x >= 10.27 - offset &&
+    playerBody.position.z <= 6.97 + offset &&
+    playerBody.position.z >= 6.97 - offset
+  ) {
+    checkClimb = true;
+    showClimbMessage();
+  } else {
+    removeClimbMessage();
+    checkClimb = false;
+  }
+}
+
+function showClimbMessage() {
+  if (checkClimb && !climbMessageDisplayed) {
+    const message = document.createElement("div");
+    message.id = "climbMessage";
+    message.textContent = "Press and hold 'C' if you want to climb the ladder";
+    message.style.position = "absolute";
+    message.style.top = "50%";
+    message.style.left = "50%";
+    message.style.transform = "translate(-50%, -50%)";
+    message.style.padding = "10px";
+    message.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+    message.style.color = "white";
+    message.style.borderRadius = "5px";
+    document.body.appendChild(message);
+
+    climbMessageDisplayed = true;
+  }
+}
+
+function removeClimbMessage() {
+  const message = document.getElementById("climbMessage");
+  if (message) {
+    document.body.removeChild(message);
+    climbMessageDisplayed = false;
+  }
+}
 function checkDistanceToFruit() {
   if (fruit) {
     // Replace with the actual character position
@@ -421,9 +479,8 @@ function checkDistanceToPaper() {
     // Example position, adjust accordingly
     let distancex;
     let distancez;
-    if(player) distancex = Math.abs(paper.position.x - player.position.x);
-    if(player) distancez = Math.abs(paper.position.z - player.position.z);
-
+    if(player)  distancex = Math.abs(pole.position.x - player.position.x);
+    if(player) distancez = Math.abs(pole.position.z - player.position.z);
     hidePopup2();
     if (
       distancex < 0.7 &&
@@ -515,13 +572,12 @@ window.addEventListener("keyup", (event) => {
 
 // Mouse movement
 document.addEventListener("mousemove", (event) => {
-  if (controls.isLocked) {
+  if (controls.isLocked && !checkClimb1) {
     yaw -= event.movementX * 0.002;
     pitch -= event.movementY * -0.002;
     pitch = Math.max(-pitchLimit, Math.min(pitchLimit, pitch));
   }
 });
-
 const clock = new THREE.Clock();
 
 let isRising = false;
@@ -529,7 +585,12 @@ let isRising = false;
 let animationEnabled = true;
 function animate() {
   if (!animationEnabled) return;
-
+  checkNearLadder();
+  // console.log("x:");
+  // console.log(playerBody.position.x);
+  // console.log(playerBody.position.y);
+  // console.log("z:");
+  // console.log(playerBody.position.z);
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
 
@@ -545,7 +606,8 @@ function animate() {
   checkDistanceToFruit();
   checkDistanceToPaper();
   checkDistanceToPole();
-  if (player) {
+  if (player && !checkClimb1) {
+    
     // Sync player position with physics body
     player.position.copy(playerBody.position);
     player.quaternion.copy(playerBody.quaternion);
@@ -556,13 +618,35 @@ function animate() {
     const cameraY = player.position.y + radius * Math.sin(pitch);
     const cameraZ =
       player.position.z - radius * Math.cos(yaw) * Math.cos(pitch);
-
+      
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(player.position);
 
     // Rotate the player to match the camera's yaw
     player.rotation.y = yaw; // Sync player's Y rotation with the camera's yaw
+    console.log("x");
+      console.log(player.rotation.x);
+      console.log("y");
+      console.log(player.rotation.y);
+      console.log("z");
+      console.log(player.rotation.z);
   }
+  else if(player && checkClimb1)
+    {
+    
+      player.position.copy(playerBody.position);
+      player.quaternion.copy(playerBody.quaternion);
+  
+      // Calculate the camera position based on player and pitch/yaw
+      const cameraX =10.1;
+      const cameraY = player.position.y + radius * Math.sin(pitch);
+      const cameraZ =3.296;
+      camera.position.set(cameraX, cameraY, cameraZ);
+      camera.lookAt(player.position);
+  
+      // Rotate the player to match the camera's yaw
+      player.rotation.y = 0.022;
+    }
 
   if (isRising && model) {
     model.position.y += 0.01;
@@ -584,17 +668,20 @@ function updatePlayerAnimation() {
   let newAction;
 
   if (isMoving) {
-    if (isRunning) {
+    if (isRunning && !checkClimb1) {
       newAction = actions["crawl"];
-    } else {
+    } else if(!checkClimb1) {
       newAction = actions["walk_forward"];
       // newAction = actions['run'];
     }
-  } else if (isMoving_back) {
+  } else if (isMoving_back&&!checkClimb1) {
     newAction = actions["walk_backward"];
-  } else if (isClimbing) {
+  } else if (isClimbing && checkClimb) {
+    removeClimbMessage();
+    checkClimb1=true;
     newAction = actions["climb_up"];
   } else {
+    checkClimb1=false;
     newAction = actions["idle"];
   }
 
@@ -616,7 +703,7 @@ function movePlayer() {
     .crossVectors(forward, new THREE.Vector3(0, 1, 0))
     .normalize();
   // console.log(forward);
-  if (keys.s) moveDirection.add(forward);
+  if (keys.s ) moveDirection.add(forward);
   if (keys.w) moveDirection.add(forward.clone().negate());
   if (keys.d) moveDirection.add(right.clone().negate());
   if (keys.a) moveDirection.add(right);
@@ -624,7 +711,7 @@ function movePlayer() {
 
   moveDirection.normalize();
 
-  if (moveDirection.length() > 0) {
+  if (moveDirection.length() > 0 && !checkClimb1) {
     const speedValue = isRunning ? speed.run : speed.walk;
     playerBody.velocity.x = moveDirection.x * speedValue;
     playerBody.velocity.z = moveDirection.z * speedValue;
@@ -633,13 +720,13 @@ function movePlayer() {
     player.rotation.y =
       THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1) + Math.PI;
   }
-  if (keys.s) {
-    playerBody.velocity.z += 1;
-  }
-  if (keys.c) {
+ 
+  if (keys.c&&checkClimb) {
     // Shift + Space: Fly upward
+    checkClimb1=true;
     playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
   } else if (playerBody.position.y <= 1.6) {
+    checkClimb1=false;
     // playerBody.velocity.y = jumpForce;
   }
 
