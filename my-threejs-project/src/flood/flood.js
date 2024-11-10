@@ -198,7 +198,7 @@ gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
     const action = mixer.clipAction(clip);
     actions[clip.name.toLowerCase()] = action;
   });
-  activeAction = actions['idle'];
+  activeAction = actions['walk'];
   activeAction.play();
 });
 
@@ -262,27 +262,61 @@ gltfLoader.load('../../models/snowy_water_tank.glb', (gltf) => {
 let room;
 gltfLoader.load('../../models/apartment_plan.glb', (gltf) => {
   room = gltf.scene;
-  // room.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
-  room.scale.set(1, 1,1); // Adjust scale if necessary
+  // Adjust the scale and position of the room as needed
+  room.scale.set(1, 1, 1);
   scene.add(room);
-  room.position.set(-10, 0, 10); 
+  room.position.set(-10, 0, 10);
 
-  // console.log("hi  ");
+  // Iterate through all the objects in the room and add Trimesh colliders for each
+  room.traverse((child) => {
+    if (child.isMesh) {
+      // Get the geometry of the mesh
+      const geometry = child.geometry;
 
-  // Add physics body for the room
-  const roomShape = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1)); // Adjust shape based on room
-  const roomTransform = new Ammo.btTransform();
-  roomTransform.setIdentity();
-  roomTransform.setOrigin(new Ammo.btVector3(0, 0, 0)); // Adjust position
-  const roomMass = 1;
-  const roomLocalInertia = new Ammo.btVector3(0, 0, 0);
-  roomShape.calculateLocalInertia(roomMass, roomLocalInertia);
-  const roomMotionState = new Ammo.btDefaultMotionState(roomTransform);
-  const roomBodyInfo = new Ammo.btRigidBodyConstructionInfo(roomMass, roomMotionState, roomShape, roomLocalInertia);
-  const roomBody = new Ammo.btRigidBody(roomBodyInfo);
-  physicsWorld.addRigidBody(roomBody);
+      if (geometry.attributes.position) {
+        // Get the vertices and indices from the geometry
+        const vertices = geometry.attributes.position.array;
+        const indices = geometry.index ? geometry.index.array : undefined;
 
+        // Create the Trimesh collider in Cannon.js
+        const colliderShape = new CANNON.Trimesh(vertices, indices);
+
+        // Create the body with mass = 0 (static body) and add it to the physics world
+        const body = new CANNON.Body({
+          mass: 0, // Static body (no physics movement)
+          position: new CANNON.Vec3(child.position.x, child.position.y, child.position.z), // Same position as the mesh
+        });
+
+        // Add the Trimesh shape to the body
+        body.addShape(colliderShape);
+
+        // Add the body to the physics world
+        world.addBody(body);
+
+        // Optionally, set the collision material for better collision response
+        const material = new CANNON.Material();
+        body.material = material;
+
+        // Visualize the collider using wireframe or any other method
+        const wireframeMaterial = new THREE.MeshBasicMaterial({
+          color: 0x00FF00, // Green color for the collider
+          wireframe: true, // Display as wireframe
+        });
+
+        // Create a wireframe mesh to visualize the collider
+        const wireframeMesh = new THREE.Mesh(geometry, wireframeMaterial);
+
+        // Add wireframe mesh to scene for visualization, but not the original mesh
+        scene.add(wireframeMesh);
+
+        // Ensure the wireframe matches the mesh's position, rotation, and scale
+        wireframeMesh.position.copy(child.position);
+        wireframeMesh.rotation.copy(child.rotation);
+        wireframeMesh.scale.copy(child.scale);
+      }
+    }
+  });
 });
 document.getElementById('restartButton').addEventListener('click', () => {
   restartGame();
@@ -409,23 +443,19 @@ function animate() {
 // Function to update animation based on player's movement
 function updatePlayerAnimation() {
   if (!player || !mixer) return;
-  // console.log("player position: ");
-  // console.log(player.position.y);
-  // console.log(player.position.z);
   let newAction;
-
-  // Check if the player is moving and if they're running
 
   if (isMoving) {
     if (isRunning) {
-      newAction = actions['walk'];
-      // newAction = actions['crawl']; // Play run animation
+      newAction = actions['crawl']; // Play run animation
     } else {
       newAction = actions['walk']; // Play walk animation
+      // newAction = actions['run']; 
     }
   } else {
     newAction = actions['idle']; // PlayerBplayerBody is idle
   }
+
   // If the new action is different from the active action, blend the animations
   if (newAction && newAction !== activeAction) {
     previousAction = activeAction;
@@ -450,7 +480,6 @@ function movePlayer() {
 
   moveDirection.normalize();
 
-  // Update player physics body
   if (moveDirection.length() > 0) {
     const speedValue = isRunning ? speed.run : speed.walk;
     playerBody.velocity.x = moveDirection.x * speedValue;
@@ -460,14 +489,16 @@ function movePlayer() {
     player.rotation.y = THREE.MathUtils.lerp(player.rotation.y, targetRotation, 0.1) + Math.PI;
   }
 
-  // Jumping
- 
+  if (keys.space) {
+    if (keys.shift) {
+      // Shift + Space: Fly upward
+      playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
+    } else if (playerBody.position.y <= 1.6) {
+      // playerBody.velocity.y = jumpForce;
+    }
+  }
 
-  // Reset Y velocity for better control
   playerBody.velocity.y = Math.max(playerBody.velocity.y, -20);
-
-
-  // Update animation based on movement
   updatePlayerAnimation();
 }
 
@@ -479,6 +510,12 @@ function getPlayerForwardDirection() {
   );
   return forward.normalize();
 }
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
