@@ -1,4 +1,3 @@
-<!-- ./index.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,28 +9,15 @@
 </head>
 
 <body>
-
-  
   <header class="header">
-    <img src="./images/homepage/logo.avif" alt="Logo" class="logo">
+    <img onclick="location.href='./'" src="./images/homepage/logo.jpeg" alt="Logo" class="logo">
     <h1 onclick="location.href='./'">Disaster Preparedness Simulation</h1>
     <nav class="navbar">
       <a href="#simulation">Simulations</a>
+      <a href="#other">How to play?</a> 
       <a href="#news">News</a>
-      <a href="#other">Other Section</a> 
       <a href="#about">About Us</a>
     </nav>
-    <img src="./images/homepage/profile.png" alt="Profile Icon" class="profile-icon" onclick="toggleProfilePopup()">
-
-    
-    <div id="profile-popup" class="popup hidden">
-      <p style="font-weight: bold;">Welcome, User!</p>
-      <hr>
-      <p><a href="#">View Profile</a></p>
-      <p><a href="#">Settings</a></p>
-      <hr>
-      <p><a href="#">Logout</a></p>
-    </div>
   </header>
 
   <div class="section-banner">
@@ -334,63 +320,57 @@
 
   <section id="simulation">
     <h2>Simulations</h2>
-    
-    
     <div class="container">
       <div class="card">
         <img src="./images/homepage/earthquake.avif" alt="Earthquake Image" class="card-image">
         <h3 class="card-title">Earthquake</h3>
-        <p class="card-description">In the face of shaking ground, your calm can keep you steady.</p>
-        <button type="button" class="card-button"
-          onclick="location.href='./src/earthquake/earthquake.html'">Start</button>
+        <p class="card-description">Earthquakes can happen without warning. Stay calm and remember to Drop, Cover, and Hold On for safety.</p>
+        <div class="buttons">
+          <button class="btn" onclick="location.href='./src/earthquake/earthquake.html'"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
+        </div>
       </div>
       <div class="card">
-        <img src="./images/homepage/flood2.jpg" alt="Flood Image" class="card-image">
+        <img src="./images/homepage/flood2.jpg" alt="Flood Image" class="card-image" style="height: 155px;">
         <h3 class="card-title">Flood</h3>
-        <p class="card-description">Stay alert and rise above, your strength can weather any storm.</p>
-        <button type="button" class="card-button" onclick="location.href='./src/flood/flood.html'">Start</button>
-      </div>
-      <div class="card">
-        <img src="./images/homepage/flood.jpg" alt="Tsunami Image" class="card-image">
-        <h3 class="card-title">Tsunami</h3>
-        <p class="card-description">Stand firm and act swiftly, your focus will help you ride the waves.</p>
-        <button class="card-button">Start</button>
+        <p class="card-description">Floods can occur quickly. Be prepared by knowing evacuation routes and how to protect yourself from rising waters.</p>
+        <div class="buttons">
+          <button class="btn" onclick="location.href='./src/flood/flood.html'"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
+        </div>
       </div>
       <div class="card">
         <img src="./images/homepage/tornado.jpg" alt="Tornado Image" class="card-image">
         <h3 class="card-title">Tornado</h3>
-        <p class="card-description">When winds rage and chaos strikes, stay low and seek shelter.</p>
-        <button class="card-button" onclick="location.href='./src/tornado/tornado.html'">Start</button>
+        <p class="card-description">Tornadoes can form suddenly. Seek shelter in a basement or interior room to stay safe from flying debris.</p>
+        <div class="buttons">
+          <button class="btn" onclick="location.href='./src/tornado/tornado.html'"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
+        </div>
       </div>
     </div>
+  </section>
+
+  <section id="other">
+    <h2>How to play?</h2>
+    <p>This section contains other relevant information.</p>
   </section>
 
   <section id="news">
     <h2>News</h2>
     <div id="news-container"></div>
-    <script src="./src/homepage/news.js"></script>
     <p>This section contains the latest news related to disaster preparedness.</p>
   </section>
+  <script src="./src/homepage/news.js"></script>
 
-  <section id="other">
-    <h2>Other Section</h2>
-    
-    <p>This section contains other relevant information.</p>
-  </section>
   <section id="about">
-    
     <h2>About Us</h2>
-    
     <p>This section contains information about the project.</p>
   </section>
 
-  
   <footer class="footer">
     <hr>
     <p>&copy; 2024 Disaster Preparedness Simulation. All rights reserved.</p>
   </footer>
-  <script src="script.js"></script>
 
+  <script src="script.js"></script>
 </body>
 
 </html>

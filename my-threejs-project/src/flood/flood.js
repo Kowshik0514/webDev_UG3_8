@@ -260,64 +260,145 @@ gltfLoader.load('../../models/snowy_water_tank.glb', (gltf) => {
 
 
 let room;
-gltfLoader.load('../../models/apartment_plan.glb', (gltf) => {
+gltfLoader.load('../../models/house.glb', (gltf) => {
   room = gltf.scene;
 
   // Adjust the scale and position of the room as needed
   room.scale.set(1, 1, 1);
   scene.add(room);
-  room.position.set(-10, 0, 10);
+  room.position.set(0, 0, 0); 
 
-  // Iterate through all the objects in the room and add Trimesh colliders for each
-  room.traverse((child) => {
-    if (child.isMesh) {
-      // Get the geometry of the mesh
-      const geometry = child.geometry;
+  // console.log("hi  ");
 
-      if (geometry.attributes.position) {
-        // Get the vertices and indices from the geometry
-        const vertices = geometry.attributes.position.array;
-        const indices = geometry.index ? geometry.index.array : undefined;
+  // Add physics body for the room
+  const roomShape = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1)); // Adjust shape based on room
+  const roomTransform = new Ammo.btTransform();
+  roomTransform.setIdentity();
+  roomTransform.setOrigin(new Ammo.btVector3(0, 0, 0)); // Adjust position
+  const roomMass = 1;
+  const roomLocalInertia = new Ammo.btVector3(0, 0, 0);
+  roomShape.calculateLocalInertia(roomMass, roomLocalInertia);
+  const roomMotionState = new Ammo.btDefaultMotionState(roomTransform);
+  const roomBodyInfo = new Ammo.btRigidBodyConstructionInfo(roomMass, roomMotionState, roomShape, roomLocalInertia);
+  const roomBody = new Ammo.btRigidBody(roomBodyInfo);
+  physicsWorld.addRigidBody(roomBody);
 
-        // Create the Trimesh collider in Cannon.js
-        const colliderShape = new CANNON.Trimesh(vertices, indices);
-
-        // Create the body with mass = 0 (static body) and add it to the physics world
-        const body = new CANNON.Body({
-          mass: 0, // Static body (no physics movement)
-          position: new CANNON.Vec3(child.position.x, child.position.y, child.position.z), // Same position as the mesh
-        });
-
-        // Add the Trimesh shape to the body
-        body.addShape(colliderShape);
-
-        // Add the body to the physics world
-        world.addBody(body);
-
-        // Optionally, set the collision material for better collision response
-        const material = new CANNON.Material();
-        body.material = material;
-
-        // Visualize the collider using wireframe or any other method
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-          color: 0x00FF00, // Green color for the collider
-          wireframe: true, // Display as wireframe
-        });
-
-        // Create a wireframe mesh to visualize the collider
-        const wireframeMesh = new THREE.Mesh(geometry, wireframeMaterial);
-
-        // Add wireframe mesh to scene for visualization, but not the original mesh
-        scene.add(wireframeMesh);
-
-        // Ensure the wireframe matches the mesh's position, rotation, and scale
-        wireframeMesh.position.copy(child.position);
-        wireframeMesh.rotation.copy(child.rotation);
-        wireframeMesh.scale.copy(child.scale);
-      }
-    }
-  });
 });
+
+
+
+let table;
+gltfLoader.load('../../models/table2.glb', (gltf) => {
+  table = gltf.scene;
+  // table.setRotationFromEuler(new Euler(0, Math.PI, 0));
+
+  table.scale.set(-3, 1,-3); // Adjust scale if necessary
+  scene.add(table);
+  table.position.set(1,0.7,1); 
+
+
+});
+
+
+
+let fruit;
+gltfLoader.load('../../models/fruit_bowl.glb', (gltf) => {
+  fruit = gltf.scene;
+  // fruit.setRotationFromEuler(new Euler(0, Math.PI, 0));
+
+  fruit.scale.set(2, 2,2); // Adjust scale if necessary
+  scene.add(fruit);
+  fruit.position.set(3,1.1,3);
+});
+
+
+
+function showPopup() {
+  document.getElementById("popup").style.display = "block";
+}
+
+// Hide the pop-up
+function hidePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+let flag = true;
+
+let taken = true;
+document.getElementById("yesButton").addEventListener("click", () => {
+
+  names.push("Fruit"); // Add fruit to the bag
+  flag = false;
+  hidePopup();
+  taken = false;
+  scene.remove(fruit); 
+  
+});
+
+document.getElementById("noButton").addEventListener("click" , () => {
+  flag = false;
+  hidePopup();
+
+});
+function checkDistanceToFruit() {
+  if (fruit) {
+      // Replace with the actual character position
+     // Example position, adjust accordingly
+      const distance = Math.abs(fruit.position.x - player.position.x);
+      hidePopup();
+      if( distance < 1 && flag === true && taken == true )
+      {
+        showPopup();
+      }
+      else if(distance >=2)
+      {
+        hidePopup();
+        flag = true;
+      }
+  }
+}
+
+const names = [];
+
+document.getElementById("displayButton").addEventListener("click",showOverlay);
+document.getElementById("closeButton").addEventListener("click",hideOverlay);
+
+function showOverlay() {
+    // Display overlay
+    document.getElementById("overlay").style.display = "flex";
+    
+    // Populate overlay with names in a horizontal layout
+    const nameList = document.getElementById("nameList");
+    nameList.innerHTML = names.map(name => `<span>${name}</span>`).join('');
+}
+
+function hideOverlay() {
+    // Hide overlay
+    document.getElementById("overlay").style.display = "none";
+}
+
+// Event listener for button click
+
+
+
+// Event listener for button click
+
+
+
+let radio;
+gltfLoader.load('../../models/radio.glb', (gltf) => {
+  radio = gltf.scene;
+  // radio.setRotationFromEuler(new Euler(0, Math.PI, 0));
+
+  radio.scale.set(0.0008, 0.001,0.001); // Adjust scale if necessary
+  scene.add(radio);
+  radio.position.set(1,1.3,1); 
+
+});
+
+
+
+
 document.getElementById('restartButton').addEventListener('click', () => {
   restartGame();
 });
@@ -330,6 +411,8 @@ riseButton.style.left = '10px';
 document.body.appendChild(riseButton);
 
 riseButton.addEventListener('click', () => {
+  const audio = document.getElementById("myAudio");
+            audio.play();
   isRising = true;
 });
 
@@ -393,6 +476,8 @@ let isRising = false;
 let animationEnabled = true; 
 function animate() {
   if (!animationEnabled) return;
+
+  checkDistanceToFruit();
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
 

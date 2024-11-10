@@ -17,7 +17,7 @@ canvas {
   height: 25px;
   position: fixed;
   top: 10px; /* Position at top-left corner */
-  left: 10px; /* Position on the left side */
+  right: 10px; /* Position on the left side */
   cursor: pointer;
   z-index: 100; /* Ensure it stays above other elements */
   background-color: #333; /* Dark background for the hamburger */
@@ -57,6 +57,7 @@ canvas {
 /* Button Styles */
 .button-container button {
   background-color: #ff7f00; /* Orange background */
+  width: 200px;
   color: white;              /* White text */
   border: none;              /* No border */
   border-radius: 8px;        /* Rounded corners */
