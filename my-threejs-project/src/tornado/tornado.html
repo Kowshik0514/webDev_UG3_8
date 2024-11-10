@@ -26,6 +26,20 @@
         <button id="restartGame">Restart Game</button>
         <button id="exitButton">Exit Game</button>
     </div>
+    <div id="gameOverPopup2"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 100;">
+    <div
+      style="background-color: #00FFFF;padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);">
+      <h2 id="go" style="font-family: 'Corbel', sans-serif; font-size: 26px; color: #333;">Flood Survival Game</h2>
+      <button id="restartButton2" class="dropChandelierBtn"
+        style="background-color: #28a745; color: black; font-family: 'Corbel', sans-serif; border: none; padding: 10px 20px; border-radius: 5px; font-size: 18px; cursor: pointer; transition: background-color 0.3s;">
+        Main Menu
+      </button>
+      <button id="exitButton3"
+        style="background-color: #dc3545; color: black; font-family: 'Corbel', sans-serif; border: none; padding: 10px 20px; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 15px; transition: background-color 0.3s;">
+        Exit Game
+      </button>
+    </div>
     <div id="gameOverPopup"
     style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 100;">
     <div
@@ -40,6 +54,9 @@
         Exit Game
       </button>
     </div>
+
+  </div>
+  
   </div>
 
     <script type="module" src="./main.js"></script> <!-- Ensure this path is correct -->
@@ -91,6 +108,7 @@
         // Function to start the game
         function startGame() {
           gameOverPopup.style.display = 'none'; // Hide the game over popup
+          gameOverPopup2.style.display = 'none';
           localStorage.removeItem("gameStarted"); // Clear the game started state
           animationEnabled = false;
         }
@@ -101,6 +119,13 @@
       window.location.href = "../../index.html"; // Go back to the start page
     });
     document.getElementById('exitButton2').addEventListener('click', () => {
+      localStorage.removeItem("gameStarted"); // Clear the game started state
+      window.location.href = "../../index.html"; // Go back to the start page
+    });
+    document.getElementById('restartButton2').addEventListener("click", ()=>{
+      window.location.reload(true);
+    });
+    document.getElementById('exitButton3').addEventListener('click', () => {
       localStorage.removeItem("gameStarted"); // Clear the game started state
       window.location.href = "../../index.html"; // Go back to the start page
     });

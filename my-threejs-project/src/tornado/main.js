@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'; // Import the GLTFLoader
 import { createTornado, tornadoGroup,tornadoBody,removeTornado,startRain,stopRain,stopSound,isTornadoactive } from './tornado.js';
-import { loadHome } from './survive.js';
+import { loadHome } from './room.js';
 
 // Scene setup
 export const scene = new THREE.Scene();
@@ -25,7 +25,7 @@ startTornadoButton.addEventListener('click', () => {
 });
 
 loadHome(scene, world);
-let playerHealth = 100; // Initialize player's health
+export let playerHealth = 100; // Initialize player's health
 const healthBarContainer = document.createElement('div');
 const healthBar = document.createElement('div');
 
@@ -76,7 +76,7 @@ export function updateHealth() {
 
   // If player's health reaches 0, end the game
   if (playerHealth <= 0) {
-      // alert('Game Over!');
+      alert('Game Over!');
       document.getElementById('go').innerHTML = "Wasted";
       document.getElementById('gameOverPopup').style.display = 'flex';
       removeTornado(scene,world);
@@ -91,6 +91,23 @@ export function updateHealth() {
       player.position.x=0;
       playerHealth=100;
   }
+}
+
+export function updateHealth2() {
+  document.getElementById('go').innerHTML = "Game Over!!\nDont stay near vehicles with more surface area";
+      document.getElementById('gameOverPopup2').style.display = 'flex';
+      removeTornado(scene,world);
+      stopRain();
+      stopSound();
+      // restartGame();
+      // refill_health(playerBody)
+      playerHealth = 100; // Reset health for testing purposes
+      playerBody.position.set(0, 1.6, 0); // Reset player position (if applicable)
+      healthBar.style.width = '100%'; // Reset health bar
+      healthBar.style.backgroundColor = 'green'; // Reset health bar color
+      player.position.x=0;
+      playerHealth=100;
+      // window.location.reload(true);
 }
 // Sky background color
 scene.background = new THREE.Color(0x87ceeb); // Light blue sky color
@@ -452,7 +469,7 @@ document.getElementById('restartGame').addEventListener('click', () => {
     updateEventListeners();
   restartGame();
 });
-function restartGame()
+export function restartGame()
 {
   playerBody.position.set(0, 0, 0);
   if(checkCaught)
