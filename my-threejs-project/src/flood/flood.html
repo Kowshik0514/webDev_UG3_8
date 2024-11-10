@@ -13,8 +13,21 @@
   <div class="button-container">
     <!-- <button id="dropChandelierBtn">Start Flood</button>
     <button id="soundToggleBtn">Turn Sound Off</button> -->
-    <button id="exitButton1">Exit Game</button>
   </div> 
+
+  <div id="menuIcon" class="menu-icon" color="white" >
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <!-- Navigation menu -->
+  <div id="navMenu" class="nav-menu">
+    <button id="startFloodBtn">Start Flood</button>
+    <button id="exitGameBtn">Exit Game</button>
+    <button id="restartGameBtn">Restart Game</button>
+    <button id="toggleSoundBtn">Turn Sound Off</button>
+  </div>
 
   <div id="popup">
     <p>Add this into your bag?</p>
@@ -77,7 +90,8 @@
       localStorage.removeItem("gameStarted"); // Clear the game started state
     //   localStorage.setItem("gameStarted", "true"); // Optionally set game state
       animationEnabled = false;
-
+      const audio = document.getElementById('myAudio');
+      audio.play();
      // Start the timer
     }
 
@@ -85,14 +99,52 @@
     document.getElementById('restartButton').addEventListener("click", startGame);
 
     // Add event listener to both "Exit" buttons to clear game state and go back to index.html
-    document.getElementById('exitButton1').addEventListener('click', () => {
-      localStorage.removeItem("gameStarted"); // Clear the game started state
-      window.location.href = "../../index.html"; // Go back to the start page
-    });
+   // document.getElementById('exitButton1').addEventListener('click', () => {
+   //   localStorage.removeItem("gameStarted"); // Clear the game started state
+   //   window.location.href = "../../index.html"; // Go back to the start page
+  //  });
     document.getElementById('exitButton2').addEventListener('click', () => {
       localStorage.removeItem("gameStarted"); // Clear the game started state
       window.location.href = "../../index.html"; // Go back to the start page
     });
+
+
+    document.getElementById('menuIcon').addEventListener('click', () => {
+      const navMenu = document.getElementById('navMenu');
+      navMenu.style.display = navMenu.style.display === 'none' || navMenu.style.display === '' ? 'flex' : 'none';
+    });
+    
+    document.getElementById('startFloodBtn').addEventListener('click', () => {
+      // Code to start the flood game
+   //   alert("Starting flood...");
+   const navMenu = document.getElementById('navMenu');
+      navMenu.style.display = navMenu.style.display === 'none' || navMenu.style.display === '' ? 'flex' : 'none';
+      const audio = document.getElementById('myAudio');
+    audio.pause();
+    audio.currentTime = 0;
+    });
+    
+    document.getElementById('exitGameBtn').addEventListener('click', () => {
+      const navMenu = document.getElementById('navMenu');
+      navMenu.style.display = navMenu.style.display === 'none' || navMenu.style.display === '' ? 'flex' : 'none';
+      window.location.href = "../../index.html";
+    });
+    
+    document.getElementById('restartGameBtn').addEventListener('click', () => {
+      window.location.href = "./flood.html";
+    });
+    
+    document.getElementById('toggleSoundBtn').addEventListener('click', () => {
+      const audio = document.getElementById('myAudio');
+      if (audio.paused) {
+        audio.play();
+        document.getElementById('toggleSoundBtn').innerText = 'Turn Sound Off';
+      } else {
+        audio.pause();
+        document.getElementById('toggleSoundBtn').innerText = 'Turn Sound On';
+      }
+    });
+    
   </script>
 
 

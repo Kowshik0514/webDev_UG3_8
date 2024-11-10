@@ -332,3 +332,106 @@ body {
   font-size: 18px;
   font-weight: bold;
 }
+
+
+/* Hamburger icon */
+.hamburger div {
+  background-color: #fff;
+  height: 4px;
+  margin: 4px 0;
+  transition: 0.4s;
+}
+div {
+  display: block;
+  unicode-bidi: isolate;
+}
+.hamburger {
+  display: block;
+  width: 30px;
+  height: 25px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  z-index: 100;
+  background-color: #717171;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.menu-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #717171;
+}
+
+.menu-icon div {
+  width: 30px;
+  height: 3px;
+  background-color: white;
+}
+
+/* Navigation menu */
+.nav-menu {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 100;
+}
+
+.nav-menu button {
+  background-color: #ff7f00; /* Orange background */
+  width: 200px;
+  color: white;              /* White text */
+  border: none;              /* No border */
+  border-radius: 8px;        /* Rounded corners */
+  padding: 10px 20px;        /* Padding for better button size */
+  font-size: 16px;           /* Consistent font size */
+  font-family: 'Arial', sans-serif; /* Font for consistency */
+  cursor: pointer;          /* Pointer cursor on hover */
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.nav-menu button:hover {
+  background-color: #e67300; /* Darker orange on hover */
+  transform: scale(1.05);    /* Slight zoom on hover */
+}
+
+.nav-menu button:active {
+  background-color: #cc6600; /* Even darker orange on click */
+  transform: scale(1);       /* Reset scale on click */
+}
+
+
+.nav-menu {
+  display: none;
+  flex-direction: column;
+  gap:10px;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the container */
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+
+
