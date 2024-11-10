@@ -1,12 +1,8 @@
 // src/homepage/news.js
+
 const newsContainer = document.getElementById('news-container');
-const loadMoreButton = document.createElement('button');
-loadMoreButton.innerHTML = 'More...';
-loadMoreButton.classList.add('load-more');
 let currentPage = 0;
 const pageSize = 4;
-
-document.getElementById('news').appendChild(loadMoreButton);
 
 async function fetchNews() {
     try {
@@ -18,11 +14,16 @@ async function fetchNews() {
         const data = await response.json();
         
         if (data.items && data.items.length > 0) {
+            // Display a slice of the data, corresponding to the current page
             displayNews(data.items.slice(currentPage * pageSize, (currentPage + 1) * pageSize));
             currentPage++;
         } else {
-            loadMoreButton.disabled = true;
-            loadMoreButton.textContent = 'No more news';
+            // If there are no articles or we reach the end
+            const loadMoreButton = document.querySelector('.load-more');
+            if (loadMoreButton) {
+                loadMoreButton.disabled = true;
+                loadMoreButton.textContent = 'No more news';
+            }
         }
     } catch (error) {
         console.error('Error fetching news:', error);
@@ -63,8 +64,18 @@ function displayNews(articles) {
     });
 }
 
-loadMoreButton.addEventListener('click', () => {
-    fetchNews();
+// Add infinite scroll behavior (user scrolls to the bottom)
+const newsContainerElement = document.getElementById('news-container');
+newsContainerElement.addEventListener('scroll', () => {
+    const scrollTop = newsContainerElement.scrollTop;
+    const scrollHeight = newsContainerElement.scrollHeight;
+    const clientHeight = newsContainerElement.clientHeight;
+
+    // If user reaches near the bottom, load more news
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+        fetchNews();
+    }
 });
 
+// Initialize first set of articles
 fetchNews();
