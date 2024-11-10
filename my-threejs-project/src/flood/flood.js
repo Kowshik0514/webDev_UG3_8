@@ -284,7 +284,9 @@ gltfLoader.load('../../models/apartment_plan.glb', (gltf) => {
   physicsWorld.addRigidBody(roomBody);
 
 });
-
+document.getElementById('restartButton').addEventListener('click', () => {
+  restartGame();
+});
 
 const riseButton = document.createElement('button');
 riseButton.innerText = 'Raise Water Level';
@@ -483,7 +485,12 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
+function restartGame()
+{
+  isRising=false;
+  model.position.y=0;
+  refill_health();
+}
 animate();
 
 

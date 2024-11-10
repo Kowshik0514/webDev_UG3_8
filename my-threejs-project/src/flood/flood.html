@@ -10,11 +10,11 @@
 
 <body>
   <canvas id="bg"></canvas>
-  <!-- <div class="button-container">
-    <button id="dropChandelierBtn">Start Flood</button>
-    <button id="soundToggleBtn">Turn Sound Off</button>
+  <div class="button-container">
+    <!-- <button id="dropChandelierBtn">Start Flood</button>
+    <button id="soundToggleBtn">Turn Sound Off</button> -->
     <button id="exitButton1">Exit Game</button>
-  </div> -->
+  </div> 
 
   <!-- Game Over Pop-up -->
   <div id="gameOverPopup"
@@ -46,7 +46,8 @@
     // Function to start the game
     function startGame() {
       gameOverPopup.style.display = 'none'; // Hide the game over popup
-      localStorage.setItem("gameStarted", "true"); // Optionally set game state
+      localStorage.removeItem("gameStarted"); // Clear the game started state
+    //   localStorage.setItem("gameStarted", "true"); // Optionally set game state
       animationEnabled = false;
     //   isRising=false;
     //   console.log(model);
@@ -56,9 +57,9 @@
     }
 
     // Add event listener to the "Start Earthquake" button
-    document.getElementById('dropChandelierBtn').addEventListener("click", startGame);
-    document.getElementById('dropChandelierBtn').addEventListener("click", startGame);
-    document.getElementById('restartButton').addEventListener("click", startGame);
+    // document.getElementById('dropChandelierBtn').addEventListener("click", startGame);
+    // document.getElementById('dropChandelierBtn').addEventListener("click", startGame);
+    // document.getElementById('restartButton').addEventListener("click", startGame);
 
     // Add event listener to the "Restart" button
     document.getElementById('restartButton').addEventListener("click", startGame);
