@@ -252,7 +252,7 @@ export let texture1;
 export let texture2;
 
 // Load the character model
-gltfLoader.load('../../models/earthquake/mixed46.glb', (gltf) => {
+gltfLoader.load('../../models/global_models/player2.glb', (gltf) => {
   player = gltf.scene;
   player.scale.set(0.5, 0.5, 0.5);
   player.rotation.y = Math.PI;
@@ -350,12 +350,10 @@ gltfLoader.load('../../models/earthquake/first_aid_box.glb', (gltf) => {
   scene.add(first_aid_box2);
 
 });
-// Define a flag to show if the player is near the door
 let nearDoor = false;
-const doorLeaveDistance = 2; // The distance within which the player can interact with the door
+const doorLeaveDistance = 2; 
 let isMessageDisplayed = false;
 
-// Position outside the room (where you want the player to be moved after leaving)
 const outsidePosition = new CANNON.Vec3(0, 1.6, 7); // Set this to where you want the player to appear after leaving
 
 // Function to check if the player is near the door
@@ -381,18 +379,16 @@ function checkProximityToDoor() {
   if (distanceToDoor < doorLeaveDistance) {
     if (!isMessageDisplayed) {
       displayDoorInteractionMessage();
-      isMessageDisplayed = true; // Set flag to true to avoid multiple messages
+      isMessageDisplayed = true;
     }
     nearDoor = true;
   } else {
     nearDoor = false;
     isMessageDisplayed = false;
     hideLeaveRoomMessage();
-    // Reset flag when player moves away from the door
   }
 }
 
-// Display a message for entering/leaving the room based on the player's position
 function displayDoorInteractionMessage() {
   const messageBox = document.createElement('div');
   messageBox.id = 'leaveRoomMessage';
@@ -445,54 +441,18 @@ gltfLoader.load('../../models/earthquake/room.glb', (gltf) => {
   const textureLoader = new THREE.TextureLoader();
   texture1 = textureLoader.load('../../models/earthquake/crack.jpg'); // Replace with your texture path
 
-  // // Find the existing plane named 'Plane001'
-
   texture2 = plane1.material.map;
-
-  // // Apply the texture to the plane's material;
-
-  // // Animation loop (if needed)
   function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
   }
-
-  // // Start the animation
   animate();
-
-  // Traverse through each object in the room and create colliders
-  // room.traverse((object) => {
-  //   // if (object.isMesh && object.name === 'Cube010') {
-  //   const box = new THREE.Box3().setFromObject(object); // Calculate bounding box after scaling
-
-  //   // Calculate the center and size of the bounding box
-  //   const center = new THREE.Vector3();
-  //   box.getCenter(center);
-  //   const size = new THREE.Vector3();
-  //   box.getSize(size);
-
-  //   // Create a Cannon.js box shape based on the size of the bounding box
-  //   const halfExtents = new CANNON.Vec3(size.x / 2, size.y / 2, size.z / 2);
-  //   const shape = new CANNON.Box(halfExtents);
-
-  //   // Create a physical body in Cannon.js
-  //   const body = new CANNON.Body({
-  //     mass: 0, // Mass of the object
-  //     position: new CANNON.Vec3(center.x, center.y, center.z), // Use the center of the bounding box for positioning
-  //     shape: shape,
-  //   });
-
-  //   // Add the body to the physics world
-  //   world.addBody(body);
-  //   // }
-  // });
 }, undefined, (error) => {
   console.error('An error occurred while loading the GLB model:', error);
 });
 
-export let crack1; // Declare the crack object
+export let crack1; 
 
-// Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
 document.addEventListener('click', () => {
   controls.lock();
@@ -503,6 +463,7 @@ const keys = { w: false, a: false, s: false, d: false, space: false, shift: fals
 const jumpForce = 5;
 const speed = { walk: 9, run: 8 };
 let isMoving = false;
+let isMoving_back = false;
 let isRunning = false;
 
 let yaw = 0;
@@ -520,6 +481,7 @@ window.addEventListener('keydown', (event) => {
       keys[event.key.toLowerCase()] = true;
     }
     isMoving = keys.w ;
+    isMoving_back = keys.s;
     isRunning = keys.shift;
   }
 });
@@ -531,7 +493,8 @@ window.addEventListener('keyup', (event) => {
     } else {
       keys[event.key.toLowerCase()] = false;
     }
-    isMoving = keys.w || keys.a || keys.s || keys.d;
+    isMoving = keys.w || keys.a || keys.d;
+    isMoving_back = keys.s;
     isRunning = keys.shift;
   }
 });
@@ -587,17 +550,12 @@ function animate() {
       }
     });
   }
-  // Step the physics world
   world.step(1 / 60);
-  // Update stones position
   checkProximityToDoor();
-  updateStones(playerBody, world, scene);  // Add this to sync stone positions with physics bodies
-
+  updateStones(playerBody, world, scene);
   if (mixer) mixer.update(delta);
-
   // Call movePlayer every frame
   movePlayer();
-
 
   if (player) {
     // Sync player position with physics body
@@ -611,8 +569,6 @@ function animate() {
 
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(player.position);
-
-    // Rotate the player to match the camera's yaw
     player.rotation.y = yaw; // Sync player's Y rotation with the camera's yaw
   }
 
@@ -623,22 +579,21 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-// Function to update animation based on player's movement
 function updatePlayerAnimation() {
   if (!player || !mixer) return;
 
   let newAction;
-
-  // Check if the player is moving and if they're running
-
   if (isMoving) {
     if (isRunning) {
-      newAction = actions['crawl']; // Play run animation
+      newAction = actions['crawl']; 
     } else {
-      newAction = actions['walk']; // Play walk animation
+      newAction = actions['walk_forward'];
     }
+  }
+  else if(isMoving_back){
+    newAction = actions['walk_backward'];
   } else {
-    newAction = actions['idle']; // PlayerBplayerBody is idle
+    newAction = actions['idle']; 
   }
   if ((player.position.x > -1.5 && playerBody.position.x < 1.5) && (playerBody.position.z > -6 && playerBody.position.z <-4.3)) {
     newAction = actions['crawl'];
@@ -649,14 +604,12 @@ function updatePlayerAnimation() {
   if (newAction && newAction !== activeAction) {
     previousAction = activeAction;
     activeAction = newAction;
-
     // Smoothly blend between animations
     previousAction.fadeOut(0.2);
     activeAction.reset().fadeIn(0.2).play();
   }
 }
-// Move player function
-// Call updatePlayerAnimation within movePlayer
+
 function movePlayer() {
   if (!player) return;
 
@@ -664,7 +617,7 @@ function movePlayer() {
   const forward = getPlayerForwardDirection();
   const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
 
-  // if (keys.s) moveDirection.add(forward);
+  if (keys.s) moveDirection.add(forward);
   if (keys.w) moveDirection.add(forward.clone().negate());
   // if (keys.d) moveDirection.add(right.clone().negate());
   // if (keys.a) moveDirection.add(right);
@@ -685,14 +638,10 @@ function movePlayer() {
   if (keys.space) {
     if (keys.shift) {
       // Shift + Space: Fly upward
-      // playerBody.velocity.y = jumpForce; // Ascend upwards with a custom force
+      // playerBody.velocity.y = jumpForce;
     } else if (playerBody.position.y <= 1.6) {
       // Normal jump (only if player is grounded)
-      /* The above code is setting the vertical velocity of the player's body to a value specified by
-      the variable `jumpForce`, which likely represents the force applied to make the player
-      character jump in a game or simulation. This line of code is responsible for implementing a
-      regular jump action for the player character. */
-      // playerBody.velocity.y = jumpForce; // Regular jump
+      // playerBody.velocity.y = jumpForce; 
     }
   }
 
@@ -703,7 +652,7 @@ function movePlayer() {
     update(30);
     updateHealth(playerBody);
     if (first_aid_box1) {
-      scene.remove(first_aid_box1); // Remove the object from the scene
+      scene.remove(first_aid_box1); 
       // world.remove(first_aid_body);
     }
 
@@ -712,17 +661,14 @@ function movePlayer() {
     update(30);
     updateHealth(playerBody);
     if (first_aid_box2) {
-      scene.remove(first_aid_box2); // Remove the object from the scene
+      scene.remove(first_aid_box2); 
       // world.remove(first_aid_body);
     }
 
   }
-  // Update animation based on movement
   updatePlayerAnimation();
 }
 
-
-// Get player forward direction
 function getPlayerForwardDirection() {
   const forward = new THREE.Vector3(
     -Math.sin(player.rotation.y), 0, -Math.cos(player.rotation.y)
@@ -744,8 +690,8 @@ window.addEventListener('resize', () => {
 export let floor2;
 gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
   floor2 = gltf.scene;
-  floor2.scale.set(1, 1, 1); // Scale adjustment
-  floor2.position.set(-1, 0.2, 0); // Position adjustment
+  floor2.scale.set(1, 1, 1);
+  floor2.position.set(-1, 0.2, 0); 
   floor2.visible = true;
   scene.add(floor2);
 });
@@ -753,8 +699,8 @@ gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
 export let floor3;
 gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
   floor3 = gltf.scene;
-  floor3.scale.set(1, 1, 1); // Scale adjustment
-  floor3.position.set(4.63, 0.2, 0); // Position adjustment
+  floor3.scale.set(1, 1, 1);
+  floor3.position.set(4.63, 0.2, 0); 
   floor3.visible = true;
   scene.add(floor3);
 });
@@ -762,8 +708,8 @@ gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
 export let floor4;
 gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
   floor4 = gltf.scene;
-  floor4.scale.set(1, 1, 1); // Scale adjustment
-  floor4.position.set(-6.6, 0.2, 0); // Position adjustment
+  floor4.scale.set(1, 1, 1);
+  floor4.position.set(-6.6, 0.2, 0); 
   floor4.visible = true;
   scene.add(floor4);
 });
@@ -771,8 +717,8 @@ gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
 export let floor5;
 gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
   floor5 = gltf.scene;
-  floor5.scale.set(1, 1, 1); // Scale adjustment
-  floor5.position.set(-1, 0.2, -8.54); // Position adjustment
+  floor5.scale.set(1, 1, 1);
+  floor5.position.set(-1, 0.2, -8.54); 
   floor5.visible = true;
   scene.add(floor5);
 });
@@ -781,8 +727,8 @@ gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
 export let floor6;
 gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
   floor6 = gltf.scene;
-  floor6.scale.set(1, 1, 1); // Scale adjustment
-  floor6.position.set(4.63, 0.2, -8.54); // Position adjustment
+  floor6.scale.set(1, 1, 1);
+  floor6.position.set(4.63, 0.2, -8.54); 
   floor6.visible = true;
   scene.add(floor6);
 });
@@ -790,8 +736,8 @@ gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
 export let floor7;
 gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
   floor7 = gltf.scene;
-  floor7.scale.set(1, 1, 1); // Scale adjustment
-  floor7.position.set(-6.6, 0.2, -8.53); // Position adjustment
+  floor7.scale.set(1, 1, 1);
+  floor7.position.set(-6.6, 0.2, -8.53); 
   floor7.visible = true;
   scene.add(floor7);
 });
@@ -800,11 +746,11 @@ gltfLoader.load('../../models/earthquake/floor2.glb', (gltf) => {
 
 gltfLoader.load('../../models/earthquake/crack.glb', (gltf) => {
   crack1 = gltf.scene;
-  crack1.scale.set(2, 1, 3); // Scale adjustment
-  crack1.position.set(3, 0.05, 0.53); // Position adjustment
+  crack1.scale.set(2, 1, 3);
+  crack1.position.set(3, 0.05, 0.53); 
   crack1.traverse((child) => {
     if (child.isMesh) {
-      child.material.color.set(0x808080); // Change color to red
+      child.material.color.set(0x808080); 
     }
   });
   crack1.visible = false;
@@ -816,13 +762,13 @@ export let crack2;
 
 gltfLoader.load('../../models/earthquake/crack.glb', (gltf) => {
   crack2 = gltf.scene;
-  crack2.scale.set(2, 1, 3); // Scale adjustment
+  crack2.scale.set(2, 1, 3);
   crack2.traverse((child) => {
     if (child.isMesh) {
-      child.material.color.set(0x808080); // Change color to red
+      child.material.color.set(0x808080); 
     }
   });
-  crack2.position.set(3, 0.05, -4.5); // Position adjustment
+  crack2.position.set(3, 0.05, -4.5); 
   crack2.visible = false;
   scene.add(crack2);
   console.log(1);
@@ -832,11 +778,11 @@ export let crack3;
 
 gltfLoader.load('../../models/earthquake/crack.glb', (gltf) => {
   crack3 = gltf.scene;
-  crack3.scale.set(2, 1, 2); // Scale adjustment
-  crack3.position.set(-4, 0.05, -4.5); // Position adjustment
+  crack3.scale.set(2, 1, 2);
+  crack3.position.set(-4, 0.05, -4.5); 
   crack3.traverse((child) => {
     if (child.isMesh) {
-      child.material.color.set(0x808080); // Change color to red
+      child.material.color.set(0x808080); 
     }
   });
   crack3.visible = false;
@@ -848,11 +794,11 @@ export let crack4;
 
 gltfLoader.load('../../models/earthquake/crack.glb', (gltf) => {
   crack4 = gltf.scene;
-  crack4.scale.set(2, 1, 2); // Scale adjustment
-  crack4.position.set(-4, 0.05, -0.53); // Position adjustment
+  crack4.scale.set(2, 1, 2);
+  crack4.position.set(-4, 0.05, -0.53); 
   crack4.traverse((child) => {
     if (child.isMesh) {
-      child.material.color.set(0x808080); // Change color to red
+      child.material.color.set(0x808080); 
     }
   });
   crack4.visible = false;
@@ -860,14 +806,8 @@ gltfLoader.load('../../models/earthquake/crack.glb', (gltf) => {
   console.log(1);
 });
 
-
-
-
-// Start the animation
 animate();
-
 
 export function rstgame() {
   removeStones(world, scene)
 }
-
