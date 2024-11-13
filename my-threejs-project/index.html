@@ -321,6 +321,7 @@
   <section id="simulation">
     <h2>Simulations</h2>
     <div class="container">
+
       <div class="card">
         <img src="./images/homepage/earthquake.avif" alt="Earthquake Image" class="card-image">
         <h3 class="card-title">Earthquake</h3>
@@ -329,14 +330,7 @@
           <button class="btn" onclick="location.href='./src/earthquake/earthquake.html'" title="Start Earthquake Simulation"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
         </div>
       </div>
-      <div class="card">
-        <img src="./images/homepage/flood2.jpg" alt="Flood Image" class="card-image" style="height: 155px;">
-        <h3 class="card-title">Flood</h3>
-        <p class="card-description">Floods can occur quickly. Be prepared by knowing evacuation routes and how to protect yourself from rising waters.</p>
-        <div class="buttons">
-          <button class="btn" onclick="location.href='./src/flood/flood.html'" title="Start Flood Simulation"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
-        </div>
-      </div>
+
       <div class="card">
         <img src="./images/homepage/tornado.jpg" alt="Tornado Image" class="card-image">
         <h3 class="card-title">Tornado</h3>
@@ -345,18 +339,63 @@
           <button class="btn" onclick="location.href='./src/tornado/tornado.html'" title="Start Tornado Simulation"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
         </div>
       </div>
+
+      <div class="card">
+        <img src="./images/homepage/flood2.jpg" alt="Flood Image" class="card-image" style="height: 155px;">
+        <h3 class="card-title">Flood</h3>
+        <p class="card-description">Floods can occur quickly. Be prepared by knowing evacuation routes and how to protect yourself from rising waters.</p>
+        <div class="buttons">
+          <button class="btn" onclick="location.href='./src/flood/flood.html'" title="Start Flood Simulation"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <section id="other">
-    <h2>How to play?</h2>
-    <p>This section contains other relevant information.</p>
-  </section>
+    <h2>How to Play?</h2>
+    
+    <div id="controls">
+      <div class="images-container">
+          <img src="./images/icons/a.png" alt="A key" class="controls-image">
+          <img src="./images/icons/s.png" alt="S key" class="controls-image">
+          <img src="./images/icons/d.png" alt="D key" class="controls-image">
+          <img src="./images/icons/w.jpeg" alt="W key" class="controls-image">
+          <img src="./images/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+          <p class="c1">MOVE PLAYER</p>
+      </div>
+
+      <div class="images-container">
+          <img src="./images/icons/shift.png" alt="Shift key" class="shift-image">
+          <img src="./images/icons/plus.png" alt="Plus key" class="controls-image">
+          <img src="./images/icons/a.png" alt="A key" class="controls-image">
+          <img src="./images/icons/d.png" alt="D key" class="controls-image">
+          <img src="./images/icons/w.jpeg" alt="W key" class="controls-image">
+          <img src="./images/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+          <p class="c2">CRAWL</p>
+      </div>
+      
+      <div class="images-container">
+          <img src="./images/icons/c.png" alt="C key" class="controls-image">
+          <img src="./images/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+          <p class="c1">CLIMB</p>
+      </div>
+
+      <div class="images-container">
+        <img src="./images/icons/mouse.jpg" alt="C key" class="mouse-image">
+        <img src="./images/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+        <p class="c1">TO ROTATE PLAYER AND CAMERA</p>
+    </div>
+
+  </div>
+  
+</section>>
+
 
   <section id="news">
     <h2>News</h2>
     <div id="news-container"></div>
-    <p>This section contains the latest news related to disaster preparedness.</p>
+    <!-- <p>This section contains the latest news related to disaster preparedness.</p> -->
   </section>
   <script src="./src/homepage/news.js"></script>
 

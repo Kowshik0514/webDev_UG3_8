@@ -64,7 +64,8 @@ export function updateHealth() {
   // If player's health reaches 0, end the game
   if (playerHealth <= 0) {
     // alert('Game Over!');
-    document.getElementById("go").innerHTML = "Wasted";
+    if(diedPole) document.getElementById("go").innerHTML = "Game Over! You touched the pole!";
+    else if(diedWater) document.getElementById("go").innerHTML = "Game Over! You drowned in the water!";
     document.getElementById("gameOverPopup").style.display = "flex";
     // restartGame();
     // refill_health(playerBody)
@@ -74,6 +75,9 @@ export function updateHealth() {
     healthBar.style.backgroundColor = "green"; // Reset health bar color
   }
 }
+let diedPole = false;
+let diedWater = false;
+
 // Camera
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -113,7 +117,7 @@ const skyMaterial = new THREE.MeshBasicMaterial({
 });
 const sky = new THREE.Mesh(skyGeometry, skyMaterial);
 scene.add(sky);
-const planeGeometry1 = new THREE.PlaneGeometry(1000, 1000); // Visual ground plane
+const planeGeometry1 = new THREE.PlaneGeometry(1000, 1000); // Visual grouplanend 
 const planeMaterial1 = new THREE.MeshStandardMaterial({ color: 0x808080 });
 export const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
 plane1.rotation.x = -Math.PI / 2; // Rotate the mesh to lie horizontally
@@ -211,14 +215,12 @@ gltfLoader.load("../../models/global_models/player2.glb", (gltf) => {
 });
 let water_mixer;
 let model;
-gltfLoader.load('../../models/opt_wave2.glb', (gltf) => {
+gltfLoader.load('../../models/flood/opt_wave2.glb', (gltf) => {
   model = gltf.scene;
   model.rotation.x = Math.PI;
-  // console.log("rotate \n");
-  // console.log(model.rotation);
   model.scale.set(0.09, 0.005, 0.08); // Adjust scale if necessary
   scene.add(model);
-  model.position.set(1, 0.7, 1);
+  model.position.set(1, -1, 1);
 
   water_mixer = new AnimationMixer(model);
   const action = water_mixer.clipAction(gltf.animations[0]);
@@ -238,7 +240,7 @@ gltfLoader.load('../../models/opt_wave2.glb', (gltf) => {
 });
 
 let tank;
-gltfLoader.load("../../models/snowy_water_tank.glb", (gltf) => {
+gltfLoader.load("../../models/flood/snowy_water_tank.glb", (gltf) => {
   tank = gltf.scene;
   // tank.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
@@ -248,21 +250,21 @@ gltfLoader.load("../../models/snowy_water_tank.glb", (gltf) => {
 });
 
 let room;
-gltfLoader.load("../../models/house.glb", (gltf) => {
+gltfLoader.load("../../models/flood/house.glb", (gltf) => {
   room = gltf.scene;
 
   scene.add(room);
-  room.position.set(0, 0, 0);
+  room.position.set(0, -0.2, 0);
 });
 
 let pole;
-gltfLoader.load("../../models/pole.glb", (gltf) => {
+gltfLoader.load("../../models/flood/pole.glb", (gltf) => {
   pole = gltf.scene;
   // pole.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
   pole.scale.set(1, 1, 1); // Adjust scale if necessary
   scene.add(pole);
-  pole.position.set(-1, 5, 10);
+  pole.position.set(10, 5, 1);
 });
 
 function checkDistanceToPole() {
@@ -274,19 +276,20 @@ function checkDistanceToPole() {
     if(player)  distancex = Math.abs(pole.position.x - player.position.x);
     if(player) distancez = Math.abs(pole.position.z - player.position.z);
 
-    if (distancex < 0.7 && distancez < 0.7) {
+    if (distancex < 0.7 && distancez < 0.7 && model.position.y>0) {
       playerHealth = 0;
+      diedPole = true;
       updateHealth();
-    } else if (distancex < 1 && distancez < 1) {
+    } else if (distancex < 1.5 && distancez < 1.5) {
       showWarning();
-    } else if (distancex >= 1 || distancez >= 1) {
+    } else if (distancex >= 1.5 || distancez >= 1.5) {
       hideWarning();
     }
   }
 }
 
 function showWarning() {
-  document.getElementById("warningPopup").style.display = "block";
+  if(model.position.y>0) document.getElementById("warningPopup").style.display = "block";
 }
 
 function hideWarning() {
@@ -294,7 +297,7 @@ function hideWarning() {
 }
 
 let table;
-gltfLoader.load("../../models/table2.glb", (gltf) => {
+gltfLoader.load("../../models/flood/table2.glb", (gltf) => {
   table = gltf.scene;
   // table.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
@@ -304,7 +307,7 @@ gltfLoader.load("../../models/table2.glb", (gltf) => {
 });
 
 let table2;
-gltfLoader.load("../../models/table2.glb", (gltf) => {
+gltfLoader.load("../../models/flood/table2.glb", (gltf) => {
   table2 = gltf.scene;
   // table2.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
@@ -314,7 +317,7 @@ gltfLoader.load("../../models/table2.glb", (gltf) => {
 });
 
 let fruit;
-gltfLoader.load("../../models/fruit_bowl.glb", (gltf) => {
+gltfLoader.load("../../models/flood/fruit_bowl.glb", (gltf) => {
   fruit = gltf.scene;
   // fruit.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
@@ -427,7 +430,7 @@ function hideOverlay() {
 }
 
 let radio;
-gltfLoader.load("../../models/radio.glb", (gltf) => {
+gltfLoader.load("../../models/flood/radio.glb", (gltf) => {
   radio = gltf.scene;
   // radio.setRotationFromEuler(new Euler(0, Math.PI, 0));
   radio.rotation.y = Math.PI / 2;
@@ -437,7 +440,7 @@ gltfLoader.load("../../models/radio.glb", (gltf) => {
 });
 
 let paper;
-gltfLoader.load("../../models/papers__envelopes.glb", (gltf) => {
+gltfLoader.load("../../models/flood/papers__envelopes.glb", (gltf) => {
   paper = gltf.scene;
   // paper.setRotationFromEuler(new Euler(0, Math.PI, 0));
   paper.rotation.y = Math.PI / 2;
@@ -474,8 +477,8 @@ function checkDistanceToPaper() {
     // Example position, adjust accordingly
     let distancex;
     let distancez;
-    if(player)  distancex = Math.abs(pole.position.x - player.position.x);
-    if(player) distancez = Math.abs(pole.position.z - player.position.z);
+    if(player)  distancex = Math.abs(paper.position.x - player.position.x);
+    if(player) distancez = Math.abs(paper.position.z - player.position.z);
     hidePopup2();
     if (
       distancex < 0.7 &&
@@ -574,7 +577,7 @@ document.addEventListener("mousemove", (event) => {
   }
 });
 const clock = new THREE.Clock();
-
+let isFloodWaterReached = false;
 let isRising = false;
 // Animation Loop
 let animationEnabled = true;
@@ -643,18 +646,32 @@ function animate() {
       player.rotation.y = 0.022;
     }
 
-  if (isRising && model) {
-    model.position.y += 0.01;
-    if (model.position.y - player.position.y >= 0.75) {
-      // console.log("svsvs");
-      playerHealth -= 1;
-      updateHealth();
+    if (isRising && model) {
+      if(model.position.y<5) model.position.y += 0.001;
+      if (model.position.y - player.position.y >= 0.75) {
+        // console.log("svsvs");
+        if(model.position.y>=0.5) {
+          playerHealth -= 0.05;
+          if(playerHealth<=0) diedWater = true;
+        }
+        updateHealth();
+      }
     }
-    // console.log(model.position.y);
-
-    // Adjust the speed of rising water here
-  }
-
+    if (!isFloodWaterReached && model.position.y >= 0.5) {
+      isFloodWaterReached = true;
+      Swal.fire({
+          title: 'Flood Warning',
+          text: 'The flood water is rising. Please evacuate immediately and reach high altitude areas!',
+          icon: 'warning',
+          background: '#2e2c2f',
+          color: 'red',
+          confirmButtonColor: 'green',
+          customClass: {
+              popup: 'rpg-popup'
+          }
+      });
+    } 
+  
   renderer.render(scene, camera);
 }
 
@@ -666,18 +683,32 @@ function updatePlayerAnimation() {
     if (isRunning && !checkClimb1) {
       newAction = actions["crawl"];
     } else if(!checkClimb1) {
-      newAction = actions["walk_forward"];
+      if(model.position.y<=0.5){
+        newAction = actions["walk_forward"];
+      }
+      else {
+        newAction = actions["swim_no"];
+      }
       // newAction = actions['run'];
     }
   } else if (isMoving_back&&!checkClimb1) {
-    newAction = actions["walk_backward"];
+    if(model.position.y<=0.5){
+      newAction = actions["walk_backward"];
+    }
+    else {
+      newAction = actions["swim_no"];
+    }
   } else if (isClimbing && checkClimb) {
     removeClimbMessage();
     checkClimb1=true;
     newAction = actions["climb_up"];
   } else {
     checkClimb1=false;
-    newAction = actions["idle"];
+    if(model.position.y<=0.5){
+      newAction = actions["idle"];
+    }else{
+      newAction = actions["swim_no"];
+    }
   }
 
   // If the new action is different from the active action, blend the animations
@@ -752,18 +783,28 @@ window.addEventListener("resize", () => {
 });
 function restartGame() {
   isRising = false;
-  if(model) model.position.y = 0;
+  const audio = document.getElementById("myAudio");
+  audio.play();
+  if(model) model.position.y = -1;
   refill_health();
+  diedPole = false;
+  diedWater = false;
+  isFloodWaterReached = false;
 }
 document.getElementById("restartGameBtn").addEventListener("click",() => {
+  const audio = document.getElementById("myAudio");
+  audio.play();
   isRising = false;
   if(model)
     {
-      model.position.y = 0;
+      model.position.y = -1;
       model.position.x = 0;
       model.position.z = 0;
     } 
   refill_health();
+  diedPole = false;
+  diedWater = false;
+  isFloodWaterReached = false;
 })
 
 document.getElementById("startFloodBtn").addEventListener("click" ,() => {

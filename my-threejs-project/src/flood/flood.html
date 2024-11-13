@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flood Survival Game</title>
   <link rel="stylesheet" href="./flood.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -30,18 +31,18 @@
   </div>
 
   <div id="popup">
-    <p>Add this into your bag?</p>
+    <p>Collect fruits to bag?</p>
     <button id="yesButton">Yes</button>
     <button id="noButton">No</button>
   </div>
 
   <div id="popup2">
-    <p>Add this into your bag?</p>
+    <p>Collect important documents to bag?</p>
     <button id="yesButton2">Yes</button>
     <button id="noButton2">No</button>
   </div>
 
-  <audio id="myAudio" src="../../models/flood_warning.mp3"></audio>
+  <audio id="myAudio" src="../../sounds/flood_warning.mp3"></audio>
 
   <button id="displayButton" >Check Bag</button>
     <!-- Overlay with names list -->
@@ -74,17 +75,9 @@
   <script type="module" src="./flood.js"></script>
 
   <script>
-
-
-
-
     let timerDuration = 30;
     const timerElement = document.getElementById('timer');
     const gameOverPopup = document.getElementById('gameOverPopup');
-
-    // Function to start the countdown
-
-    // Function to start the game
     function startGame() {
       gameOverPopup.style.display = 'none'; // Hide the game over popup
       localStorage.removeItem("gameStarted"); // Clear the game started state
