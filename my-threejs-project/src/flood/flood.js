@@ -77,7 +77,7 @@ export function updateHealth() {
 }
 let diedPole = false;
 let diedWater = false;
-
+let isAlive = true;
 // Camera
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -112,13 +112,20 @@ world.addBody(planeBody1); // Add planeBody to the world
 // Sky Sphere (for a 360-degree sky effect)
 const skyGeometry = new THREE.SphereGeometry(500, 100, 100);
 const skyMaterial = new THREE.MeshBasicMaterial({
-  color: 0x87ceeb, // Sky blue color
+  color:0xB0C4DE, // Sky blue color
   side: THREE.BackSide, // Render the inside of the sphere
 });
 const sky = new THREE.Mesh(skyGeometry, skyMaterial);
 scene.add(sky);
 const planeGeometry1 = new THREE.PlaneGeometry(1000, 1000); // Visual grouplanend 
-const planeMaterial1 = new THREE.MeshStandardMaterial({ color: 0x808080 });
+const planeMaterial1 = new THREE.MeshStandardMaterial({ 
+  color: 0x1E90FF,
+  emissive: 0x1E90FF,  // Slight emission for more glowing effect
+    roughness: 0.5,  // Moderate roughness
+    metalness: 0,  // Non-metallic
+    transparent: true,
+    opacity: 0.4  // Transparent
+ });
 export const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
 plane1.rotation.x = -Math.PI / 2; // Rotate the mesh to lie horizontally
 plane1.position.set(1, 0, 0); // Set ground position at Y = 0
@@ -164,7 +171,28 @@ let activeAction, previousAction;
 // export let plane001;
 export let texture1;
 export let texture2;
-
+let field;
+gltfLoader.load("../../models/flood/grass_land.glb", (gltf) => {
+  field = gltf.scene;
+  field.scale.set(1, 1, 1); // Adjust scale if necessary
+  field.rotation.x = -Math.PI / 100;
+  scene.add(field);
+  field.position.set(10, -4.7, 0);
+});
+let rabbit;
+gltfLoader.load("../../models/flood/rabbit.glb", (gltf) => {
+  rabbit = gltf.scene;
+  rabbit.scale.set(0.5, 0.5, 0.5); // Adjust scale if necessary
+  scene.add(rabbit);
+  rabbit.position.set(2, 0.2, 2);
+});
+// let house;
+// gltfLoader.load("../../models/flood/housed.glb", (gltf) => {
+//   house = gltf.scene;
+//   house.scale.set(10, 10, 10); // Adjust scale if necessary
+//   scene.add(house);
+//   house.position.set(15, 2, 10);
+// });
 // Load the character model
 gltfLoader.load("../../models/global_models/player2.glb", (gltf) => {
   player = gltf.scene;
@@ -213,6 +241,23 @@ gltfLoader.load("../../models/global_models/player2.glb", (gltf) => {
   activeAction = actions["idle"];
   activeAction.play();
 });
+const raindropModel = [];
+gltfLoader.load("../../models/flood/raindrop.glb", (gltf) => {
+  const raindrop = gltf.scene; // The raindrop model
+  raindrop.scale.set(0.001, 0.001, 0.001); // Adjust scale if necessary
+
+  // Create multiple instances of the raindrop model
+  for (let i = 0; i < 3000; i++) {
+      const drop = raindrop.clone(); // Clone the raindrop model
+      drop.position.set(
+          Math.random() * 200 - 100, // Random X position
+          Math.random() * 200 - 100, // Random Y position
+          Math.random() * 200 - 100  // Random Z position
+      );
+      scene.add(drop);
+      raindropModel.push(drop); // Add to array to keep track of raindrops
+  }
+});
 let water_mixer;
 let model;
 gltfLoader.load('../../models/flood/opt_wave2.glb', (gltf) => {
@@ -221,7 +266,7 @@ gltfLoader.load('../../models/flood/opt_wave2.glb', (gltf) => {
   model.scale.set(0.09, 0.005, 0.08); // Adjust scale if necessary
   scene.add(model);
   model.position.set(1, -1, 1);
-
+  // model.material.transparent = true;
   water_mixer = new AnimationMixer(model);
   const action = water_mixer.clipAction(gltf.animations[0]);
 
@@ -244,9 +289,9 @@ gltfLoader.load("../../models/flood/snowy_water_tank.glb", (gltf) => {
   tank = gltf.scene;
   // tank.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
-  tank.scale.set(8, 8, 8); // Adjust scale if necessary
+  tank.scale.set(8, 4, 8); // Adjust scale if necessary
   scene.add(tank);
-  tank.position.set(10, 8, 10);
+  tank.position.set(10, 2, 10);
 });
 
 let room;
@@ -264,7 +309,7 @@ gltfLoader.load("../../models/flood/pole.glb", (gltf) => {
 
   pole.scale.set(1, 1, 1); // Adjust scale if necessary
   scene.add(pole);
-  pole.position.set(10, 5, 1);
+  pole.position.set(15, 5, 3);
 });
 
 function checkDistanceToPole() {
@@ -528,7 +573,7 @@ const keys = {
   shift: false,
 };
 const jumpForce = 2;
-const speed = { walk: 20, run: 8, climb: 4 };
+const speed = { walk: 25, run: 8, climb: 4 };
 let isMoving = false;
 let isRunning = false;
 let isClimbing = false;
@@ -595,39 +640,48 @@ function animate() {
   if (mixer) mixer.update(delta);
   if (water_mixer) water_mixer.update(delta);
 
-  // Step the physics world
   world.step(1 / 60);
-
-  // Call movePlayer every frame
   movePlayer();
 
-  checkDistanceToFruit();
-  checkDistanceToPaper();
-  checkDistanceToPole();
+  if(isAlive) checkDistanceToFruit();
+  if(isAlive) checkDistanceToPaper();
+  if(isAlive) checkDistanceToPole();
+  raindropModel.forEach((drop) => {
+    drop.position.y -= 0.4; // Move the Y coordinate downward
+    if (drop.position.y < -100) {
+        drop.position.y = Math.random() * 100;
+    }
+  });
+  if(camera.position.y <=0) {
+    // model.material.transparent = true;
+    // field.material.transparent = true;
+  }
+  else {
+    // model.material.transparent = false;
+    // field.material.transparent = false;
+  }
+    
   if (player && !checkClimb1) {
     
     // Sync player position with physics body
     player.position.copy(playerBody.position);
     player.quaternion.copy(playerBody.quaternion);
 
-    // Calculate the camera position based on player and pitch/yaw
-    const cameraX =
-      player.position.x - radius * Math.sin(yaw) * Math.cos(pitch);
+    const cameraX = player.position.x - radius * Math.sin(yaw) * Math.cos(pitch);
     const cameraY = player.position.y + radius * Math.sin(pitch);
-    const cameraZ =
-      player.position.z - radius * Math.cos(yaw) * Math.cos(pitch);
+    const cameraZ = player.position.z - radius * Math.cos(yaw) * Math.cos(pitch);
       
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(player.position);
 
     // Rotate the player to match the camera's yaw
     player.rotation.y = yaw; // Sync player's Y rotation with the camera's yaw
-    console.log("x");
-      console.log(player.rotation.x);
-      console.log("y");
-      console.log(player.rotation.y);
-      console.log("z");
-      console.log(player.rotation.z);
+    // console.log("x");
+    //   console.log(player.rotation.x);
+    //   console.log("y");
+    //   console.log(player.rotation.y);
+    //   console.log("z");
+    //   console.log(player.rotation.z);
   }
   else if(player && checkClimb1)
     {
@@ -635,50 +689,49 @@ function animate() {
       player.position.copy(playerBody.position);
       player.quaternion.copy(playerBody.quaternion);
   
-      // Calculate the camera position based on player and pitch/yaw
       const cameraX =10.1;
       const cameraY = player.position.y + radius * Math.sin(pitch);
       const cameraZ =3.296;
       camera.position.set(cameraX, cameraY, cameraZ);
       camera.lookAt(player.position);
-  
-      // Rotate the player to match the camera's yaw
       player.rotation.y = 0.022;
     }
 
     if (isRising && model) {
       if(model.position.y<5) model.position.y += 0.001;
       if (model.position.y - player.position.y >= 0.75) {
-        // console.log("svsvs");
         if(model.position.y>=0.5) {
           playerHealth -= 0.05;
-          if(playerHealth<=0) diedWater = true;
+          if(playerHealth<=0) {
+            diedWater = true;
+            isAlive = false;
+          }
         }
         updateHealth();
       }
     }
-    if (!isFloodWaterReached && model.position.y >= 0.5) {
-      isFloodWaterReached = true;
-      Swal.fire({
-          title: 'Flood Warning',
-          text: 'The flood water is rising. Please evacuate immediately and reach high altitude areas!',
-          icon: 'warning',
-          background: '#2e2c2f',
-          color: 'red',
-          confirmButtonColor: 'green',
-          customClass: {
-              popup: 'rpg-popup'
-          }
-      });
-    } 
-  
+    if (model) {
+      if (!isFloodWaterReached && model.position.y >= 0.5 && isAlive ) {
+        isFloodWaterReached = true;
+        Swal.fire({
+            title: 'Flood Warning',
+            text: 'The flood water is rising. Please evacuate immediately and reach high altitude areas!',
+            icon: 'warning',
+            background: '#2e2c2f',
+            color: 'red',
+            confirmButtonColor: 'green',
+            customClass: {
+                popup: 'rpg-popup'
+            }
+        });
+      } 
+    }
   renderer.render(scene, camera);
 }
 
 function updatePlayerAnimation() {
   if (!player || !mixer) return;
   let newAction;
-
   if (isMoving) {
     if (isRunning && !checkClimb1) {
       newAction = actions["crawl"];
@@ -704,14 +757,12 @@ function updatePlayerAnimation() {
     newAction = actions["climb_up"];
   } else {
     checkClimb1=false;
-    if(model.position.y<=0.5){
+    if(model && model.position.y<=0.5){
       newAction = actions["idle"];
     }else{
       newAction = actions["swim_no"];
     }
   }
-
-  // If the new action is different from the active action, blend the animations
   if (newAction && newAction !== activeAction) {
     previousAction = activeAction;
     activeAction = newAction;
@@ -720,6 +771,7 @@ function updatePlayerAnimation() {
     activeAction.reset().fadeIn(0.2).play();
   }
 }
+
 function movePlayer() {
   if (!player) return;
 
@@ -790,11 +842,13 @@ function restartGame() {
   diedPole = false;
   diedWater = false;
   isFloodWaterReached = false;
+  isAlive = true;
 }
 document.getElementById("restartGameBtn").addEventListener("click",() => {
   const audio = document.getElementById("myAudio");
   audio.play();
   isRising = false;
+  isAlive = true;
   if(model)
     {
       model.position.y = -1;
@@ -809,5 +863,6 @@ document.getElementById("restartGameBtn").addEventListener("click",() => {
 
 document.getElementById("startFloodBtn").addEventListener("click" ,() => {
   isRising = true;
+  isAlive = true;
 })
 animate();

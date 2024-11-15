@@ -35,7 +35,9 @@ function displayNews(articles) {
     articles.forEach(article => {
         const newsCard = document.createElement('div');
         newsCard.classList.add('news-card');
-        
+        // console.table(article);
+        // console.log(JSON.stringify(article, null, 2));
+        // console.log(article.pubDate);
         let imageUrl = '';
         if (article.enclosure) {
             imageUrl = article.enclosure.link;
@@ -47,15 +49,20 @@ function displayNews(articles) {
                 imageUrl = match[1];
             }
         }
-
+        let title = article.title;
+        let mainTitle = title.replace(/- [^-]*$/, '').trim();
+        let sourceMatch = title.match(/- ([^-]*)$/);
+        let source = sourceMatch ? sourceMatch[1].trim() : '';
+        // console.log(source);
         newsCard.innerHTML = `
             <div class="news-card-content">
                 ${imageUrl ? `<img src="${imageUrl}" alt="News Image" class="news-image" />` : ''}
                 <div class="text-content">
-                    <h3>${article.title}</h3>
+                    <h3>${mainTitle}</h3>
                     <hr>
-                    <p>${article.description || 'No description available.'}</p>
-                    <a href="${article.link}" target="_blank">Read more</a>
+                    <p><strong>Source:</strong> ${source}</p>
+                    <p><strong>Published on:</strong> ${new Date(article.pubDate).toLocaleString()}</p>
+                    <a href="${article.link}" target="_blank">Read more...</a>
                 </div>
             </div>
         `;
