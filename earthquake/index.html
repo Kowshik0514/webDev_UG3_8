@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Earthquake</title>
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+  <canvas id="bg"></canvas>
+  <div class="button-container">
+    <button id="dropChandelierBtn">Start Earthquake</button>
+    <button id="soundToggleBtn">Turn Sound Off</button>
+    <button id="exitButton1">Exit Game</button>
+  </div>
+
+  <!-- Game Over Pop-up -->
+  <div id="gameOverPopup"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 100;">
+    <div
+      style="background-color: #00FFFF;padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);">
+      <h2 id="go" style="font-family: 'Corbel', sans-serif; font-size: 26px; color: #333;">Earthquake Survival Game</h2>
+      <button id="restartButton" class="dropChandelierBtn"
+        style="background-color: #28a745; color: black; font-family: 'Corbel', sans-serif; border: none; padding: 10px 20px; border-radius: 5px; font-size: 18px; cursor: pointer; transition: background-color 0.3s;">
+        Start Game
+      </button>
+      <button id="exitButton2"
+        style="background-color: #dc3545; color: black; font-family: 'Corbel', sans-serif; border: none; padding: 10px 20px; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 15px; transition: background-color 0.3s;">
+        Exit Game
+      </button>
+    </div>
+  </div>
+
+
+  <div id="timerContainer">
+    <span id="timer">30</span>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+  <script type="module" src="/src/tree.js"></script>
+  <script type="module" src="/src/wall.js"></script>
+  <script type="module" src="/src/chandelier.js"></script>
+  <script type="module" src="/src/globals.js"></script>
+
+  <script>
+    let timerDuration = 30;
+    const timerElement = document.getElementById('timer');
+    let countdown;
+    // Function to start the countdown
+    function startTimer() {
+      let timeLeft = timerDuration;
+
+        countdown = setInterval(() => {
+        timerElement.textContent = timeLeft;
+        timeLeft--;
+
+        // Check if the time has run out
+        if (timeLeft < 0) {
+          clearInterval(countdown); // Stop the timer
+          timerElement.textContent = "Time's up!";
+        }
+      }, 1000); // Update every second
+    }
+
+    // Add event listener to the "Drop Chandelier" button
+    const dropChandelierBtn = document.getElementById('dropChandelierBtn');
+    dropChandelierBtn.addEventListener("click", function (event) {
+      startTimer(); // Start the timer when the button is clicked
+    });
+
+    // Add event listener to the "Restart" button
+    document.getElementById('restartButton').addEventListener('click', () => {
+      //startTimer(); // Start the timer again if you want it on restart
+      clearInterval(countdown); // Stop the timer
+      timerElement.textContent = 30; // Reset the timer
+    });
+
+    // Add event listener to the "Exit" button to clear the game state and go back to index.html
+    document.getElementById('exitButton1').addEventListener('click', () => {
+      localStorage.removeItem("gameStarted"); // Clear the game started state
+      window.location.href = "../../index.html"; // Go back to the start page
+    });
+    document.getElementById('exitButton2').addEventListener('click', () => {
+      localStorage.removeItem("gameStarted"); // Clear the game started state
+      window.location.href = "../../index.html"; // Go back to the start page
+    });
+  </script>
+</body>
+
+</html>
