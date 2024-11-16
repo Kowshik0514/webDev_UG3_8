@@ -22,7 +22,7 @@ jspm_packages/
 .cache/
 
 # Production build
-/dist/
+dist/
 /build/
 
 # Typescript output
