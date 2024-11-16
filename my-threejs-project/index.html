@@ -5,12 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Disaster Preparedness Simulation</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="/src/style.css">
 </head>
 
 <body>
   <header class="header">
-    <img onclick="location.href='./'" src="./images/homepage/logo.jpeg" alt="Logo" class="logo">
+    <img onclick="location.href='./'" src="/images/homepage/logo.jpeg" alt="Logo" class="logo">
     <h1 onclick="location.href='./'">Disaster Preparedness Simulation</h1>
     <nav class="navbar">
       <a href="#simulation">Simulations</a>
@@ -323,7 +323,7 @@
     <div class="container">
 
       <div class="card">
-        <img src="./images/homepage/earthquake.avif" alt="Earthquake Image" class="card-image">
+        <img src="/images/homepage/earthquake.avif" alt="Earthquake Image" class="card-image">
         <h3 class="card-title">Earthquake</h3>
         <p class="card-description">Earthquakes can happen without warning. Stay calm and remember to Drop, Cover, and Hold On for safety.</p>
         <div class="buttons">
@@ -332,16 +332,16 @@
       </div>
 
       <div class="card">
-        <img src="./images/homepage/tornado.jpg" alt="Tornado Image" class="card-image">
+        <img src="/images/homepage/tornado.jpg" alt="Tornado Image" class="card-image">
         <h3 class="card-title">Tornado</h3>
         <p class="card-description">Tornadoes can form suddenly. Seek shelter in a basement or interior room to stay safe from flying debris.</p>
         <div class="buttons">
-          <button class="btn" onclick="location.href='./src/tornado/tornado.html'" title="Start Tornado Simulation"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
+          <button class="btn" onclick="location.href='https://tornadosimulation.vercel.app/'" title="Start Tornado Simulation"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
         </div>
       </div>
 
       <div class="card">
-        <img src="./images/homepage/flood2.jpg" alt="Flood Image" class="card-image" style="height: 155px;">
+        <img src="/images/homepage/flood2.jpg" alt="Flood Image" class="card-image" style="height: 155px;">
         <h3 class="card-title">Flood</h3>
         <p class="card-description">Floods can occur quickly. Be prepared by knowing evacuation routes and how to protect yourself from rising waters.</p>
         <div class="buttons">
@@ -357,33 +357,33 @@
     
     <div id="controls">
       <div class="images-container">
-          <img src="./images/icons/a.png" alt="A key" class="controls-image">
-          <img src="./images/icons/s.png" alt="S key" class="controls-image">
-          <img src="./images/icons/d.png" alt="D key" class="controls-image">
-          <img src="./images/icons/w.jpeg" alt="W key" class="controls-image">
-          <img src="./images/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+          <img src="/icons/a.png" alt="A key" class="controls-image">
+          <img src="/icons/s.png" alt="S key" class="controls-image">
+          <img src="/icons/d.png" alt="D key" class="controls-image">
+          <img src="/icons/w.jpeg" alt="W key" class="controls-image">
+          <img src="/icons/arrow.png" alt="Arrow key" class="arrow-image" >
           <p class="c1">MOVE PLAYER</p>
       </div>
 
       <div class="images-container">
-          <img src="./images/icons/shift.png" alt="Shift key" class="shift-image">
-          <img src="./images/icons/plus.png" alt="Plus key" class="controls-image">
-          <img src="./images/icons/a.png" alt="A key" class="controls-image">
-          <img src="./images/icons/d.png" alt="D key" class="controls-image">
-          <img src="./images/icons/w.jpeg" alt="W key" class="controls-image">
-          <img src="./images/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+          <img src="/icons/shift.png" alt="Shift key" class="shift-image">
+          <img src="/icons/plus.png" alt="Plus key" class="controls-image">
+          <img src="/icons/a.png" alt="A key" class="controls-image">
+          <img src="/icons/d.png" alt="D key" class="controls-image">
+          <img src="/icons/w.jpeg" alt="W key" class="controls-image">
+          <img src="/icons/arrow.png" alt="Arrow key" class="arrow-image" >
           <p class="c2">CRAWL</p>
       </div>
       
       <div class="images-container">
-          <img src="./images/icons/c.png" alt="C key" class="controls-image">
-          <img src="./images/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+          <img src="/icons/c.png" alt="C key" class="controls-image">
+          <img src="/icons/arrow.png" alt="Arrow key" class="arrow-image" >
           <p class="c1">CLIMB</p>
       </div>
 
       <div class="images-container">
-        <img src="./images/icons/mouse.jpg" alt="C key" class="mouse-image">
-        <img src="./images/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+        <img src="/icons/mouse.jpg" alt="C key" class="mouse-image">
+        <img src="/icons/arrow.png" alt="Arrow key" class="arrow-image" >
         <p class="c1">TO ROTATE PLAYER AND CAMERA</p>
     </div>
 
@@ -397,7 +397,7 @@
     <div id="news-container"></div>
     <!-- <p>This section contains the latest news related to disaster preparedness.</p> -->
   </section>
-  <script type="module" src="./src/homepage/news.js"></script>
+  <script type="module" src="/src/news.js"></script>
 
   <section id="about">
     <h2>About Us</h2>
@@ -409,7 +409,7 @@
     <p>&copy; 2024 Disaster Preparedness Simulation. All rights reserved.</p>
   </footer>
 
-  <script type="module" src="script.js"></script>
+  <script type="module" src="/src/script.js"></script>
 </body>
 
 </html>
