@@ -229,8 +229,8 @@ section p {
 max-width: 1170px;
 margin: 20px auto;
 padding: 20px;
-overflow-y: auto; /* Enables vertical scrolling */
-max-height: 500px; /* Restricts the height of the container */
+overflow-y: auto;
+max-height: 500px;
 display: flex;
 flex-direction: column;
 gap: 20px;
@@ -398,18 +398,14 @@ height: 50px;
 .c1 {
 font-size: 21px;
 font-weight: bold;
-margin-left: 10px; /* Adds space between the arrow and the text */
+margin-left: 10px; 
 }
 
 .c2 {
 font-size: 21px;
 font-weight: bold;
-margin-left: 10px; /* Adds space between the arrow and the text */
+margin-left: 10px; 
 }
-
-
-
-
 
 .section-banner {
   height: 350px;
