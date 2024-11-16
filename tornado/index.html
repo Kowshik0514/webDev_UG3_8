@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tornado</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+    <canvas id="bg"></canvas>
+    <div class="button-container">
+        <button id="exitButton1">Exit Game</button>
+      </div> 
+    <!-- Hamburger Menu Icon -->
+    <div class="hamburger" id="hamburgerMenu">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <!-- Buttons Container -->
+    <div class="button-container" id="buttonContainer">
+        <button id="startTornado">Start Tornado</button>
+        <button id="soundToggleBtn">Turn Sound Off</button>
+        <button id="restartGame">Restart Game</button>
+        <button id="exitButton">Exit Game</button>
+    </div>
+    <div id="gameOverPopup2"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 100;">
+    <div
+      style="background-color: #00FFFF;padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);">
+      <h2 id="go" style="font-family: 'Corbel', sans-serif; font-size: 26px; color: #333;">Flood Survival Game</h2>
+      <button id="restartButton2" class="dropChandelierBtn"
+        style="background-color: #28a745; color: black; font-family: 'Corbel', sans-serif; border: none; padding: 10px 20px; border-radius: 5px; font-size: 18px; cursor: pointer; transition: background-color 0.3s;">
+        Main Menu
+      </button>
+      <button id="exitButton3"
+        style="background-color: #dc3545; color: black; font-family: 'Corbel', sans-serif; border: none; padding: 10px 20px; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 15px; transition: background-color 0.3s;">
+        Exit Game
+      </button>
+    </div>
+    <div id="gameOverPopup"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 100;">
+    <div
+      style="background-color: #00FFFF;padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);">
+      <h2 id="go" style="font-family: 'Corbel', sans-serif; font-size: 26px; color: #333;">Tornado Survival Game</h2>
+      <button id="restartButton" class="dropChandelierBtn"
+        style="background-color: #28a745; color: black; font-family: 'Corbel', sans-serif; border: none; padding: 10px 20px; border-radius: 5px; font-size: 18px; cursor: pointer; transition: background-color 0.3s;">
+        Start Game
+      </button>
+      <button id="exitButton2"
+        style="background-color: #dc3545; color: black; font-family: 'Corbel', sans-serif; border: none; padding: 10px 20px; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 15px; transition: background-color 0.3s;">
+        Exit Game
+      </button>
+    </div>
+
+  </div>
+  
+  </div>
+
+    <script type="module" src="/src/main.js"></script> <!-- Ensure this path is correct -->
+    <script type="module" src="/src/tornado.js"></script>
+
+    <script>
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const buttonContainer = document.getElementById('buttonContainer');
+        
+        // Toggle the button container visibility when hamburger menu is clicked
+        hamburgerMenu.addEventListener('click', (e) => {
+            e.stopPropagation();  // Prevent event bubbling so it doesn't close immediately
+            buttonContainer.classList.toggle('active');
+        });
+
+        // Close the menu after clicking any button
+        const buttons = document.querySelectorAll('.button-container button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                buttonContainer.classList.remove('active'); // Hide the menu
+            });
+        });
+
+        // Exit game button logic to redirect
+        document.getElementById('exitButton').addEventListener('click', () => {
+            window.location.href = "https://disastersimulation.vercel.app/"; // Go back to the start page
+        });
+
+        // Close the menu when tapping anywhere outside the button container
+        document.addEventListener('click', (e) => {
+            // Check if the click is outside the button container and the hamburger menu
+            if (!buttonContainer.contains(e.target) && !hamburgerMenu.contains(e.target)) {
+                buttonContainer.classList.remove('active');
+            }
+        });
+
+        // Prevent click inside the button container from propagating to document (i.e., prevent closing)
+        buttonContainer.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
+      <script>
+        let timerDuration = 30;
+        const timerElement = document.getElementById('timer');
+        const gameOverPopup = document.getElementById('gameOverPopup');
+    
+        // Function to start the countdown
+    
+        // Function to start the game
+        function startGame() {
+          gameOverPopup.style.display = 'none'; // Hide the game over popup
+          gameOverPopup2.style.display = 'none';
+          localStorage.removeItem("gameStarted"); // Clear the game started state
+          animationEnabled = false;
+        }
+    
+        document.getElementById('restartButton').addEventListener("click", startGame);
+        document.getElementById('exitButton1').addEventListener('click', () => {
+        localStorage.removeItem("gameStarted"); // Clear the game started state
+        window.location.href = "https://disastersimulation.vercel.app/"; // Go back to the start page
+      });
+      document.getElementById('exitButton2').addEventListener('click', () => {
+        localStorage.removeItem("gameStarted"); // Clear the game started state
+        window.location.href = "https://disastersimulation.vercel.app/"; // Go back to the start page
+      });
+      document.getElementById('restartButton2').addEventListener("click", ()=>{
+        window.location.reload(true);
+      });
+      document.getElementById('exitButton3').addEventListener('click', () => {
+      localStorage.removeItem("gameStarted"); // Clear the game started state
+      window.location.href = "https://disastersimulation.vercel.app/"; // Go back to the start page
+    });
+        </script>
+</body>
+</html>
