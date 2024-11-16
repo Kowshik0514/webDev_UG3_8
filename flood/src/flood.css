@@ -1,0 +1,437 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: hsl(173, 73%, 50%); /* Change this to your desired color */
+  }
+    
+    canvas {
+      color: aqua;
+      display: block;
+    }
+    
+  
+    /* Timer container styles */
+  #timerContainer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 15px;
+    border-radius: 5px;
+  }
+  
+  #timer {
+    font-weight: bold;
+  }
+  
+   /* Slideshow container */
+   .slideshow-container {
+    position: relative;
+    max-width: 100vw; /* Full width */
+    max-height: 100vh; /* Full height */
+    margin: auto;
+    overflow: hidden; /* Hide overflow */
+  }
+  
+  /* Slides */
+  .mySlides {
+    display: none; /* Hidden by default */
+  }
+  
+  /* Image styling */
+  .mySlides img {
+    width: 100%; /* Responsive width */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+  /* Caption text */
+  .text {
+    color: #f2f2f2; /* White text */
+    font-size: 15px; /* Caption font size */
+    padding: 8px 12px; /* Padding around text */
+    position: absolute; /* Positioning */
+    bottom: 8px; /* Position from bottom */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center correction */
+    background-color: rgba(0, 0, 0, 0.6); /* Background color with transparency */
+    border-radius: 5px; /* Rounded corners */
+  }
+  
+  /* Next and Previous buttons */
+  .prev,
+  .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    /* user-select: none; Prevent text selection */
+  }
+  
+  .next {
+    right: 0;
+    border-radius: 3px 0 0 3px; /* Round corners */
+  }
+  
+  .prev:hover,
+  .next:hover {
+    background-color: rgba(0, 0, 0, 0.8); /* Darken on hover */
+  }
+  
+  /* Dots/Indicators */
+  .dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb; /* Gray dots */
+    border-radius: 50%; /* Circular dots */
+    display: inline-block;
+    transition: background-color 0.6s ease;
+  }
+  
+  .active,
+  .dot:hover {
+    background-color: #717171; /* Active dot color */
+  }
+  
+  /* Start Game button */
+  #startGameButton {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background color change */
+    padding: 10px 20px; /* Padding */
+    font-size: 20px; /* Font size */
+  }
+  
+  #startGameButton:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }
+  
+  .scaled-image {
+    /* width: 100%; Set desired width */
+    max-width: 1600px; /* Optional: maximum width */
+    max-height: 800px;
+    /* height: auto; Maintain aspect ratio */
+    margin: 0 auto; /* Center the image */
+  }
+  
+  .slide-button {
+    position: absolute;
+    bottom: 100px; /* Position 100px above the bottom of the slide */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 20px;
+  }
+  
+  .slide-button:hover {
+    background-color: #45a049;
+  }
+  
+  
+  
+  .button-container {
+    position: absolute; /* Positioning the container absolutely */
+    top: 10px; /* Start position */
+    left: 10px; /* Start position */
+  }
+  
+  .button-container button {
+    background-color: #ff7f00; /* Orange background */
+    color: white;              /* White text */
+    border: none;              /* No border */
+    border-radius: 8px;       /* Rounded corners */
+    padding: 10px 20px;       /* Padding for better button size */
+    font-size: 16px;          /* Consistent font size */
+    font-family: 'Arial', sans-serif; /* Font for consistency */
+    cursor: pointer;          /* Pointer cursor on hover */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  }
+  
+  #dropChandelierBtn {
+    margin-bottom: 10px; /* Space between buttons */
+  }
+  
+  #soundToggleBtn {
+    margin-bottom: 10px; /* Space between buttons */
+  }
+  
+  .button-container button:hover {
+    background-color: #e67300; /* Darker orange on hover */
+    transform: scale(1.05);    /* Slight zoom on hover */
+  }
+  
+  .button-container button:active {
+    background-color: #cc6600; /* Even darker orange on click */
+    transform: scale(1);       /* Reset scale on click */
+  }
+  
+
+
+  #displayButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Overlay styles */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    z-index: 1000;
+    flex-direction: column;
+}
+
+/* Close button for overlay */
+#closeButton {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#nameList {
+    display: flex;
+    flex-direction: row;
+    gap: 20px; /* Space between names */
+}
+
+#removeFruitButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #FF6347; /* Tomato color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+
+
+#popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 1000;
+}
+
+/* Button styling */
+#popup button {
+  margin: 10px;
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#popup button#noButton {
+  background-color: #FF6347;
+  z-index: 1000; /* Tomato color for No */
+}
+
+
+
+#popup2 {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 1000;
+}
+
+/* Button styling */
+#popup2 button {
+  margin: 10px;
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#popup2 button#noButton {
+  background-color: #FF6347;
+  z-index: 1000; /* Tomato color for No */
+}
+
+
+#warningPopup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 0, 0, 0.9); /* Red background for warning */
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 1000;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+/* Hamburger icon */
+.hamburger div {
+  background-color: #fff;
+  height: 4px;
+  margin: 4px 0;
+  transition: 0.4s;
+}
+div {
+  display: block;
+  unicode-bidi: isolate;
+}
+.hamburger {
+  display: block;
+  width: 30px;
+  height: 25px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  z-index: 100;
+  background-color: #717171;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.menu-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #717171;
+}
+
+.menu-icon div {
+  width: 30px;
+  height: 3px;
+  background-color: white;
+}
+
+/* Navigation menu */
+.nav-menu {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 100;
+}
+
+.nav-menu button {
+  background-color: #ff7f00; /* Orange background */
+  width: 200px;
+  color: white;              /* White text */
+  border: none;              /* No border */
+  border-radius: 8px;        /* Rounded corners */
+  padding: 10px 20px;        /* Padding for better button size */
+  font-size: 16px;           /* Consistent font size */
+  font-family: 'Arial', sans-serif; /* Font for consistency */
+  cursor: pointer;          /* Pointer cursor on hover */
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.nav-menu button:hover {
+  background-color: #e67300; /* Darker orange on hover */
+  transform: scale(1.05);    /* Slight zoom on hover */
+}
+
+.nav-menu button:active {
+  background-color: #cc6600; /* Even darker orange on click */
+  transform: scale(1);       /* Reset scale on click */
+}
+
+
+.nav-menu {
+  display: none;
+  flex-direction: column;
+  gap:10px;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the container */
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+
+

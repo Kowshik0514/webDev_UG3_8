@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flood Survival Game</title>
+  <link rel="stylesheet" href="/src/flood.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <canvas id="bg"></canvas>
+  <div class="button-container">
+    <!-- <button id="dropChandelierBtn">Start Flood</button>
+    <button id="soundToggleBtn">Turn Sound Off</button> -->
+  </div> 
+
+  <div id="menuIcon" class="menu-icon" color="white" >
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <!-- Navigation menu -->
+  <div id="navMenu" class="nav-menu">
+    <button id="startFloodBtn">Start Flood</button>
+    <button id="exitGameBtn">Exit Game</button>
+    <button id="restartGameBtn">Restart Game</button>
+    <button id="toggleSoundBtn">Turn Sound Off</button>
+  </div>
+
+  <div id="popup">
+    <p>Collect fruits to bag?</p>
+    <button id="yesButton">Yes</button>
+    <button id="noButton">No</button>
+  </div>
+
+  <div id="popup2">
+    <p>Collect important documents to bag?</p>
+    <button id="yesButton2">Yes</button>
+    <button id="noButton2">No</button>
+  </div>
+
+  <audio id="myAudio" src="/sounds/flood_warning.mp3"></audio>
+
+  <button id="displayButton" >Check Bag</button>
+    <!-- Overlay with names list -->
+    <div id="overlay">
+        <button id="closeButton">x</button>
+        <div id="nameList"></div>
+    </div>
+  <!-- Game Over Pop-up -->
+  <div id="gameOverPopup"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 100;">
+    <div
+      style="background-color: #00FFFF;padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);">
+      <h2 id="go" style="font-family: 'Corbel', sans-serif; font-size: 26px; color: #333;">Flood Survival Game</h2>
+      <button id="restartButton" class="dropChandelierBtn"
+        style="background-color: #28a745; color: black; font-family: 'Corbel', sans-serif; border: none; padding: 10px 20px; border-radius: 5px; font-size: 18px; cursor: pointer; transition: background-color 0.3s;">
+        Start Game
+      </button>
+      <button id="exitButton2"
+        style="background-color: #dc3545; color: black; font-family: 'Corbel', sans-serif; border: none; padding: 10px 20px; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 15px; transition: background-color 0.3s;">
+        Exit Game
+      </button>
+    </div>
+  </div>
+
+  <div id="warningPopup">
+    Beware of electric poles
+  </div>
+
+
+  <script type="module" src="/src/flood.js"></script>
+
+  <script>
+    let timerDuration = 30;
+    const timerElement = document.getElementById('timer');
+    const gameOverPopup = document.getElementById('gameOverPopup');
+    function startGame() {
+      gameOverPopup.style.display = 'none'; // Hide the game over popup
+      localStorage.removeItem("gameStarted"); // Clear the game started state
+    //   localStorage.setItem("gameStarted", "true"); // Optionally set game state
+      animationEnabled = false;
+      const audio = document.getElementById('myAudio');
+      audio.play();
+     // Start the timer
+    }
+
+    // Add event listener to the "Restart" button
+    document.getElementById('restartButton').addEventListener("click", startGame);
+
+    // Add event listener to both "Exit" buttons to clear game state and go back to index.html
+   // document.getElementById('exitButton1').addEventListener('click', () => {
+   //   localStorage.removeItem("gameStarted"); // Clear the game started state
+   //   window.location.href = "../../index.html"; // Go back to the start page
+  //  });
+    document.getElementById('exitButton2').addEventListener('click', () => {
+      localStorage.removeItem("gameStarted"); // Clear the game started state
+      window.location.href = "../../index.html"; // Go back to the start page
+    });
+
+
+    document.getElementById('menuIcon').addEventListener('click', () => {
+      const navMenu = document.getElementById('navMenu');
+      navMenu.style.display = navMenu.style.display === 'none' || navMenu.style.display === '' ? 'flex' : 'none';
+    });
+    
+    document.getElementById('startFloodBtn').addEventListener('click', () => {
+      // Code to start the flood game
+   //   alert("Starting flood...");
+   const navMenu = document.getElementById('navMenu');
+      navMenu.style.display = navMenu.style.display === 'none' || navMenu.style.display === '' ? 'flex' : 'none';
+      const audio = document.getElementById('myAudio');
+    audio.pause();
+    audio.currentTime = 0;
+    });
+    
+    document.getElementById('exitGameBtn').addEventListener('click', () => {
+      const navMenu = document.getElementById('navMenu');
+      navMenu.style.display = navMenu.style.display === 'none' || navMenu.style.display === '' ? 'flex' : 'none';
+      window.location.href = "../../index.html";
+    });
+    
+    document.getElementById('restartGameBtn').addEventListener('click', () => {
+      window.location.href = "./";
+    });
+    
+    document.getElementById('toggleSoundBtn').addEventListener('click', () => {
+      const audio = document.getElementById('myAudio');
+      if (audio.paused) {
+        audio.play();
+        document.getElementById('toggleSoundBtn').innerText = 'Turn Sound Off';
+      } else {
+        audio.pause();
+        document.getElementById('toggleSoundBtn').innerText = 'Turn Sound On';
+      }
+    });
+    
+  </script>
+
+
+</body>
+
+</html>
