@@ -40,6 +40,13 @@
     <button id="noButton2">No</button>
   </div>
 
+  <div id="popup3">
+    <p>Save the Rabbit?</p>
+    <button id="yesButton3">Yes</button>
+    <button id="noButton3">No</button>
+  </div>
+
+
   <audio id="myAudio" src="/sounds/flood_warning.mp3"></audio>
 
   <button id="displayButton" >Check Bag</button>
@@ -119,8 +126,8 @@
       localStorage.removeItem("gameStarted"); // Clear the game started state
     //   localStorage.setItem("gameStarted", "true"); // Optionally set game state
       animationEnabled = false;
-      const audio = document.getElementById('myAudio');
-      audio.play();
+    /*  const audio = document.getElementById('myAudio');
+      audio.play();*/
      // Start the timer
     }
 
@@ -153,8 +160,8 @@
    loadingScreen.style.display = 'flex';
       navMenu.style.display = navMenu.style.display === 'none' || navMenu.style.display === '' ? 'flex' : 'none';
       const audio = document.getElementById('myAudio');
-    audio.pause();
-    audio.currentTime = 0;
+   /* audio.pause();
+    audio.currentTime = 0;*/
     });
     
     document.getElementById('exitGameBtn').addEventListener('click', () => {

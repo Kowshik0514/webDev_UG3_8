@@ -1,3 +1,4 @@
+// /flood/src/flood.js
 import * as THREE from "three";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -15,9 +16,6 @@ playerBody = new CANNON.Body({
 let playerHealth = 100; // Initialize player's health
 const healthBarContainer = document.createElement("div");
 const healthBar = document.createElement("div");
-const loadingScreen = document.getElementById('loadingScreen');
-let loaded1 = false;
-let loaded2 = false;
 
 // Style the health bar container
 healthBarContainer.style.position = "absolute";
@@ -38,7 +36,7 @@ healthBar.style.borderRadius = "5px";
 // Add the health bar to the container and then the container to the document
 healthBarContainer.appendChild(healthBar);
 document.body.appendChild(healthBarContainer);
-let names = [];
+
 export function update(health) {
   playerHealth = Math.min(100, playerHealth + health);
 }
@@ -72,25 +70,19 @@ export function updateHealth() {
       let won ="";
       if( names.includes("Fruits") == false && names.includes("Certificates") == false)
       {
-          won = won + "\nbut you didn't carry food and important documents";
+          won = won + "\nBut you can't survive longer and lost valuables";
       }
       else if( names.includes("Fruits") == false)
       {
-        won = won + "\nbut you didn't carry food";
-      }
-      else if( names.includes("Rabbit") == false)
-      {
-        won = won + "\n, be kind to animals during flood";
+        won = won + "\nBut you can't survive longer";
       }
       else if(names.includes("Certificates") == false)
       {
-        won = won + "\nbut you didn't carry important documents";
+        won = won + "\nBut you lost valuables";
       }
       document.getElementById("go").innerHTML = "You Won !" + won;
     } 
     document.getElementById("gameOverPopup").style.display = "flex";
-    // restartGame();
-    // refill_health(playerBody)
     playerHealth = 100; // Reset health for testing purposes
     playerBody.position.set(0, 1.6, 0); // Reset player position (if applicable)
     healthBar.style.width = "100%"; // Reset health bar
@@ -199,7 +191,6 @@ gltfLoader.load("/models/flood/grass_land.glb", (gltf) => {
   field.scale.set(1, 1, 1); // Adjust scale if necessary
   field.rotation.x = -Math.PI / 100;
   scene.add(field);
-  loaded1 = true;
   field.position.set(10, -4.7, 0);
 });
 let rabbit;
@@ -207,7 +198,7 @@ gltfLoader.load("/models/flood/rabbit.glb", (gltf) => {
   rabbit = gltf.scene;
   rabbit.scale.set(0.5, 0.5, 0.5); // Adjust scale if necessary
   scene.add(rabbit);
-  rabbit.position.set(2, 0.3, 2);
+  rabbit.position.set(2, 0.2, 2);
 });
 // let house;
 // gltfLoader.load("/models/flood/housed.glb", (gltf) => {
@@ -320,7 +311,7 @@ gltfLoader.load("/models/flood/snowy_water_tank.glb", (gltf) => {
 let room;
 gltfLoader.load("/models/flood/house.glb", (gltf) => {
   room = gltf.scene;
-  loaded2 = true;
+
   scene.add(room);
   room.position.set(0, -0.2, 0);
 });
@@ -394,7 +385,7 @@ gltfLoader.load("/models/flood/fruit_bowl.glb", (gltf) => {
   fruit.position.set(-0.7, 0.93, 2);
 });
 
-
+const names = [];
 
 function showPopup() {
   document.getElementById("popup").style.display = "block";
@@ -417,50 +408,6 @@ document.getElementById("noButton").addEventListener("click", () => {
   flag = false;
   hidePopup();
 });
-
-
-
-
-
-function showPopup3() {
-  document.getElementById("popup3").style.display = "block";
-}
-
-function hidePopup3() {
-  document.getElementById("popup3").style.display = "none";
-}
-let flag3 = true;
-let taken3 = true;
-
-function checkDistanceToRabbit() {
-  if (rabbit) {
-    // Replace with the actual character position
-    // Example position, adjust accordingly
-    const distancex = Math.abs(rabbit.position.x - player.position.x);
-    const distancez = Math.abs(rabbit.position.z - player.position.z);
-
-    hidePopup3();
-    if (distancex < 0.6 && flag3 === true && taken3 == true && distancez < 0.6) {
-      showPopup3();
-    } else if (distancex >= 0.6 || distancez >= 0.6) {
-      hidePopup3();
-      flag3= true;
-    }
-  }
-}
-document.getElementById("yesButton3").addEventListener("click", () => {
-  names.push("Rabbit"); // Add fruit to the bag
-  flag3 = false;
-  hidePopup3();
-  taken3 = false;
-  scene.remove(rabbit);
-});
-document.getElementById("noButton3").addEventListener("click", () => {
-  flag3 = false;
-  hidePopup3();
-});
-
-
 let checkClimb = false;
 let checkClimb1=false;
 let climbMessageDisplayed = false;
@@ -533,7 +480,7 @@ function showOverlay() {
 
   // Populate overlay with names in a horizontal layout
   const nameList = document.getElementById("nameList");
-  nameList.innerHTML = names.map((name) => `<span>${name}</span>`).join("");
+  nameList.innerHTML = names.map((name) => <span>${name}</span>).join("");
 }
 
 function hideOverlay() {
@@ -571,8 +518,6 @@ function hidePopup2() {
 
 let flag2 = true;
 let taken2 = true;
-
-
 document.getElementById("yesButton2").addEventListener("click", () => {
   names.push("Certificates"); // Add fruit to the bag
   flag2 = false;
@@ -615,14 +560,13 @@ document.getElementById("restartButton").addEventListener("click", () => {
 const riseButton = document.createElement("button");
 riseButton.innerText = "Raise Water Level";
 riseButton.style.position = "absolute";
-riseButton.style.backgroundColor = "cyan";
 riseButton.style.top = "10px";
 riseButton.style.left = "10px";
 document.body.appendChild(riseButton);
 
 riseButton.addEventListener("click", () => {
-  // const audio = document.getElementById("myAudio");
-  // audio.play();
+  const audio = document.getElementById("myAudio");
+  audio.play();
   isRising = true;
 });
 
@@ -704,9 +648,6 @@ function animate() {
   // console.log(playerBody.position.y);
   // console.log("z:");
   // console.log(playerBody.position.z);
-  if(loaded1 && loaded2) {
-    loadingScreen.style.display = 'none';
-  }
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
 
@@ -719,7 +660,6 @@ function animate() {
   if(isAlive) checkDistanceToFruit();
   if(isAlive) checkDistanceToPaper();
   if(isAlive) checkDistanceToPole();
-  if(isAlive) checkDistanceToRabbit();
   raindropModel.forEach((drop) => {
     drop.position.y -= 0.4; // Move the Y coordinate downward
     if (drop.position.y < -100) {
@@ -734,13 +674,15 @@ function animate() {
     // model.material.transparent = false;
     // field.material.transparent = false;
   }
+
   if(player.position.y >= 7.9  && isRising)
-    {
-       playerHealth = 0;
-       isRising = false;
-       updateHealth();
-    }
-  else if (player && !checkClimb1) {
+  {
+     playerHealth = 0;
+     playerBody.mass = 0;
+     updateHealth();
+  }
+    
+  if (player && !checkClimb1) {
     
     // Sync player position with physics body
     player.position.copy(playerBody.position);
@@ -774,6 +716,8 @@ function animate() {
       camera.position.set(cameraX, cameraY, cameraZ);
       camera.lookAt(player.position);
       player.rotation.y = 0.022;
+
+
     }
 
     if (isRising && model) {
@@ -913,10 +857,14 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 function restartGame() {
+  
+  playerBody.mass = 1;
+  playerBody.positon.set(0.5, 2.5, 0);
   isRising = false;
+  model.position.set(0,0,0);
+
   const audio = document.getElementById("myAudio");
-  audio.pause();
-    audio.currentTime = 0;
+  audio.play();
   if(model) model.position.y = -1;
   refill_health();
   diedPole = false;
@@ -925,13 +873,10 @@ function restartGame() {
   isAlive = true;
 }
 document.getElementById("restartGameBtn").addEventListener("click",() => {
-  // const audio = document.getElementById("myAudio");
-  // audio.play();
+  const audio = document.getElementById("myAudio");
+  audio.play();
   isRising = false;
   isAlive = true;
-  const audio = document.getElementById("myAudio");
-  audio.pause();
-    audio.currentTime = 0;
   if(model)
     {
       model.position.y = -1;
@@ -947,7 +892,5 @@ document.getElementById("restartGameBtn").addEventListener("click",() => {
 document.getElementById("startFloodBtn").addEventListener("click" ,() => {
   isRising = true;
   isAlive = true;
-  const audio = document.getElementById("myAudio");
-  audio.play();
 })
 animate();
