@@ -35,6 +35,7 @@ Welcome to the **Disaster Simulation Website**! This interactive website simulat
    ```
 2. Navigate to the project directory:
    ```bash
+   cd webDev_UG3_8
    cd my-threejs-project
    ```
 3. Install the required dependencies using npm:
