@@ -26,7 +26,7 @@ export function loadHome(scene, world) {
     loader.load('../../models/tornado/tornadoHome.glb', (gltfHome) => {
         const homeModel = gltfHome.scene;
         homeModel.rotateOnAxis(new THREE.Vector3(0, 1, 0), 5*Math.PI/13);
-        homeModel.position.set(0, 0, 40); 
+        homeModel.position.set(0, -0.85, 40); 
         load1=true;
         homeModel.scale.set(0.002, 0.002, 0.002); 
         scene.add(homeModel);

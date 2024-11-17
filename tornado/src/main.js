@@ -135,6 +135,37 @@ directionalLight.position.set(10, 10, 10);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
+
+const planeShapeFront = new CANNON.Box(new CANNON.Vec3(6.4925, 0.01, 14.64)); 
+const planeBodyFront = new CANNON.Body({
+  mass: 0 
+});
+planeBodyFront.addShape(planeShapeFront);
+planeBodyFront.position.set(-7.77, 0.48, 26.57);
+planeBodyFront.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+world.addBody(planeBodyFront);
+
+
+const planeShapeFront2 = new CANNON.Box(new CANNON.Vec3(6.4925, 0.01, 14.64)); 
+const planeBodyFront2 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+planeBodyFront2.addShape(planeShapeFront2);
+planeBodyFront2.position.set(-6.64, 0.48, 55.251);
+planeBodyFront2.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+world.addBody(planeBodyFront2);
+
+
+const planeShapeFront3 = new CANNON.Box(new CANNON.Vec3(15, 0.01, 14.64)); 
+const planeBodyFront3 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+planeBodyFront3.addShape(planeShapeFront3);
+planeBodyFront3.position.set(-2.097, 0.48, 40.97);
+planeBodyFront3.quaternion.setFromEuler( -Math.PI / 2, -Math.PI/2, 0);
+world.addBody(planeBodyFront2);
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
 document.addEventListener('click', () => {
@@ -322,6 +353,17 @@ function animate() {
 function movePlayer() {
   if (!player) return;
   if(!load1 || !load2) return;
+
+
+  if(player.position.x <-2.02 && player.position.x > -1.95  && player.position.z > 26.7 && player.position.z < 53)
+  {
+    playerBody.position.set(player.position.x - 0.05, player.position.y, player.position.z);
+  }
+
+  console.log("x");
+  console.log(player.position.x);
+  console.log("z");
+  console.log(player.position.z);
 
   let moveDirection = new THREE.Vector3();
   const forward = getPlayerForwardDirection();
