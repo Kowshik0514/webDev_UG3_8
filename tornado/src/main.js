@@ -225,7 +225,7 @@ gltfLoader.load('/models/global_models/player2.glb', (gltf) => {
 // Player Movement
 const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
 const jumpForce = 5;
-const speed = { walk: 10, run: 8 };
+const speed = { walk: 15, run: 8 };
 let isMoving = false;
 let isMoving_back = false;
 let isRunning = false;
