@@ -10,7 +10,6 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body>
   <canvas id="bg"></canvas>
   <div class="button-container">
   </div> 
@@ -71,11 +70,48 @@
   </div>
 
 
+  <div>
+    <div id="loadingScreen">
+      <img src="/images/load.gif" alt="Loading..." style="transform: scale(0.5); margin-top: -300px; margin-bottom: -200px;" />
+      <div class="boxes">
+        <div class="box">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="box">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="box">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="box">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    
+    <!-- dribbble -->
+    <a class="dribbble" href="https://dribbble.com/shots/5533600-Loading-boxes" target="_blank"><img src="https://cdn.dribbble.com/assets/dribbble-ball-mark-2bd45f09c2fb58dbbfb44766d5d1d07c5a12972d602ef8b32204d28fa3dda554.svg" alt=""></a>
+  </div>
+
   <script type="module" src="/src/flood.js"></script>
+
+
 
   <script>
     let timerDuration = 30;
     const timerElement = document.getElementById('timer');
+    const loadingScreen = document.getElementById('loadingScreen');
     const gameOverPopup = document.getElementById('gameOverPopup');
     function startGame() {
       gameOverPopup.style.display = 'none'; // Hide the game over popup
@@ -88,7 +124,10 @@
     }
 
     // Add event listener to the "Restart" button
-    document.getElementById('restartButton').addEventListener("click", startGame);
+    document.getElementById('restartButton').addEventListener("click", ()=> {
+      loadingScreen.style.display = 'flex';
+      startGame();
+    });
 
     // Add event listener to both "Exit" buttons to clear game state and go back to index.html
    // document.getElementById('exitButton1').addEventListener('click', () => {
@@ -110,6 +149,7 @@
       // Code to start the flood game
    //   alert("Starting flood...");
    const navMenu = document.getElementById('navMenu');
+   loadingScreen.style.display = 'flex';
       navMenu.style.display = navMenu.style.display === 'none' || navMenu.style.display === '' ? 'flex' : 'none';
       const audio = document.getElementById('myAudio');
     audio.pause();

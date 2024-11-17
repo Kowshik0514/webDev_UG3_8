@@ -6,9 +6,13 @@ import {player, restartGame} from './main.js';
 import { playerHealth, updateHealth2} from './main.js';
 import { isTornadoactive } from '/src/tornado.js';
 
+let load1=false;
+let load2=false;
+
+
 export function loadHome(scene, world) {
     const loader = new GLTFLoader();
-
+    const loadingScreen = document.getElementById('loadingScreen');
     // Create a road using PlaneGeometry
     const roadGeometry = new THREE.PlaneGeometry(250, 12);
     const roadMaterial = new THREE.MeshBasicMaterial({ color: 0x555555, side: THREE.DoubleSide });
@@ -23,6 +27,7 @@ export function loadHome(scene, world) {
         const homeModel = gltfHome.scene;
         homeModel.rotateOnAxis(new THREE.Vector3(0, 1, 0), 5*Math.PI/13);
         homeModel.position.set(0, 0, 40); 
+        load1=true;
         homeModel.scale.set(0.002, 0.002, 0.002); 
         scene.add(homeModel);
     });
@@ -78,6 +83,7 @@ export function loadHome(scene, world) {
         truckModel2.position.set(-25, 1.7, 45);
         truckModel2.rotation.set(0, Math.PI, 0);
         truckModel2.hasFallen = false; 
+        load2=true;
         scene.add(truckModel2);
         vehicles.push({ model: truckModel2, speed: -0.1 }); 
     });
@@ -95,6 +101,9 @@ export function loadHome(scene, world) {
     });
 
     function animateVehicles() {
+        if(load1 && load2){
+            loadingScreen.style.display = 'none';
+        }
         vehicles.forEach(vehicle => {
             vehicle.model.position.z += vehicle.speed;
     

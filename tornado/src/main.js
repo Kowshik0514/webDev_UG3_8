@@ -14,6 +14,9 @@ const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg')
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
+export let load1=false;
+export let load2=false;
+const loadingScreen = document.getElementById('loadingScreen');
 
 // Physics world
 const world = new CANNON.World();
@@ -286,6 +289,10 @@ function animate() {
   // updateHealth();
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
+  if(load1 && load2)
+  {
+    loadingScreen.style.display = 'none';
+  }
   world.step(1 / 60);
   if (mixer) mixer.update(delta);
   movePlayer();

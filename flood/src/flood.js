@@ -16,6 +16,9 @@ playerBody = new CANNON.Body({
 let playerHealth = 100; // Initialize player's health
 const healthBarContainer = document.createElement("div");
 const healthBar = document.createElement("div");
+const loadingScreen = document.getElementById('loadingScreen');
+let loaded1 = false;
+let loaded2 = false;
 
 // Style the health bar container
 healthBarContainer.style.position = "absolute";
@@ -177,6 +180,7 @@ gltfLoader.load("/models/flood/grass_land.glb", (gltf) => {
   field.scale.set(1, 1, 1); // Adjust scale if necessary
   field.rotation.x = -Math.PI / 100;
   scene.add(field);
+  loaded1 = true;
   field.position.set(10, -4.7, 0);
 });
 let rabbit;
@@ -297,7 +301,7 @@ gltfLoader.load("/models/flood/snowy_water_tank.glb", (gltf) => {
 let room;
 gltfLoader.load("/models/flood/house.glb", (gltf) => {
   room = gltf.scene;
-
+  loaded2 = true;
   scene.add(room);
   room.position.set(0, -0.2, 0);
 });
@@ -546,6 +550,7 @@ document.getElementById("restartButton").addEventListener("click", () => {
 const riseButton = document.createElement("button");
 riseButton.innerText = "Raise Water Level";
 riseButton.style.position = "absolute";
+riseButton.style.backgroundColor = "cyan";
 riseButton.style.top = "10px";
 riseButton.style.left = "10px";
 document.body.appendChild(riseButton);
@@ -634,6 +639,9 @@ function animate() {
   // console.log(playerBody.position.y);
   // console.log("z:");
   // console.log(playerBody.position.z);
+  if(loaded1 && loaded2) {
+    loadingScreen.style.display = 'none';
+  }
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
 
