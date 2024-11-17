@@ -126,7 +126,7 @@ window.addEventListener('click', () => {
   const currentTime = new Date().getTime();
   const tapGap = currentTime - lastTap;
   if (tapGap < 300 && tapGap > 0) {
-    window.location.href = '/home.html';
+    window.location.href = 'https://disastersimulation.vercel.app/';
   }
   lastTap = currentTime;
 });

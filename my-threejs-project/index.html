@@ -1,21 +1,416 @@
+<!-- /homepage/index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Disaster Simulation</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
-    canvas {
-      display: block;
-    }
-  </style>
-  <script type="module" src="/src/news.js"></script>
+  <title>Disaster Preparedness Simulation</title>
+  <link rel="stylesheet" href="/src/style.css">
 </head>
+
 <body>
-  <script type="module" src="/src/home.js"></script>
+  <header class="header">
+    <img onclick="location.href='./'" src="/images/homepage/logo.jpeg" alt="Logo" class="logo">
+    <h1 onclick="location.href='./'">Disaster Preparedness Simulation</h1>
+    <nav class="navbar">
+      <a href="#simulation">Simulations</a>
+      <a href="#other">How to play?</a> 
+      <a href="#news">News</a>
+      <a href="#about">About Us</a>
+    </nav>
+  </header>
+
+  <div class="section-banner">
+    <div id="star-1">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-2">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-3">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-4">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-5">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-6">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-7">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+    <div id="star-8">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-9">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-10">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-11">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-12">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-13">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-14">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-15">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-16">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-17">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-18">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-19">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-20">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-21">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-22">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-23">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-24">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-25">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-26">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+
+    <div id="star-27">
+      <div class="curved-corner-star">
+        <div id="curved-corner-bottomright"></div>
+        <div id="curved-corner-bottomleft"></div>
+      </div>
+      <div class="curved-corner-star">
+        <div id="curved-corner-topright"></div>
+        <div id="curved-corner-topleft"></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="simulation">
+    <h2>Simulations</h2>
+    <div class="container">
+
+      <div class="card">
+        <img src="/images/homepage/earthquake.avif" alt="Earthquake Image" class="card-image">
+        <h3 class="card-title">Earthquake</h3>
+        <p class="card-description">Earthquakes can happen without warning. Stay calm and remember to Drop, Cover, and Hold On for safety.</p>
+        <div class="buttons">
+          <button class="btn" onclick="location.href='https://earthquakesimulation.vercel.app/'" title="Start Earthquake Simulation"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="/images/homepage/tornado.jpg" alt="Tornado Image" class="card-image">
+        <h3 class="card-title">Tornado</h3>
+        <p class="card-description">Tornadoes can form suddenly. Seek shelter in a basement or interior room to stay safe from flying debris.</p>
+        <div class="buttons">
+          <button class="btn" onclick="location.href='https://tornadosimulation.vercel.app/'" title="Start Tornado Simulation"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="/images/homepage/flood2.jpg" alt="Flood Image" class="card-image" style="height: 155px;">
+        <h3 class="card-title">Flood</h3>
+        <p class="card-description">Floods can occur quickly. Be prepared by knowing evacuation routes and how to protect yourself from rising waters.</p>
+        <div class="buttons">
+          <button class="btn" onclick="location.href='https://floodsimulation.vercel.app/'" title="Start Flood Simulation"><span></span><p data-start="good luck!" data-text="start!" data-title="new game"></p></button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="other">
+    <h2>How to Play?</h2>
+    
+    <div id="controls">
+      <div class="images-container">
+          <img src="/icons/a.png" alt="A key" class="controls-image">
+          <img src="/icons/s.png" alt="S key" class="controls-image">
+          <img src="/icons/d.png" alt="D key" class="controls-image">
+          <img src="/icons/w.jpeg" alt="W key" class="controls-image">
+          <img src="/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+          <p class="c1">MOVE PLAYER</p>
+      </div>
+
+      <div class="images-container">
+          <img src="/icons/shift.png" alt="Shift key" class="shift-image">
+          <img src="/icons/plus.png" alt="Plus key" class="controls-image">
+          <img src="/icons/a.png" alt="A key" class="controls-image">
+          <img src="/icons/d.png" alt="D key" class="controls-image">
+          <img src="/icons/w.jpeg" alt="W key" class="controls-image">
+          <img src="/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+          <p class="c2">CRAWL</p>
+      </div>
+      
+      <div class="images-container">
+          <img src="/icons/c.png" alt="C key" class="controls-image">
+          <img src="/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+          <p class="c1">CLIMB</p>
+      </div>
+
+      <div class="images-container">
+        <img src="/icons/mouse.jpg" alt="C key" class="mouse-image">
+        <img src="/icons/arrow.png" alt="Arrow key" class="arrow-image" >
+        <p class="c1">TO ROTATE PLAYER AND CAMERA</p>
+    </div>
+
+  </div>
+  
+</section>>
+
+
+  <section id="news">
+    <h2>News</h2>
+    <div id="news-container"></div>
+    <!-- <p>This section contains the latest news related to disaster preparedness.</p> -->
+  </section>
+  <script type="module" src="/src/news.js"></script>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>This section contains information about the project.</p>
+  </section>
+
+  <footer class="footer">
+    <hr>
+    <p>&copy; 2024 Disaster Preparedness Simulation. All rights reserved.</p>
+  </footer>
+
+  <script type="module" src="/src/script.js"></script>
 </body>
+
 </html>
