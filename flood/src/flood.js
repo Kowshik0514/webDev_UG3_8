@@ -564,7 +564,7 @@ riseButton.addEventListener("click", () => {
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
 document.addEventListener("click", () => {
-  controls.lock();
+  if(loaded1 && loaded2) controls.lock();
 });
 
 // Player Movement
@@ -782,7 +782,7 @@ function updatePlayerAnimation() {
 
 function movePlayer() {
   if (!player) return;
-
+  if(!loaded1 || !loaded2) return;
   let moveDirection = new THREE.Vector3();
   const forward = getPlayerForwardDirection();
   const right = new THREE.Vector3()

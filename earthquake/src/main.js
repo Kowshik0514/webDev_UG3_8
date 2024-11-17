@@ -423,7 +423,7 @@ export let crack1;
 
 const controls = new PointerLockControls(camera, renderer.domElement);
 document.addEventListener('click', () => {
-  controls.lock();
+  if(loaded) controls.lock();
 });
 
 // Player Movement
@@ -583,6 +583,7 @@ function updatePlayerAnimation() {
 
 function movePlayer() {
   if (!player) return;
+  if(!loaded) return;
 
   let moveDirection = new THREE.Vector3();
   const forward = getPlayerForwardDirection();

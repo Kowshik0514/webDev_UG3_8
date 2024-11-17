@@ -6,8 +6,8 @@ import {player, restartGame} from './main.js';
 import { playerHealth, updateHealth2} from './main.js';
 import { isTornadoactive } from '/src/tornado.js';
 
-let load1=false;
-let load2=false;
+export let load1=false;
+export let load2=false;
 
 
 export function loadHome(scene, world) {
