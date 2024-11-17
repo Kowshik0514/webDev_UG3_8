@@ -39,7 +39,7 @@ healthBar.style.borderRadius = "5px";
 // Add the health bar to the container and then the container to the document
 healthBarContainer.appendChild(healthBar);
 document.body.appendChild(healthBarContainer);
-
+let names = [];
 export function update(health) {
   playerHealth = Math.min(100, playerHealth + health);
 }
@@ -69,6 +69,22 @@ export function updateHealth() {
     // alert('Game Over!');
     if(diedPole) document.getElementById("go").innerHTML = "Game Over! You touched the pole!";
     else if(diedWater) document.getElementById("go").innerHTML = "Game Over! You drowned in the water!";
+    else{
+      let won ="";
+      if( names.includes("Fruits") == false && names.includes("Certificates") == false)
+      {
+          won = won + "\nbut you didn't carry food and important documents";
+      }
+      else if( names.includes("Fruits") == false)
+      {
+        won = won + "\nbut you didn't carry food";
+      }
+      else if(names.includes("Certificates") == false)
+      {
+        won = won + "\nbut you didn't carry important documents";
+      }
+      document.getElementById("go").innerHTML = "You Won !" + won;
+    } 
     document.getElementById("gameOverPopup").style.display = "flex";
     // restartGame();
     // refill_health(playerBody)
@@ -293,9 +309,9 @@ gltfLoader.load("/models/flood/snowy_water_tank.glb", (gltf) => {
   tank = gltf.scene;
   // tank.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
-  tank.scale.set(8, 4, 8); // Adjust scale if necessary
+  tank.scale.set(8, 6, 8); // Adjust scale if necessary
   scene.add(tank);
-  tank.position.set(10, 2, 10);
+  tank.position.set(10, 4, 10);
 });
 
 let room;
@@ -375,7 +391,7 @@ gltfLoader.load("/models/flood/fruit_bowl.glb", (gltf) => {
   fruit.position.set(-0.7, 0.93, 2);
 });
 
-const names = [];
+
 
 function showPopup() {
   document.getElementById("popup").style.display = "block";
@@ -668,8 +684,13 @@ function animate() {
     // model.material.transparent = false;
     // field.material.transparent = false;
   }
-    
-  if (player && !checkClimb1) {
+  if(player.position.y >= 7.9  && isRising)
+    {
+       playerHealth = 0;
+       isRising = false;
+       updateHealth();
+    }
+  else if (player && !checkClimb1) {
     
     // Sync player position with physics body
     player.position.copy(playerBody.position);
