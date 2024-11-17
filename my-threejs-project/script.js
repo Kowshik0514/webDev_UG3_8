@@ -121,13 +121,12 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-
 let lastTap = 0;
 window.addEventListener('click', () => {
   const currentTime = new Date().getTime();
   const tapGap = currentTime - lastTap;
   if (tapGap < 300 && tapGap > 0) {
-    window.location.href = 'home.html';
+    window.location.href = '/home.html';
   }
   lastTap = currentTime;
 });
