@@ -108,3 +108,5 @@ Welcome to the **Disaster Simulation Website**! This interactive website simulat
 ## License
 
 This project is licensed under the **MIT License**. See the [LICENSE](./LICENSE) file for details.
+
+Enjoy the challenges and test your survival instincts in the Disaster Simulation Website! 🌪️🌊🌍
