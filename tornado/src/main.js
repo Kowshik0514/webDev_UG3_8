@@ -91,6 +91,62 @@ export function updateHealth() {
   }
 }
 
+
+export function youWon() {
+  document.getElementById('go').innerHTML = "Congrats You Won!!";
+      document.getElementById('gameOverPopup2').style.display = 'flex';
+      removeTornado(scene,world);
+      stopRain();
+      stopSound();
+      // restartGame();
+      // refill_health(playerBody)
+      playerHealth = 100; 
+      playerBody.position.set(0, 1.6, 0);
+      healthBar.style.width = '100%';
+      healthBar.style.backgroundColor = 'green'; 
+      player.position.x=0;
+      playerHealth=100;
+}
+
+function displayDoorInteractionMessage() {
+  const messageBox = document.createElement('div');
+  messageBox.id = 'leaveRoomMessage';
+  messageBox.style.position = 'absolute';
+  messageBox.style.top = '20%';
+  messageBox.style.left = '50%';
+  messageBox.style.transform = 'translate(-50%, -50%)';
+  messageBox.style.padding = '10px';
+  messageBox.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+  messageBox.style.color = '#fff';
+  messageBox.style.fontSize = '20px';
+
+    messageBox.innerText = 'Do you want to enter the room? Press Y to enter or N to stay outside.';
+  
+
+  document.body.appendChild(messageBox);
+}
+
+function hideLeaveRoomMessage() {
+  const messageBox = document.getElementById('leaveRoomMessage');
+  if (messageBox) {
+    messageBox.remove();
+  }
+}
+
+function checkposition() {
+  if(player.position.x > 0 && player.position.x < 4.5  && player.position.z > 41.5 && player.position.z < 47.5)
+  {
+    displayDoorInteractionMessage();
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'y') {
+        hideLeaveRoomMessage();
+        youWon();
+      }
+    });
+  }
+  else hideLeaveRoomMessage();
+}
+
 export function updateHealth2() {
   document.getElementById('go').innerHTML = "Game Over!!\nDont stay near vehicles with more surface area";
       document.getElementById('gameOverPopup2').style.display = 'flex';
@@ -321,6 +377,7 @@ function animate() {
   // updateHealth();
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
+  checkposition();
   world.step(1 / 60);
   if (mixer) mixer.update(delta);
   movePlayer();
