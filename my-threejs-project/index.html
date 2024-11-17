@@ -12,9 +12,26 @@
     canvas {
       display: block;
     }
+    .bottom-text {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: linear-gradient(to right, #4a4a4a, #6c6c6c);
+      color: #f9f9f9;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
   </style>
 </head>
 <body>
+  <div class="bottom-text">Double click to enter, use cursor to rotate</div>
   <script type="module" src="/src/script.js"></script>
 </body>
 </html>
