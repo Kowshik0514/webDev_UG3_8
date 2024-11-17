@@ -19,6 +19,7 @@ const loadingScreen = document.getElementById('loadingScreen');
 let loaded1 = false;
 let loaded2 = false;
 
+
 // Style the health bar container
 healthBarContainer.style.position = "absolute";
 healthBarContainer.style.bottom = "20px"; // Position at the bottom
@@ -169,6 +170,59 @@ const planeShapeFront = new CANNON.Box(new CANNON.Vec3(15, 0.01, 15)); // Length
 const planeBodyFront = new CANNON.Body({
   mass: 0, // Static object
 });
+
+
+
+
+const houseCollider1 = new CANNON.Box(new CANNON.Vec3(0.4, 100, 1.5)); 
+const houseColliderbody1 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+houseColliderbody1.addShape(houseCollider1);
+houseColliderbody1.position.set(1.35, 0, 1.5);
+houseColliderbody1.quaternion.setFromEuler(0, 0, 0);
+world.addBody(houseColliderbody1);
+
+const houseCollider2 = new CANNON.Box(new CANNON.Vec3(0.4, 100, 1.5)); 
+const houseColliderbody2 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+houseColliderbody2.addShape(houseCollider2);
+houseColliderbody2.position.set(1.35, 0, -2.5);
+houseColliderbody2.quaternion.setFromEuler(0, 0, 0);
+world.addBody(houseColliderbody2);
+
+const houseCollider3 = new CANNON.Box(new CANNON.Vec3(0.6, 100, 4)); 
+const houseColliderbody3 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+houseColliderbody3.addShape(houseCollider3);
+houseColliderbody3.position.set(-2.85, 0, 0);
+houseColliderbody3.quaternion.setFromEuler(0, 0, 0);
+world.addBody(houseColliderbody3);
+
+const houseCollider4 = new CANNON.Box(new CANNON.Vec3(1.7, 100, 0.4)); 
+const houseColliderbody4 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+houseColliderbody4.addShape(houseCollider4);
+houseColliderbody4.position.set(-0.4, 0, 3.52);
+houseColliderbody4.quaternion.setFromEuler(0, 0, 0);
+world.addBody(houseColliderbody4);
+
+const houseCollider5 = new CANNON.Box(new CANNON.Vec3(1.7, 100, 0.5)); 
+const houseColliderbody5 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+houseColliderbody5.addShape(houseCollider5);
+houseColliderbody5.position.set(-0.4, 0, -3.9);
+houseColliderbody5.quaternion.setFromEuler(0, 0, 0);
+world.addBody(houseColliderbody5);
 
 // Lighting
 let ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -700,11 +754,12 @@ let animationEnabled = true;
 function animate() {
   if (!animationEnabled) return;
   checkNearLadder();
-  // console.log("x:");
-  // console.log(playerBody.position.x);
-  // console.log(playerBody.position.y);
-  // console.log("z:");
-  // console.log(playerBody.position.z);
+  console.log("x:");
+  console.log(playerBody.position.x);
+  console.log("y:");
+  console.log(playerBody.position.y);
+  console.log("z:");
+  console.log(playerBody.position.z);
   if(loaded1 && loaded2) {
     loadingScreen.style.display = 'none';
   }
