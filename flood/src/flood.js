@@ -223,6 +223,37 @@ houseColliderbody5.position.set(-0.4, 0, -3.9);
 houseColliderbody5.quaternion.setFromEuler(0, 0, 0);
 world.addBody(houseColliderbody5);
 
+const tableCollider1 = new CANNON.Box(new CANNON.Vec3(0.6, 100, 0.5)); 
+const tableColliderBody1 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+tableColliderBody1.addShape(tableCollider1);
+tableColliderBody1.position.set(-1.0, 0, 1.95);
+tableColliderBody1.quaternion.setFromEuler(0, 0, 0);
+world.addBody(tableColliderBody1);
+
+const tableCollider2 = new CANNON.Box(new CANNON.Vec3(0.6, 100, 0.5)); 
+const tableColliderBody2 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+tableColliderBody2.addShape(tableCollider2);
+tableColliderBody2.position.set(-1.0, 0, -1.95);
+tableColliderBody2.quaternion.setFromEuler(0, 0, 0);
+world.addBody(tableColliderBody2);
+
+
+const tableCollider3 = new CANNON.Box(new CANNON.Vec3(3, 100, 2.35)); 
+const tableColliderBody3 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+tableColliderBody3.addShape(tableCollider3);
+tableColliderBody3.position.set(10.0, 0, 9.7);
+tableColliderBody3.quaternion.setFromEuler(0, 0, 0);
+world.addBody(tableColliderBody3);
+
 // Lighting
 let ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
@@ -753,12 +784,12 @@ let animationEnabled = true;
 function animate() {
   if (!animationEnabled) return;
   checkNearLadder();
-  console.log("x:");
-  console.log(playerBody.position.x);
-  console.log("y:");
-  console.log(playerBody.position.y);
-  console.log("z:");
-  console.log(playerBody.position.z);
+  // console.log("x:");
+  // console.log(playerBody.position.x);
+  // console.log("y:");
+  // console.log(playerBody.position.y);
+  // console.log("z:");
+  // console.log(playerBody.position.z);
   if(loaded1 && loaded2) {
     loadingScreen.style.display = 'none';
   }

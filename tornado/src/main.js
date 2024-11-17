@@ -439,10 +439,10 @@ function movePlayer() {
     playerBody.position.set(player.position.x - 0.05, player.position.y, player.position.z);
   }
 
-  console.log("x");
-  console.log(player.position.x);
-  console.log("z");
-  console.log(player.position.z);
+  // console.log("x");
+  // console.log(player.position.x);
+  // console.log("z");
+  // console.log(player.position.z);
 
   let moveDirection = new THREE.Vector3();
   const forward = getPlayerForwardDirection();
