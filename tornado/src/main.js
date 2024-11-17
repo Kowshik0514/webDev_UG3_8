@@ -222,6 +222,28 @@ planeBodyFront3.addShape(planeShapeFront3);
 planeBodyFront3.position.set(-2.097, 0.48, 40.97);
 planeBodyFront3.quaternion.setFromEuler( -Math.PI / 2, -Math.PI/2, 0);
 world.addBody(planeBodyFront2);
+
+const houseCollider1 = new CANNON.Box(new CANNON.Vec3(0.1, 100, 13)); 
+const houseColliderbody1 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+houseColliderbody1.addShape(houseCollider1);
+houseColliderbody1.position.set(0, 0, 41);
+houseColliderbody1.quaternion.setFromEuler(0, 0, 0);
+world.addBody(houseColliderbody1);
+
+
+const houseCollider2 = new CANNON.Box(new CANNON.Vec3(0.1, 100, 13)); 
+const houseColliderbody2 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+houseColliderbody2.addShape(houseCollider2);
+houseColliderbody2.position.set(-13.8, 0, 41);
+houseColliderbody2.quaternion.setFromEuler(0, 0, 0);
+world.addBody(houseColliderbody2);
+
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
 document.addEventListener('click', () => {
