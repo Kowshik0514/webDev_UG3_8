@@ -13,7 +13,6 @@
   "description": "",
   "dependencies": {
     "my-threejs-project": "file:",
-    "three": "^0.170.0",
     "vite": "^5.4.8"
   }
 }
