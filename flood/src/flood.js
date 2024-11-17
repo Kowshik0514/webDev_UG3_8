@@ -1,4 +1,3 @@
-// /flood/src/flood.js
 import * as THREE from "three";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -580,7 +579,7 @@ riseButton.addEventListener("click", () => {
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
 document.addEventListener("click", () => {
-  if(loaded1 && loaded2) controls.lock();
+  controls.lock();
 });
 
 // Player Movement
@@ -803,7 +802,7 @@ function updatePlayerAnimation() {
 
 function movePlayer() {
   if (!player) return;
-  if(!loaded1 || !loaded2) return;
+
   let moveDirection = new THREE.Vector3();
   const forward = getPlayerForwardDirection();
   const right = new THREE.Vector3()
