@@ -1,16 +1,41 @@
+# Disaster Simulation Website
 
-# 3D Earthquake Simulator Team 8 UG 3
+Welcome to the **Disaster Simulation Website**! This interactive website simulates three realistic disaster scenarios—**Earthquake**, **Flood**, and **Tornado**—designed to test your decision-making and survival skills in high-pressure environments. Follow the scenarios, utilize the controls, and make quick decisions to survive the challenges.
 
-This project provides an immersive experience of an earthquake scenario where users can navigate through a 3D environment and interact with objects.
+---
 
+## Table of Contents
+1. [Features](#features)
+2. [Getting Started](#getting-started)
+3. [Game Controls](#game-controls)
+4. [Scenarios](#scenarios)
+   - [Earthquake](#earthquake-scenario)
+   - [Flood](#flood-scenario)
+   - [Tornado](#tornado-scenario)
+5. [Technical Details](#technical-details)
+6. [Contributing](#contributing)
+7. [License](#license)
 
-## Installation
+---
+
+## Features
+- **Three Disaster Scenarios:** Earthquake, Flood, and Tornado, each with unique challenges.
+- **Immersive Gameplay:** Navigate through realistic disaster conditions using intuitive controls.
+- **Health System:** Health Bar and replenish health using first aid kits during scenarios.
+- **Interactive News Section:** Stay updated with the "Latest News" for realism and context.
+- **Dynamic Obstacles:** Avoid hazards like falling debris, rising waters, and dangerous winds.
+
+---
+
+## Getting Started
+### Installation
 1. Clone the repository:
    ```bash
    git clone https://github.com/Kowshik0514/webDev_UG3_8
    ```
 2. Navigate to the project directory:
    ```bash
+   cd webDev_UG3_8
    cd my-threejs-project
    ```
 3. Install the required dependencies using npm:
@@ -25,76 +50,60 @@ This project provides an immersive experience of an earthquake scenario where us
   ```
 - Open your browser and navigate to [http://localhost:5173](http://localhost:3000) to view the simulator.
 
-## Controls
-- **Movement**: Use W, A, S, D keys to navigate.
-- **Interact**: Press Y to enter or leave the room when prompted.
-- **Stay Outside/Inside**: Press N to cancel the action.
-- **Crawl**: Use the shfit key with the keys used for movement.
+## Game Controls
 
-## Instructions
+#### Movement
+- **W, A, S, D**: Move your character.
 
-1. **Earthquake Alert**: Once the earthquake begins, be prepared for falling debris and tremors.
-2. **Find a Safe Spot**: Quickly navigate to a safe area to avoid being hit by falling objects
-3. **Hide Under a Table**: You can crouch and take cover under a table to shield yourself from falling debris.
-4. **Leave the Room**: Alternatively, you can interact with the door to exit the room and find safety outside.
-5. **Stay Alert**: Keep an eye on your surroundings and be ready to move as the earthquake continues, as new debris may fall.
+#### Climbing
+- **C**: Press to climb objects.
 
+#### Crawling
+- **Shift + W, A, S, D**: Hold Shift and use WASD keys to crawl.
 
-## Features
+#### View Rotation
+- **Mouse**: Move your mouse to rotate the view.
 
-- **Realistic 3D Environment**: Navigate through a detailed 3D room with various interactive objects and a dynamically changing environment.
-- **Health System**: Players start with 100 health points, which decrease upon collision with falling objects (stones) or other environmental hazards. Health can be restored by collecting health kits scattered around the scene.
-- **Interactive Objects**: Players can interact with various objects in the environment, including a door to enter or leave a room and the ability to hide under tables to avoid falling debris.
-- **Health Bar**: A dynamic health bar that visually updates based on the player’s health status. It changes color depending on the player's health percentage (Green: >50%, Yellow: 25-50%, Red: <25%).
-- **Dynamic Debris**: Stones and other debris, like a chandelier, dynamically fall from the ceiling during earthquakes, simulating a real-life earthquake scenario.
-- **Chandelier Mechanics**: A chandelier falls during seismic events, adding another obstacle for the player to avoid.
-- **Tremor Visualization**: The environment visually reacts to tremors, adding immersive earthquake effects.
-- **Game Over & Restart**: If the player's health reaches zero, the game ends with a "Game Over" message, and players can restart the game with their health and environment reset.
+#### Action Buttons
+- Click on scenario-specific buttons to start (e.g., **"Start Earthquake"**).
 
+---
 
-## Implementation Details
+## Scenarios
 
-1. **3D Environment Setup**:
-   - **Three.js**: Used for rendering 3D graphics, creating scenes, cameras, lights, and controls.
-   - **Scene Creation**: The simulation starts with a basic scene, where all objects like stones, the player, and the environment are added.
-   - **Camera**: A perspective camera provides depth and realism to the environment.
-   - **Lighting**: Ambient and directional lights are used to illuminate the scene.
+### Earthquake Scenario
+- **Start**: Click the **"Start Earthquake"** button.
+- **Objective**: Survive falling debris and ground tremors.
+- **Actions**:
+  - Hide under a table.
+  - Exit the house to avoid collapsing structures.
+  - Use first aid kits to heal if injured.
+- **Goal**: Find safety and survive until the tremors subside.
 
-2. **Model Loading**:
-   - **GLTFLoader**: Used for loading 3D models (like stones and the chandelier) in the GLB format.
-   - **Scaling and Positioning**: After loading, models are scaled and positioned appropriately in the environment.
+### Flood Scenario
+- **Start**: Click the **"Start Flood"** button.
+- **Objective**: Collect essentials and reach high ground.
+- **Actions**:
+  - Gather items like fruits and certificates before water levels rise.
+  - Avoid contact with current poles to prevent electrocution.
+  - Climb to the top of a water tank to stay safe.
+- **Goal**: Survive the flood by preparing and avoiding hazards.
 
-3. **Physics Simulation**:
-   - **Cannon.js**: Integrated for simulating realistic object interactions, gravity effects, and collisions.
-   - **Physics Bodies**: 3D objects like stones and doors are assigned physical properties like mass, shape, and collision detection.
-   - **Collision Detection**: Checks for collisions between the player and falling debris to manage health.
+### Tornado Scenario
+- **Start**: Click the **"Start Tornado"** button.
+- **Objective**: Reach safety indoors while avoiding tornado hazards.
+- **Actions**:
+  - Stay clear of large vehicles that may be lifted by the winds.
+  - Quickly head indoors for safety.
+- **Goal**: Avoid being swept away by the tornado.
 
-4. **Health Management System**:
-   - **Health Bar**: Updates dynamically based on the player's health. The health bar changes color according to the player's health percentage.
-   - **Health Kit**: Players can collect health kits to restore their health during gameplay.
+---
 
-5. **Player Interaction**:
-   - **Object Interaction**: Players can interact with certain objects (e.g., doors) when close enough. Players can also hide under tables to avoid falling debris during earthquakes.
-   - **Keyboard Input**: Movement and interaction controls are managed through keyboard events.
+## Technical Details
 
-6. **Dynamic Environment Interactions**:
-   - **Falling Debris**: Stones are loaded dynamically, each given a random position and scale, to simulate debris falling during earthquakes.
-   - **Chandelier Simulation**: A chandelier can fall during seismic activity, adding another layer of interactivity.
-   - **Tremor Effects**: The simulation visualizes tremors, enhancing the earthquake experience.
+- **Frontend**: Built with React.js for an interactive user interface.
+- **Physics Simulation**: Powered by Three.js and Cannon.js for realistic disaster effects.
+- **News Integration**: Uses a news API for the **"Latest News"** segment.
+- **Environment**: Tested on modern browsers (Chrome, Firefox, Edge).
 
-7. **Game Restart Mechanism**:
-   - **Reset Game**: After the player’s health reaches zero, the game can be restarted, resetting health and positions of objects.
-
-
-
-
-## Contributions
-
-- **Aarya**: House model design with colliders, health bar, door with functionality.
-- **Akash**: Chandelier, sound effects, table with colliders, and furniture.
-- **Jyothiraditya**: Earth quake tremors, stones system, health reduction.
-- **Kowshik**: Player animations, player movements and camera control with keys.
-- **Madhav**: Health-kit functionality, floor design, entry and exit system.
-- **Sanjay**: Floor cracks, front pages, road and street lights, light effects.
-
-
+Enjoy the challenges and test your survival instincts in the Disaster Simulation Website! 🌪️🌊🌍
