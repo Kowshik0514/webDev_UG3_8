@@ -141,12 +141,13 @@ const sky = new THREE.Mesh(skyGeometry, skyMaterial);
 scene.add(sky);
 const planeGeometry1 = new THREE.PlaneGeometry(1000, 1000); // Visual grouplanend 
 const planeMaterial1 = new THREE.MeshStandardMaterial({ 
-  color: 0x1E90FF,
-  emissive: 0x1E90FF,  // Slight emission for more glowing effect
-    roughness: 0.5,  // Moderate roughness
-    metalness: 0,  // Non-metallic
+  color: 0x323b2c, // A slightly greyish blue
+  //emissive: 0x3a4a62, // A darker, less saturated blue-grey for emissive
+  //emissiveIntensity: 0.5, // Subtle emissive effect
+  // metalness: 0.3, // Slight metallic sheen
+  // roughness: 0.7, 
     transparent: true,
-    opacity: 0.4  // Transparent
+    opacity:1  // Transparent
  });
 export const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
 plane1.rotation.x = -Math.PI / 2; // Rotate the mesh to lie horizontally
