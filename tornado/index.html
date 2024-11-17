@@ -116,7 +116,7 @@
 
         // Exit game button logic to redirect
         document.getElementById('exitButton').addEventListener('click', () => {
-            window.location.href = "https://disastersimulation.vercel.app/"; // Go back to the start page
+            window.location.href = "https://disastersimulationhome.vercel.app/"; // Go back to the start page
         });
 
         // Close the menu when tapping anywhere outside the button container
@@ -150,18 +150,18 @@
         document.getElementById('restartButton').addEventListener("click", startGame);
         document.getElementById('exitButton1').addEventListener('click', () => {
         localStorage.removeItem("gameStarted"); // Clear the game started state
-        window.location.href = "https://disastersimulation.vercel.app/"; // Go back to the start page
+        window.location.href = "https://disastersimulationhome.vercel.app/"; // Go back to the start page
       });
       document.getElementById('exitButton2').addEventListener('click', () => {
         localStorage.removeItem("gameStarted"); // Clear the game started state
-        window.location.href = "https://disastersimulation.vercel.app/"; // Go back to the start page
+        window.location.href = "https://disastersimulationhome.vercel.app/"; // Go back to the start page
       });
       document.getElementById('restartButton2').addEventListener("click", ()=>{
         window.location.reload(true);
       });
       document.getElementById('exitButton3').addEventListener('click', () => {
       localStorage.removeItem("gameStarted"); // Clear the game started state
-      window.location.href = "https://disastersimulation.vercel.app/"; // Go back to the start page
+      window.location.href = "https://disastersimulationhome.vercel.app/"; // Go back to the start page
     });
         </script>
 </body>

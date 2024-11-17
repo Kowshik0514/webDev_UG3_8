@@ -1,14 +1,19 @@
-<!-- /homepage/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Disaster Preparedness Simulation</title>
-  <link rel="stylesheet" href="/src/style.css">
+  <title>Disaster Simulation</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
 </head>
-
 <body>
   <header class="header">
     <img onclick="location.href='./'" src="/images/homepage/logo.jpeg" alt="Logo" class="logo">
@@ -400,30 +405,9 @@
   </section>
   <script type="module" src="/src/news.js"></script>
 
-  <section id="about" class="about-us">
+  <section id="about">
     <h2>About Us</h2>
-    <div class="about-content">
-      <p><strong>Who We Are</strong><br>
-        <hr>
-        <h3>We are 3rd-year undergraduate students from IIT Tirupati, united by a shared passion for making a difference. Through our innovative project, we aim to contribute to solving sustainable development goals by equipping people with disaster preparedness and management skills.</h3>
-      </p>
-      <p><strong>Our Vision</strong><br>
-        <hr>
-        <h3>To build a safer, more resilient world by empowering individuals with practical knowledge and strategies for disaster response through interactive simulations.</h3>
-      </p>
-      <p><strong>What We Offer</strong><br>
-        <hr>
-        <h3> Disaster simulation platform allows users to experience real-life disaster scenarios, make informed decisions, and learn essential survival skills. Scenarios like earthquakes, floods, and tornado help users gain the tools to act effectively during crises.</h3>
-      </p>
-      <p><strong>Our Mission</strong><br>
-        <hr>
-        <h3>By combining cutting-edge technology and creative solutions, our project strives to raise awareness and build a community of disaster-smart individuals, fostering resilience and sustainability.</h3>
-      </p>
-      <p><strong>Join Us</strong><br>
-        <hr>
-        <h3>We believe in the power of education and technology to drive meaningful change. Join us in this journey to prepare, learn, and create a positive impact for a sustainable future.</h3>
-      </p>
-    </div>  
+    <p>This section contains information about the project.</p>
   </section>
 
   <footer class="footer">
@@ -433,5 +417,4 @@
 
   <script type="module" src="/src/script.js"></script>
 </body>
-
 </html>
