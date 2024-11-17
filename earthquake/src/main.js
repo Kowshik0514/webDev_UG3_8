@@ -27,6 +27,10 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 
+
+const loadingScreen = document.getElementById('loadingScreen');
+let loaded= false;
+
 // Physics world
 const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0); // Set gravity
@@ -400,6 +404,9 @@ gltfLoader.load('/models/earthquake/room.glb', (gltf) => {
   room.scale.set(0.5, 0.5, 0.5);
   room.position.set(0, -4.3, 0);
   scene.add(room);
+  // console.log("1");
+  loadingScreen.style.display = 'none';
+  loaded = true;
   // Load the textures
 
   texture2 = plane1.material.map;
@@ -416,7 +423,7 @@ export let crack1;
 
 const controls = new PointerLockControls(camera, renderer.domElement);
 document.addEventListener('click', () => {
-  controls.lock();
+  if(loaded) controls.lock();
 });
 
 // Player Movement
@@ -474,6 +481,12 @@ const clock = new THREE.Clock();
 // Animation Loop
 function animate() {
   requestAnimationFrame(animate);
+
+  if(loaded)
+  {
+    console.log("loaded");
+    loadingScreen.style.display = 'none';
+  }
   const delta = clock.getDelta();
   if (camera.position.y > 0) {
     if (floor) {
@@ -570,6 +583,7 @@ function updatePlayerAnimation() {
 
 function movePlayer() {
   if (!player) return;
+  if(!loaded) return;
 
   let moveDirection = new THREE.Vector3();
   const forward = getPlayerForwardDirection();

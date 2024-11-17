@@ -5,6 +5,7 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { createTornado, tornadoGroup,tornadoBody,removeTornado,startRain,stopRain,stopSound,isTornadoactive } from '/src/tornado.js';
 import { loadHome } from '/src/room.js';
+import { load1,load2 } from '/src/room.js';
 
 // Scene setup
 export const scene = new THREE.Scene();
@@ -14,6 +15,7 @@ const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg')
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
+const loadingScreen = document.getElementById('loadingScreen');
 
 // Physics world
 const world = new CANNON.World();
@@ -135,7 +137,9 @@ scene.add(directionalLight);
 
 // Controls
 const controls = new PointerLockControls(camera, renderer.domElement);
-document.addEventListener('click', () => controls.lock());
+document.addEventListener('click', () => {
+  if(load2) controls.lock()
+});
 
 // Create Stones (within 100 radius)
 function createStones() {
@@ -261,7 +265,7 @@ function handleKeyUp(event) {
 }
 
 function handleMouseMove(event) {
-  if (controls.isLocked) {
+  if (controls.isLocked && load1 && load2) {
     yaw -= event.movementX * 0.002;
     pitch -= event.movementY * (-0.002);
     pitch = Math.max(-pitchLimit, Math.min(pitchLimit, pitch));
@@ -317,6 +321,7 @@ function animate() {
 
 function movePlayer() {
   if (!player) return;
+  if(!load1 || !load2) return;
 
   let moveDirection = new THREE.Vector3();
   const forward = getPlayerForwardDirection();

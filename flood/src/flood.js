@@ -1,4 +1,3 @@
-// /flood/src/flood.js
 import * as THREE from "three";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -16,6 +15,9 @@ playerBody = new CANNON.Body({
 let playerHealth = 100; // Initialize player's health
 const healthBarContainer = document.createElement("div");
 const healthBar = document.createElement("div");
+const loadingScreen = document.getElementById('loadingScreen');
+let loaded1 = false;
+let loaded2 = false;
 
 // Style the health bar container
 healthBarContainer.style.position = "absolute";
@@ -36,7 +38,7 @@ healthBar.style.borderRadius = "5px";
 // Add the health bar to the container and then the container to the document
 healthBarContainer.appendChild(healthBar);
 document.body.appendChild(healthBarContainer);
-
+let names = [];
 export function update(health) {
   playerHealth = Math.min(100, playerHealth + health);
 }
@@ -66,6 +68,22 @@ export function updateHealth() {
     // alert('Game Over!');
     if(diedPole) document.getElementById("go").innerHTML = "Game Over! You touched the pole!";
     else if(diedWater) document.getElementById("go").innerHTML = "Game Over! You drowned in the water!";
+    else{
+      let won ="";
+      if( names.includes("Fruits") == false && names.includes("Certificates") == false)
+      {
+          won = won + "\nbut you didn't carry food and important documents";
+      }
+      else if( names.includes("Fruits") == false)
+      {
+        won = won + "\nbut you didn't carry food";
+      }
+      else if(names.includes("Certificates") == false)
+      {
+        won = won + "\nbut you didn't carry important documents";
+      }
+      document.getElementById("go").innerHTML = "You Won !" + won;
+    } 
     document.getElementById("gameOverPopup").style.display = "flex";
     // restartGame();
     // refill_health(playerBody)
@@ -177,6 +195,7 @@ gltfLoader.load("/models/flood/grass_land.glb", (gltf) => {
   field.scale.set(1, 1, 1); // Adjust scale if necessary
   field.rotation.x = -Math.PI / 100;
   scene.add(field);
+  loaded1 = true;
   field.position.set(10, -4.7, 0);
 });
 let rabbit;
@@ -289,15 +308,15 @@ gltfLoader.load("/models/flood/snowy_water_tank.glb", (gltf) => {
   tank = gltf.scene;
   // tank.setRotationFromEuler(new Euler(0, Math.PI, 0));
 
-  tank.scale.set(8, 4, 8); // Adjust scale if necessary
+  tank.scale.set(8, 6, 8); // Adjust scale if necessary
   scene.add(tank);
-  tank.position.set(10, 2, 10);
+  tank.position.set(10, 4, 10);
 });
 
 let room;
 gltfLoader.load("/models/flood/house.glb", (gltf) => {
   room = gltf.scene;
-
+  loaded2 = true;
   scene.add(room);
   room.position.set(0, -0.2, 0);
 });
@@ -371,7 +390,7 @@ gltfLoader.load("/models/flood/fruit_bowl.glb", (gltf) => {
   fruit.position.set(-0.7, 0.93, 2);
 });
 
-const names = [];
+
 
 function showPopup() {
   document.getElementById("popup").style.display = "block";
@@ -546,6 +565,7 @@ document.getElementById("restartButton").addEventListener("click", () => {
 const riseButton = document.createElement("button");
 riseButton.innerText = "Raise Water Level";
 riseButton.style.position = "absolute";
+riseButton.style.backgroundColor = "cyan";
 riseButton.style.top = "10px";
 riseButton.style.left = "10px";
 document.body.appendChild(riseButton);
@@ -634,6 +654,9 @@ function animate() {
   // console.log(playerBody.position.y);
   // console.log("z:");
   // console.log(playerBody.position.z);
+  if(loaded1 && loaded2) {
+    loadingScreen.style.display = 'none';
+  }
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
 
@@ -660,8 +683,13 @@ function animate() {
     // model.material.transparent = false;
     // field.material.transparent = false;
   }
-    
-  if (player && !checkClimb1) {
+  if(player.position.y >= 7.9  && isRising)
+    {
+       playerHealth = 0;
+       isRising = false;
+       updateHealth();
+    }
+  else if (player && !checkClimb1) {
     
     // Sync player position with physics body
     player.position.copy(playerBody.position);
