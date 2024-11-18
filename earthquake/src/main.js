@@ -484,7 +484,6 @@ function animate() {
 
   if(loaded)
   {
-    console.log("loaded");
     loadingScreen.style.display = 'none';
   }
   const delta = clock.getDelta();
