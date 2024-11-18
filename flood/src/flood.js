@@ -142,12 +142,13 @@ const sky = new THREE.Mesh(skyGeometry, skyMaterial);
 scene.add(sky);
 const planeGeometry1 = new THREE.PlaneGeometry(1000, 1000); // Visual grouplanend 
 const planeMaterial1 = new THREE.MeshStandardMaterial({ 
-  color: 0x1E90FF,
-  emissive: 0x1E90FF,  // Slight emission for more glowing effect
-    roughness: 0.5,  // Moderate roughness
-    metalness: 0,  // Non-metallic
+  color: 0x323b2c, // A slightly greyish blue
+  //emissive: 0x3a4a62, // A darker, less saturated blue-grey for emissive
+  //emissiveIntensity: 0.5, // Subtle emissive effect
+  // metalness: 0.3, // Slight metallic sheen
+  // roughness: 0.7, 
     transparent: true,
-    opacity: 0.4  // Transparent
+    opacity:1  // Transparent
  });
 export const plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
 plane1.rotation.x = -Math.PI / 2; // Rotate the mesh to lie horizontally
@@ -222,6 +223,37 @@ houseColliderbody5.addShape(houseCollider5);
 houseColliderbody5.position.set(-0.4, 0, -3.9);
 houseColliderbody5.quaternion.setFromEuler(0, 0, 0);
 world.addBody(houseColliderbody5);
+
+const tableCollider1 = new CANNON.Box(new CANNON.Vec3(0.6, 100, 0.5)); 
+const tableColliderBody1 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+tableColliderBody1.addShape(tableCollider1);
+tableColliderBody1.position.set(-1.0, 0, 1.95);
+tableColliderBody1.quaternion.setFromEuler(0, 0, 0);
+world.addBody(tableColliderBody1);
+
+const tableCollider2 = new CANNON.Box(new CANNON.Vec3(0.6, 100, 0.5)); 
+const tableColliderBody2 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+tableColliderBody2.addShape(tableCollider2);
+tableColliderBody2.position.set(-1.0, 0, -1.95);
+tableColliderBody2.quaternion.setFromEuler(0, 0, 0);
+world.addBody(tableColliderBody2);
+
+
+const tableCollider3 = new CANNON.Box(new CANNON.Vec3(3, 100, 2.35)); 
+const tableColliderBody3 = new CANNON.Body({
+  mass: 0 ,
+  color: "blue"
+});
+tableColliderBody3.addShape(tableCollider3);
+tableColliderBody3.position.set(10.0, 0, 9.7);
+tableColliderBody3.quaternion.setFromEuler(0, 0, 0);
+world.addBody(tableColliderBody3);
 
 // Lighting
 let ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -587,7 +619,7 @@ function showOverlay() {
 
   // Populate overlay with names in a horizontal layout
   const nameList = document.getElementById("nameList");
-  nameList.innerHTML = names.map((name) => `<span>${name}</span>`).join("");
+  nameList.innerHTML = names.map((name) => <span>${name}</span>).join("");
 }
 
 function hideOverlay() {
@@ -753,12 +785,12 @@ let animationEnabled = true;
 function animate() {
   if (!animationEnabled) return;
   checkNearLadder();
-  console.log("x:");
-  console.log(playerBody.position.x);
-  console.log("y:");
-  console.log(playerBody.position.y);
-  console.log("z:");
-  console.log(playerBody.position.z);
+  // console.log("x:");
+  // console.log(playerBody.position.x);
+  // console.log("y:");
+  // console.log(playerBody.position.y);
+  // console.log("z:");
+  // console.log(playerBody.position.z);
   if(loaded1 && loaded2) {
     loadingScreen.style.display = 'none';
   }
