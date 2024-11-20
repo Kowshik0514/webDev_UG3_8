@@ -665,6 +665,7 @@ document.getElementById("yesButton2").addEventListener("click", () => {
   hidePopup2();
   taken2 = false;
   scene.remove(paper);
+  paper=NULL;
 });
 
 document.getElementById("noButton2").addEventListener("click", () => {
@@ -694,8 +695,10 @@ function checkDistanceToPaper() {
   }
 }
 
-document.getElementById("restartButton").addEventListener("click", () => {
-  restartGame();
+
+let paper2; 
+document.getElementById("restartButton").addEventListener("click", async () => {
+  await restartGame();
 });
 
 const riseButton = document.createElement("button");
@@ -999,7 +1002,46 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-function restartGame() {
+async function restartGame() {
+  if(!taken2)
+    {
+      // alert("Loaded");
+        gltfLoader.load("/models/flood/papers__envelopes.glb", async (gltf) => {
+        paper2 = gltf.scene;
+        // paper.setRotationFromEuler(new Euler(0, Math.PI, 0));
+        paper2.rotation.y = Math.PI / 2;
+        paper2.scale.set(0.8, 1, 1); // Adjust scale if necessary
+        scene.add(paper2);
+        paper2.position.set(-1.2, 0.95, -2);
+      });
+    }
+  flag2=true;
+  taken2=true;
+  if(!taken)
+  {
+    gltfLoader.load("/models/flood/fruit_bowl.glb", (gltf) => {
+      fruit = gltf.scene;
+      // fruit.setRotationFromEuler(new Euler(0, Math.PI, 0));
+    
+      fruit.scale.set(2, 2, 2); // Adjust scale if necessary
+      scene.add(fruit);
+      fruit.position.set(-0.7, 0.93, 2);
+    });
+  }
+  taken=true;
+  flag=true;
+  if(!taken3)
+  {
+    gltfLoader.load("/models/flood/rabbit.glb", (gltf) => {
+      rabbit = gltf.scene;
+      rabbit.scale.set(0.5, 0.5, 0.5); // Adjust scale if necessary
+      scene.add(rabbit);
+      rabbit.position.set(2, 0.3, 2);
+    });
+  }
+  taken3=true;
+  flag3=true;
+  names=[];
   isRising = false;
   const audio = document.getElementById("myAudio");
   audio.pause();
@@ -1010,6 +1052,7 @@ function restartGame() {
   diedWater = false;
   isFloodWaterReached = false;
   isAlive = true;
+  return;
 }
 document.getElementById("restartGameBtn").addEventListener("click",() => {
   // const audio = document.getElementById("myAudio");
